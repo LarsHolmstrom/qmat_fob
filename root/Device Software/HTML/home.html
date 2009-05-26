@@ -27,7 +27,7 @@
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "login.html"; 
+		links[1] = "pretest.html"; 
 		links[2] = "intro1.html";
 			
 		// keep the date/time updated
@@ -83,7 +83,6 @@
 			NextTest.innerHTML = '<font style="font-size:12pt;line-height:17pt;color:white;">Ready for<br>testing<br></font>';
 			testbutton.innerText = "Take Tests";
 			instructionsbutton.innerText = "Instructions";
-			links[1] = "login.html";
 		}
 
 		/*
@@ -226,6 +225,9 @@
 			jsClock();				
 	
 			setTimeout("initWait()", 1000);	
+			
+			// Enable debug menu by default.
+			parent.frames["scriptframe"].DebugMenuAvailable = true;
 		}
 		
 		// need to make sure the control has actually loaded in the script frame first
@@ -289,7 +291,7 @@
 			<img src="images/alert-green.gif" border="0">
 		</div>
 		<div id="NextTest" style="position: absolute; left: 25px; top:155px; line-height:13pt;font-family:Arial; color:234368; font-size:11pt;font-weight:bold;">
-			<br>Checking Memory...<br>Build 101
+			<br>Checking Memory...<br>Build 102
 		</div>
 		<div id="Buttons" style="position: absolute; left: 176px; top:67px;visibility:hidden">
 			<table border="0" cellpadding="0" cellspacing="0">

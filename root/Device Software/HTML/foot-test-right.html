@@ -24,21 +24,23 @@
 		{
 			// do nothing here in the event a capsit button is pressed	
 		}
+		
+		function readyRight(){
+            header.innerText = "Foot-Tapping Test - Right Foot";
+            panel.style.paddingTop = 0;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eyes";
+			setTimeout('readyRight2()',2000);
+		}
 			
 		// prepare for right hand
-		function readyRight()
-		{
-			header.innerText = "Foot-Tapping Test - Right Foot";
-			panel.style.paddingTop = 0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Foot<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-		
+		function readyRight2() {
 			Kinetics.ActivityEndNormal();
 			Kinetics.ActivityConfig(4, "FOOTRIGHT", 0, 0);   
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Foot<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 		
 			setTimeout('startRight()',4000);
-		
 		}
 				
 		// begin test with right hand

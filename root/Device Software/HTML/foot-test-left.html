@@ -24,20 +24,24 @@
 		{
 			// do nothing here in the event a capsit button is pressed	
 		}
-
-		// prepare for left hand
-		function readyLeft()
-		{
-			panel.style.paddingTop = 0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Foot<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 		
-			Kinetics.ActivityEndNormal();
+        function readyLeft(){
+            header.innerText = "Foot-Tapping Test - Left Foot";
+            panel.style.paddingTop = 0;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eyes";
+            setTimeout('readyLeft2()',2000);
+        }
+            
+        // prepare for left hand
+        function readyLeft2() {
+            Kinetics.ActivityEndNormal();
             Kinetics.ActivityConfig(4, "FOOTLEFT", 0, 0);   
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\get_ready.wav");
-		
-			setTimeout('startLeft()',2000);
-		}
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Foot<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+        
+            setTimeout('startLeft()',4000);
+        }
 		
 		// begin test with left hand
 		function startLeft()

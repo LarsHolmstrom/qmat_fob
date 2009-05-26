@@ -1,12 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <html>
 	<head>
-		<title>Replace Storage Unit</title>
+		<title>Noise Suppression</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />
 		<script language="javascript" src="menu.js"></script>
 		<script language="javascript">
-		
-		var Kinetics = parent.frames["scriptframe"].Kinetics;		
 		
 		// menu setup
 		menuItems = 1;
@@ -15,30 +13,27 @@
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "reaction-intro.html";			
-				
+		links[1] = "keys-test.html";			
+			
+		// local handler for help (or "do over" button)
 		function keyDownLocal()
 		{
-			// h key
+			// h key (help)
 			if (event.keyCode == 72)
 			{
 				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
-				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
-				{
-					window.location = "debug-menu.html";
-				}
+				window.location = "keys-intro.html";
 			}
 		}
-		
+						
 		function init()
 		{
 			menuSelect(1);
 
-			// leave only the select light on since there's only a "next" button
 			var Kinetics = parent.frames["scriptframe"].Kinetics;
 			
-            Kinetics.SessionStart();
-			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
 			Kinetics.SetLedState(4,1);
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
@@ -48,10 +43,10 @@
 	</head>
 	<body onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
 		<div id="header" class="header">
-			Before Starting Your Tests
+			Noise Suppression
 		</div>
 		<div id="boundingbox" class="boundingbox">
-			<table border="0" cellpadding="0" cellspacing="0">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
 				<tr>
 				<td><img src="images/boundingbox-topleft.gif"></td>
 				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
@@ -69,20 +64,19 @@
 				</tr>
 			</table>
 		</div>
-		<div id="innerbody" style="position: absolute; left: 12px; top:55px; width:275px; height:130px;">
+		<div id="innerbody" style="font-size:12pt;line-height:15pt;position: absolute; left: 15px; top:60px; width:267px; height:90px;">
 			<ul>
-			
-				<li style="padding-bottom:8px;">Place yourself in a straight back chair.<br>
-				<li style="padding-bottom:8px;">Ensure that your surroundings will remain quiet and distraction free for the duration of the session<br>
-				<li>Follow directions exactly.<br>
-			
-			</ul>	
-
-			<div id="questions" style="position: absolute; left: 150; top:125;">
-				<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+				<li>Place the ear muffs over your ears
+			</ul>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or
+			<ul>    
+				<li>Place the ear plugs in your ears
+			</ul>			 
+			<div id="questions" style="position: absolute; left: 160; top:125;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
 					<tr>
 						<td class="menu-left"	id="m1-left"></td>
-						<td class="menu-mid"	id="m1-mid" width="70">Continue</td>
+						<td class="menu-mid"	id="m1-mid" width="60">Start Test</td>
 						<td class="menu-right"	id="m1-right"></td>
 					</tr>			
 				</table>
