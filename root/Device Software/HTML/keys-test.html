@@ -137,13 +137,15 @@
 			panel.innerHTML = "";
 			
 			var el = document.getElementById("sessionDone");
-			el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+//			el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+			el.innerHTML = "&nbsp;&nbsp;&nbsp;You can open<br>&nbsp;&nbsp;&nbsp;your eyes now";
 			
 			parent.frames["scriptframe"].currentTest = "";
 			
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
+//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\you_can_open_eyes_now.wav");    
 			
-			setTimeout("location='foot-intro.html';",4000);
+			setTimeout("location='peg-intro.html';",4000);
 		}
 		
 		// return to home screen for now (temporary for demo purposes)
