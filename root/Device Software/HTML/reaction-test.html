@@ -7,6 +7,10 @@
 		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
 
+		// BDELEEUW:  note...KeyPressLocal appears to invoke debug menu regardless of mode.
+		// BDELEEUW:  Search on "accumulate" to find thoughts on how to avoid full restart of timer 
+		//            when a button is up and the beep should occur.
+
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		
 		// TODO: make constants for all tests in contants.js
@@ -17,21 +21,20 @@
 		the_script_frame.currentTest = "REACTION";
 		
 		var sideStarted = "UNKNOWN";
-		var countRight = 0;
-		var countLeft = 0;
-		var rightPressCount = 0;
-		var leftPressCount = 0;
-		var haspressed = false;
-		var releaseRequired;
-		var beep_count=0;
-		var is_stopped = true;
-		var debounceReleaseID = 0;
-		var debouncePressID = 0;
-		var pressPending = false;
-		var releasePending = false;
-		var isPressed = false;
-		var timeout_timer_id = null;
-		var side_active = "right";
+		var countRight = 0; //number of right tests
+		var countLeft = 0;  //number of left tests
+		var haspressed = false;  //active side button pressed in prep for a test
+		var releaseRequired;  //beep happened but button has not been released yet
+		var beep_count=0;   // number of beeps in this test so far
+		var is_stopped = true;  //current test has ended - suppress final beep
+		var debounceReleaseID = 0;  //debounce timer
+		var debouncePressID = 0;    //other debounce timer
+		var isPressed = false;  // debounced pressed indicator
+		var timeout_timer_id = null;  // overall timeout timer progress
+		var side_active = "right";  // which test we're running
+		var beeperID = 0; // our beep timer ID
+		
+		var debounce_msec = 50;  //number of msec before action not considered bounce
 
 		function init()
 		{
@@ -312,21 +315,16 @@
 			setTimeout("location='keys-intro.html';",3000);
 		}
 
-	
-		// beeper
-		function beeper()
-		{
-			if (!is_stopped)
-			{
-				// BD updated to allow fractional seconds & generate actual random numbers, rather than
-				// statistically skewed things that Math.round results in.
-				setTimeout('beep()', Math.floor((Math.random()* (REACTION_BEEP_MAX_MSEC - REACTION_BEEP_MIN_MSEC))) + REACTION_BEEP_MIN_MSEC);
-			}
-		}
 		
 		// test
 		function beep()
 		{
+		
+		    // if accumulated up-time more than "minimal" time, set timer to accumulated up-time 
+		    // and reset accumulation.  Otherwise process the beep.
+		    
+		    beeperID=0;
+		    
 			if ( isPressed && !releaseRequired)
 			{
 				++beep_count;
@@ -374,16 +372,36 @@
 
 		function doRelease()
 		{
-			releaseRequired = false;
-			releasePending = false;
 			isPressed = false;
+			debounceReleaseID = 0;
+			releaseRequired = false;
+			
+			// record time for use in accumulated release
+			
+			if (beeperID != 0)
+			{
+			  clearTimeout(beeperID);
+			  beeperID = 0;
+			}
+
 		}
 
 		function doPress()
 		{
 			isPressed = true;
-			pressPending = false;
-			beeper();
+			debouncePressID = 0;
+
+			// add time since recorded release time to accumulated release
+
+			if (beeperID==0)
+			{
+				if (!is_stopped)
+				{
+					// BD updated to allow fractional seconds & generate actual random numbers, rather than
+					// statistically skewed things that Math.round results in.
+					beeperID = setTimeout('beep()', Math.floor((Math.random()* (REACTION_BEEP_MAX_MSEC - REACTION_BEEP_MIN_MSEC))) + REACTION_BEEP_MIN_MSEC);
+				}
+			}
 		}
 
 
@@ -393,30 +411,25 @@
 		function reaction_start_key_press( side, pressed )
 		{
 			//the_script_frame.writeToFile("DEBUG: Entered reaction_start_key_press");
+			if (debounceReleaseID)//(releaseRequired && releasePending)
+			{
+				clearTimeout(debounceReleaseID);
+				debounceReleaseID = 0;
+			}
+			
+			if (debouncePressID)
+			{
+				clearTimeout(debouncePressID);
+				debouncePressID = 0;
+			}
+
 
 			if (pressed)
 			{
-				if (releaseRequired && releasePending)
-				{
-					clearTimeout(debounceReleaseID);
-					debounceReleaseID = 0;
-				} else
-				{
-					pressPending = true;					
-					debouncePressID = setTimeout('doPress()', 10);
-				}
-
+				debouncePressID = setTimeout('doPress()', debounce_msec);
 			} else
 			{
-				if (pressPending)
-				{
-					clearTimeout(debouncePressID);
-				}
-				else
-				{
-					releasePending = true;
-					debounceReleaseID = setTimeout('doRelease()', 10);
-				}
+				debounceReleaseID = setTimeout('doRelease()', debounce_msec);
 			}
 		}
 

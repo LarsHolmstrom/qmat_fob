@@ -7,6 +7,8 @@
 		<script language="javascript" src="menu.js"></script>
 		<script language="javascript">
 		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+
 		// menu setup
 		menuItems = 1;
 		
@@ -25,11 +27,26 @@
 				window.history.go(-1);
 			}
 		}
-						
+			
+
+		function init()
+		{
+			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			menuSelect(1);
+			parent.frames["scriptframe"].ActiwatchSkipped = true;		
+		}
+
+			
 		</script>
 				
 	</head>
-	<body onload="focus();menuSelect(1)" onkeydown="keyDownLocal();keyDown()">
+	<body onload="init();focus()" onkeydown="keyDownLocal();keyDown()">
 		<div id="header" class="header">
 			Tremorwatch
 		</div>
