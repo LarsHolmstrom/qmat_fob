@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Pegboard Test Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		parent.frames["scriptframe"].currentTest = "";
+		
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "peg-demo.html";
+		links[2] = "peg-pretest.html"; 		
+		
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					window.location = "debug-menu.html";
+				}
+				else
+				{
+					window.location = "peg-intro.html";		
+				}
+			}
+		}
+						
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			menuSelect(1);
+			
+			// reset peg related variables in the script frame
+			parent.frames["scriptframe"].pegDirection = "";
+			parent.frames["scriptframe"].pegCountRight = 1;
+			parent.frames["scriptframe"].pegCountLeft = 1;
+			
+			// don't replay the intro audio if we're coming from the instructions page
+			var url = String(window.location);
+			if (url.indexOf("quiet") == -1)
+			{			
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");			
+			}	
+			else
+			{
+				menuSelect(2);				
+			}		
+			
+			// turn off nav LED's
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,1);
+			Kinetics.SetLedState(6,1);				
+		}
+						
+		</script>
+	</head>
+	<body class="hands" onload="focus();init();" onkeydown="keyDownLocal();keyDown();">
+		<div id="device" class="device">
+			<img src="images/device-peg.gif">
+		</div>
+		<div id="sidebar" class="sidebar-peg">
+			<img src="images/sidebar-peg.gif">
+		</div>
+		<div id="header" class="header">
+			&nbsp;Peg Test
+		</div>
+		<div id="notes" style="position: absolute; left: 185px; top:125px; width:120px;">
+			<font class="grey8">Move the pegs from the right side to the left side as quickly as you can.<br></font>
+		</div>
+		<div id="Buttons" style="position: absolute; left: 176px; top:172px;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82">Instructions</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>				
+			</table>
+		</div>
+		<div id="peg1" style="position: absolute; left: 292px; top:4px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg2" style="position: absolute; left: 292px; top:17px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg3" style="position: absolute; left: 292px; top:30px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg4" style="position: absolute; left: 292px; top:43px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg5" style="position: absolute; left: 292px; top:56px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg6" style="position: absolute; left: 292px; top:69px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg7" style="position: absolute; left: 292px; top:82px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg8" style="position: absolute; left: 292px; top:95px;">
+			<img src="images/peg.gif">
+		</div>
+	</body>
+</html>

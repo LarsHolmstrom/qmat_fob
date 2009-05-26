@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Saving Session</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;		
+		
+		function initWait()
+		{
+			// let the screen draw itself before bringing it to it's knees with SessionEndNormal
+			setTimeout("init()",1500);
+		}
+		
+		function init()
+		{				
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);				
+			
+			//updateProgress(0);
+			Kinetics.SessionEndNormal();
+		}
+		
+		// updates progress bar with percentage passed
+		function updateProgress(pct)
+		{
+			//progressbar.style.width=pct+"%";
+		}
+		
+		</script>
+	</head>
+	<body onload="initWait();focus()">
+		<div id="header" class="header">
+			Saving Data
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="font-size:12pt;line-height:15pt;position: absolute; left: 32px; top:55px; width:265px; height:90px;">
+		
+			Please wait while your test<br> session data is saved.
+			
+			<div id="progres-lights" style="padding-top:8px;padding-bottom:2px;">
+				<img src="images/progress-bar.gif" border="0" vspace="12" width="240"> 
+			<div>
+			
+			<!--  SAVE FOR LATER IF WE CAN TALK BRAD INTO GIVING US SAVE PERCENTAGE UPDATES
+			<div id="progressframe" style="width: 255; height: 20; border-top: solid #aaaaaa 2px; border-left: solid #aaaaaa 2px;border-bottom: solid #dddddd 1px; border-right: solid #dddddd 1px;">
+				<div id="progressbar" style="position:absolute;left:0;height: 17; background-color: #7FBF40;font-size:8pt;width:50%;">
+					 
+				</div>
+			</div>			
+			-->
+			Do not unplug the device, remove the storage device, or close the lid.
+            
+			</div>
+	</body>
+</html>

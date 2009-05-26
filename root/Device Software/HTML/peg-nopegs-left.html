@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Pegboard - No Pegs Installed</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var peg_test_page_timer_id = null;
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		parent.frames["scriptframe"].currentTest = "NOPEGSLEFT";
+		
+		// menu setup
+		menuItems = 1;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "peg-intro.html?quiet";
+		
+		function init()
+		{
+			menuSelect(1);
+			focus();
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\pegboard\\all_pegs_left.wav");
+
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);				
+		}
+	
+		// called from the script frame once all 8 pegs show up on the left 
+		function pegsReady()
+		{
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\misc\\great.wav");
+			clearTimeout(peg_test_page_timer_id);
+			peg_test_page_timer_id = setTimeout('location = "\peg-test.html"',2000);
+		}
+		
+		// called from the script frame each time a pegMap event fires
+		function pegIn(pegId)
+		{
+			for( i = 1; 9 > i; ++i )
+			{
+				if( i == pegId )
+					eval("peg"+(i+8)+".style.left = 21");
+			}
+		}
+		function pegOut(pegId)
+		{
+			for( i = 1; 9 > i; ++i )
+			{
+				if( i == pegId )
+					eval("peg"+(i+8)+".style.left = 392");
+			}
+		}
+		
+		</SCRIPT>
+	</head>
+	<body class="hands" onload="init();" onkeydown="keyDown()">
+		<div id="device" class="device">
+			<img src="images/device-peg.gif">
+		</div>
+		<div id="sidebar" style="position:absolute;left:175;top:45;">
+			<img src="images/sidebar-peg.gif">
+		</div>
+		<div id="notes" style="position: absolute; left: 190; top:55px; width:125px;">
+			<font class="grey8">Make sure all eight holes on the left side contain pegs.<br></font>
+		</div>		
+		<div id="Buttons" style="position: absolute; left: 188px; top:115px;">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82">Cancel</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>				
+			</table>
+		</div>
+		<div id="header" class="header">
+			&nbsp;<a href="javascript: placepegs()">Peg Test</a>
+		</div>
+		<div id="peg9" style="position: absolute; left: 392px; top:4px;"> <!-- 293 -->
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg10" style="position: absolute; left: 392px; top:17px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg11" style="position: absolute; left: 392px; top:30px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg12" style="position: absolute; left: 392px; top:43px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg13" style="position: absolute; left: 392px; top:56px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg14" style="position: absolute; left: 392px; top:69px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg15" style="position: absolute; left: 392px; top:82px;">
+			<img src="images/peg.gif">
+		</div>
+		<div id="peg16" style="position: absolute; left: 392px; top:95px;">
+			<img src="images/peg.gif">
+		</div>
+	</body>
+</html>

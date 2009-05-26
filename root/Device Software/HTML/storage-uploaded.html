@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Restart</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		// menu setup
+		menuItems = 1;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+				
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		function init()
+		{
+			parent.frames["scriptframe"].waitingForStorageInsert = false;
+		
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);	
+			
+			focus();
+			menuSelect(1);
+			
+			setTimeout('restart()',180000);
+		}
+		
+		function keyDownLocal()
+		{
+			if (event.keyCode == 13)
+			{
+				setTimeout('restart()',2000);
+			}
+		}
+						
+		function restart()
+		{
+			Kinetics.Reboot();
+		}
+		
+		</script>
+	</head>
+	<body onload="init()" onkeydown="keyDownLocal();">
+		<div id="header" class="header">
+			Data Sent
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:50px; width:267px; height:130px;">
+			You may unplug the device or select "Restart" to restart the device.
+
+			<div id="questions" style="position: absolute; left: 155; top:125;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="50">Restart</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>			
+				</table>
+			</div>
+						
+		</div>
+	</body>
+</html>

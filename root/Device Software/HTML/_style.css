@@ -1,0 +1,226 @@
+
+/*******************************************************
+* STYLE.CSS
+* Version:	0.0.4
+* Revised:	08/05/2005
+*******************************************************/
+
+a
+{
+	text-decoration: none; 
+	color: 234368; 
+}
+
+body
+{
+	margin: 0px;
+	background-color: CAEDF9;
+	background-image: url(images/background-default.gif);
+	background-repeat: no-repeat;
+	font-family: Arial Narrow; 
+	font-size: 11pt; 
+	font-weight: bold;
+	line-height: 14pt;
+	color: 666666; 
+}
+
+body.home
+{
+	background-color: CAEDF9;
+	background-image: url(images/background-home.gif);
+	background-repeat: no-repeat;
+}
+
+body.hands
+{
+	background-color: CAEDF9;
+	background-image: url(images/background-hands.gif);
+	background-repeat: no-repeat;
+}
+	
+td
+{
+	font-family: Arial Narrow; 
+	font-size: 11pt; 
+	font-weight: bold;
+	line-height: 14pt;
+	color: 666666; 
+}
+
+div.header
+{
+	position: absolute; 
+	left: 30px; 
+	top: 9px;
+	font-family: Arial Narrow; 
+	font-size: 13pt; 
+	font-weight: bold;
+	color: 234368; 
+}
+
+div.header-home
+{
+	position: absolute; 
+	left: 30px; 
+	top: 27px;
+	font-family: Arial Narrow; 
+	font-size: 13pt; 
+	font-weight: bold;
+	color: 234368; 
+}
+
+div.boundingbox
+{
+	position: absolute; 
+	left: 15px; 
+	top: 35px;
+}
+
+div.boundingboxtest
+{
+	position: absolute; 
+	left: 93px; 
+	top: 385px;
+}
+
+div.boundingbox-questions
+{
+	position: absolute; 
+	left: 0px; 
+	top: 35px;
+}
+
+div.inprogress
+{
+	position: absolute; 
+	left: 103px; 
+	top: 105px;
+	font-family: Arial Narrow; 
+	font-size: 13pt; 
+	font-weight: bold;
+	line-height: 17pt;
+	color: 234368; 
+	text-align: center;
+}
+
+div.device
+{
+	position: absolute; 
+	left: 4px; 
+	top: 0px;
+}
+
+div.sidebar
+{
+	position: absolute; 
+	left: 168px; 
+	top: 3px;
+}
+
+div.sidebar-peg
+{
+	position: absolute; 
+	left: 168px; 
+	top: 120px;
+}
+
+div.timecaption
+{
+	font-family: Arial; 
+	color: 234368; 
+	font-size: 16pt; 
+}
+
+div.datecaption
+{
+	font-family: Arial Narrow; 
+	color: 234368; 
+	font-size: 10pt; 
+}
+
+font.blue10
+{
+	font-family: Arial; 
+	color: 234368; 
+	font-size: 10pt;
+}
+
+font.blue8
+{
+	font-family: Arial; 
+	color: 234368; 
+	font-size: 8pt;
+}
+
+font.grey8
+{
+	font-family: Arial Narrow; 
+	color: 666666; 
+	font-size: 8pt;
+	line-height: 10pt;
+}
+
+font.boldgrey10
+{
+	font-family: Arial Narrow; 
+	color: 666666; 
+	font-size: 10pt;
+	font-weight: bold;
+	line-height: 13pt;
+}
+
+td.menu-left
+{
+	width: 24px;
+	height: 26px;
+	background: images/button-unselected-left.gif;
+}
+
+td.menu-mid
+{
+	padding-left: 8px;
+	height: 26px;
+	font-family: Arial; 
+	color: 234368; 
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+td.menu-right
+{
+	width: 12px;
+	height: 26px;	
+}
+
+td.menu-left-sel
+{
+	width: 24px;
+	height: 26px;
+	background-image: url(images/button-selected-left.gif);
+}
+
+td.menu-mid-sel
+{
+	padding-left: 8px;
+	height: 26px;
+	font-family: Arial; 
+	color: FFFFFF; 
+	font-size: 10pt;
+	font-weight: bold;
+	background-image: url(images/button-selected-middle.gif);
+}
+
+td.menu-right-sel
+{
+	width: 12px;
+	height: 26px;
+	background-image: url(images/button-selected-right.gif);
+}
+
+input.pinbox
+{
+	font-size: 32pt;
+	border: 0px;
+	background-color: #F4F4F4;
+}
+

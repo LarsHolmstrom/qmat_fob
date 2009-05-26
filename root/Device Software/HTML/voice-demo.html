@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Voice Test Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+	
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+			
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\voice\\voice_instructions.wav");	
+			setTimeout("location='voice-intro.html?quiet'",21500);		
+		}
+						
+		function keyDownLocal()
+		{
+				
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.location = "voice-intro.html";
+			}
+
+			// enter key
+			if (event.keyCode == 13)
+			{			
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+				location = "voice-intro.html?quiet";
+			}
+		}
+		
+		</script>
+	</head>
+	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+		<div id="sidebar" class="sidebar" style="top:37">
+			<img src="images/sidebar.gif">
+		</div>
+		<div id="leftillus" style="position: absolute; left: 0px; top:37px;">
+			<img src="images/illus-voiceleft.gif">
+		</div>
+
+		<div id="header" class="header">
+			Voice Test
+		</div>
+		<div id="notes" style="position: absolute; left: 185px; top:41px; width:120px;">
+			<font class="grey8">
+			Make sure the pads do not cover your ears, the microphone boom is straight, and the microphone is in front of the right side of your mouth.
+			<br></font>
+		</div>
+
+	</body>
+</html>

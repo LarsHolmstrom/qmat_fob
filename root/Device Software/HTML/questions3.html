@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Questionnaire</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+		menuItems = 3;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "peg-intro.html";	
+		links[2] = "peg-intro.html";	
+		links[3] = "peg-intro.html";	
+				
+		function keyDownLocal()
+		{
+			// h key
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.history.go(-1);
+			}
+
+			// select (enter) key
+			if (event.keyCode == 13)
+			{
+				// record question response
+				Kinetics.ActivityConfig(7, "QUESTIONS", 0, 0);
+				Kinetics.ActivityStart(0);
+				Kinetics.QuestionResponse("Q3",currentItem+"");
+				Kinetics.ActivityEndNormal();
+			}			
+		}
+						
+		</script>
+				
+	</head>
+	<body onload="focus();menuSelect(1)" onkeydown="keyDownLocal();keyDown()">
+		<div id="header" class="header">
+			Questionnaire
+		</div>
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 35px; top:45px; width:270px; height:130px;">
+			How much better than usual?
+			
+			<div id="questions" style="position: absolute; left: 0; top:45;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="200">A little better</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m2-left"></td>
+						<td class="menu-mid"	id="m2-mid" width="200">Much better</td>
+						<td class="menu-right"	id="m2-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m3-left"></td>
+						<td class="menu-mid"	id="m3-mid" width="200">Very much better</td>
+						<td class="menu-right"	id="m3-right"></td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+	</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head> 
+		<title>Voice - Ahh</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+
+		parent.frames["scriptframe"].currentTest = "AHH";
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		var volumeTimer;
+		
+		function init()
+		{
+			parent.frames["scriptframe"].resetActivityTimer();
+		
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\voice\\one_last_time_ahh.wav");
+			setTimeout("readyToRecord()",8000);			
+		}
+
+		function readyToRecord()
+		{
+			Kinetics.ActivityConfig(4, "AHH3", 0, 0);			
+			Kinetics.ActivityStart(1);
+			
+			Kinetics.RecStartTimeoutS = 50;   
+			Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
+			Kinetics.AudioRecord(3, VOICE_AHH_FIXED_TIMEOUT);   
+		}
+		
+		// called from the script frame when progress event fires, or from local timer no events have come for a while
+		function volume(b)
+		{
+			var el = document.getElementById("recording");
+			
+			if (b == true)
+			{
+				el.style.color = "maroon";
+				el.innerHTML = "Recording";
+				clearTimeout(volumeTimer);
+				volumeTimer = setTimeout("volumeTimeout()",1000);
+			}
+			else
+			{
+				el.style.color = "d0d0d0";
+				el.innerHTML = "Not Recording";
+				clearTimeout(volumeTimer);
+			}
+		}
+		
+		// this should fire once a second of no volume has passed
+		function volumeTimeout()
+		{
+			volume(false);
+		}
+		
+		// called from the script when audio recording is done (based on volume or timeout)
+		function doneRecording()
+		{
+			Kinetics.ActivityEndNormal();
+			location = "HTML\\voice-talking.html";
+		}
+		
+		function keyDownLocal()
+		{
+			// placeholder
+		}
+		
+		</script>
+	</head>
+	<body onload="init();focus()" onkeydown="keyDownLocal()">
+		<div id="header" class="header">
+			Ahh Test - Round 3 of 3
+		</div>
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:40px; width:250px; height:130px;">
+			<font class="boldgrey10">At the tone, take a deep breath, sit up straight, and say “Ahhh” for as long as you can. </font>
+		</div>
+		<div id="photo" style="position: absolute; left: 25px; top:115px;">
+			<table border=0 width="250" ID="Table1">
+			<tr>
+				<td id="recording" align="center" style="height:50;color:#d0d0d0;font-size:18pt;">
+					Not Recording
+				</td>
+			</tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Things to Remembert</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		// menu setup
+		menuItems = 1;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "voice-ahh.html";	;				
+			
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.location = "voice-intro.html";
+			}
+		}
+						
+		function init()
+		{
+			menuSelect(1);
+
+			var Kinetics = parent.frames["scriptframe"].Kinetics;
+			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+		}
+		
+		</script>
+	</head>
+	<body onload="init();focus()" onkeydown="keyDownLocal();keyDown();">
+		<div id="header" class="header">
+			Please Remember During the Test
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="font-size:12pt;line-height:15pt;position: absolute; left: 15px; top:50px; width:267px; height:90px;">
+		<ul>
+			<li>Keep the microphone boom straight
+			<li>Place the microphone head in front of the right side of your mouth
+			<li>Headset pads go on your temples, not your ears
+            	<li>Reduce noise in your environment before starting
+		</ul>			 
+			<div id="questions" style="position: absolute; left: 160; top:130;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="60">Start Test</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>			
+				</table>
+			</div>
+
+		</div>
+	</body>
+</html>

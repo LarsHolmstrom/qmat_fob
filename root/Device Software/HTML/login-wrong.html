@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Replace Storage Unit</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "login.html";					
+		links[2] = "home.html?quiet";					
+			
+			
+		</script>
+	</head>
+	<body onload="focus();menuSelect(1)" onkeydown="keyDown()">
+		<div id="header" class="header">
+			Device is Locked
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:50px; width:258px; height:130px;">
+		The two digit code you entered was not correct.  Please select “Try Again”, or select “Cancel” to stop.
+
+			<div id="questions" style="position: absolute; left: 65; top:85;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="100">Try Again</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>			
+					<tr>
+						<td class="menu-left"	id="m2-left"></td>
+						<td class="menu-mid"	id="m2-mid" width="100">Cancel</td>
+						<td class="menu-right"	id="m2-right"></td>
+					</tr>			
+				</table>
+			</div>
+
+		</div>
+	</body>
+</html>

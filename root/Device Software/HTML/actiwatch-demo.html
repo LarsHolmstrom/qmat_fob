@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Actiwatch Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		parent.frames["scriptframe"].currentTest = "";
+		
+		// menu setup
+		menuItems = 1;
+		currentItem = 1;		
+
+		// links specific to this page
+		links[1] = "actiwatch-skipped.html"; 	
+
+		var watch, watchside, watchback, i;
+		watch = new Image(); 
+		watch.src = "images/watch.gif"; 
+		watchside = new Image(); 
+		watchside.src = "images/watch-side.gif";
+		watchback = new Image(); 
+		watchback.src = "images/watch-back.gif";
+		i = 1;
+
+		function watchchange(watchstatus)
+		{
+			if (watchstatus==0)
+			{
+			watchimg.src=watch.src
+			}
+
+			else if (watchstatus==1)
+			{
+			watchimg.src=watchside.src
+			}
+
+			else if (watchstatus==2)
+			{
+			watchimg.src=watchback.src
+			}
+
+		}
+
+		function watchslide(spot, target)
+		{
+		var picture=watchdiv.style;
+			if (spot>target)
+			{
+				picture.top= spot;
+				if (spot<37)
+			{
+				watchchange(2);
+			}
+				else if (spot<120)
+			{
+				watchchange(1);
+			}
+				else if (spot<238)
+			{
+				watchchange(0);
+			}
+				spot-=4;
+				setTimeout('watchslide('+spot+', '+target+')',10);
+			}      
+
+		}
+		
+		function init()
+		{
+			menuSelect(1); 
+			watchslide(240, 35);
+			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+						
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\tremorwatch\\place_tremorwatch_in_dock.wav");
+
+			// we never have an error to start with.				
+			parent.frames["scriptframe"].ActiwatchFailed = false;				
+
+			// start polling for watch presence.
+			setTimeout('waitToProceed()',500);			
+		}
+
+		function waitToProceed()
+		{
+			if (parent.frames["scriptframe"].watchVisible == true)
+			{
+				Kinetics.CancelAudioPlay()
+				location = "actiwatch-docked.html";
+			}
+			else
+				setTimeout('waitToProceed()',500);			
+		}
+		
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+					window.location = "debug-menu.html";
+				}
+			}
+		}
+
+		</script>
+	</head>
+	<body class="hands" onload="focus();init();" onkeydown="keyDownLocal();keyDown()">
+		<div id="device" class="device">
+			<img src="images/device.gif">
+		</div>
+		<div id="dock" style="position: absolute; left: 65px; top:35px;">
+			<img src="images/actiwatch-dock.gif">
+		</div>
+		<div id="watchdiv" style="position: absolute; left: -10px; top:240px;">
+			<img name="watchimg" src="images/watch.gif">
+		</div>
+		<div id="sidebar" style="position: absolute; left: 148px; top:3px;">
+			<img src="images/sidebar-watch.gif">
+		</div>
+		<div id="notes" style="position: absolute; left: 165px; top:8px; width:140px;">
+			<font class="grey8">Place the Tremorwatch in its dock as shown.</font>
+		</div>
+		<div id="Buttons" style="position: absolute; left: 156px; top:55px;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="116">Skip Tremorwatch</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="header" class="header">
+			Tremorwatch
+		</div>
+	</body>
+</html>

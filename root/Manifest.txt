@@ -1,0 +1,5 @@
+Build 53
+Script: 53
+Device Control: 1.1.0.26
+Device App: 1.0.0.8
+HC08: 7.10

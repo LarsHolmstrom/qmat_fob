@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Questionnaire</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		// menu setup
+		menuItems = 8;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "peg-intro.html"; 	
+		links[2] = "tap-intro.html"; 	
+		links[3] = "reaction-intro.html"; 	
+		links[4] = "keys-intro.html"; 	
+		links[5] = "actiwatch-demo.html"; 	
+		links[6] = "voice-intro.html";
+		links[7] = "actiwatch-saving.html"; 	
+		links[8] = "session-saving.html"; 	
+	 	
+				
+		function init()
+		{
+			parent.frames["scriptframe"].Kinetics.SetLedState(4,1);
+			parent.frames["scriptframe"].Kinetics.SetLedState(5,1);
+			parent.frames["scriptframe"].Kinetics.SetLedState(6,1);
+			
+			menuSelect(1)
+			focus();
+		}
+		
+		</script>
+				
+	</head>
+	<body onload="init()" onkeydown="keyDown()">
+
+
+		<div id="helpbg" style="position: absolute; left: 0; top:0;">
+			<img src="images/help.gif">
+		</div>
+
+			<div id="help" style="position: absolute; left: 80; top:18;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="120">Peg Test</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m2-left"></td>
+						<td class="menu-mid"	id="m2-mid" width="120">Tapping Test</td>
+						<td class="menu-right"	id="m2-right"></td>
+					</tr>								
+					<tr>
+						<td class="menu-left"	id="m3-left"></td>
+						<td class="menu-mid"	id="m3-mid" width="120">Reaction Test</td>
+						<td class="menu-right"	id="m3-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m4-left"></td>
+						<td class="menu-mid"	id="m4-mid" width="120">Keyboard Test</td>
+						<td class="menu-right"	id="m4-right"></td>
+					</tr>					<tr>
+						<td class="menu-left"	id="m5-left"></td>
+						<td class="menu-mid"	id="m5-mid" width="120">Tremorwatch Dock</td>
+						<td class="menu-right"	id="m5-right"></td>
+					</tr>					<tr>
+						<td class="menu-left"	id="m6-left"></td>
+						<td class="menu-mid"	id="m6-mid" width="120">Voice Test</td>
+						<td class="menu-right"	id="m6-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m7-left"></td>
+						<td class="menu-mid"	id="m7-mid" width="120">Tremorwatch Save</td>
+						<td class="menu-right"	id="m7-right"></td>
+					</tr>						
+					<tr>
+						<td class="menu-left"	id="m8-left"></td>
+						<td class="menu-mid"	id="m8-mid" width="120">Session Save</td>
+						<td class="menu-right"	id="m8-right"></td>
+					</tr>					
+				</table>
+			</div>
+
+	</body>
+</html>

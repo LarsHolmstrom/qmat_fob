@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Saving Tremowatch Data</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript">
+				
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		var LEDState = 0;
+
+		// this traps any and all js errors, IE doesn't pass line numbers (like mozilla!) so we can't trap specific errors
+		function handleErrors(msg,url,linenumber)
+		{
+			writeToFile("TRAPPED on actiwatch-saving.html: " + msg + " (line " + linenumber + ")");
+			Kinetics.AssertWrite(url, linenumber, msg);
+			return true;  // comment this line to show the jscript error dialogs
+		}
+
+		window.onerror = handleErrors;
+
+		
+		function init()
+		{
+			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			focus();
+			
+			parent.frames["scriptframe"].ActiwatchSaving = true;
+
+			// start polling for failure.
+			if (parent.frames["scriptframe"].ActiwatchSaveComplete == true)
+				setTimeout('WaitForFailure()',500);			
+			else
+				setTimeout('WaitForBusy()',500);			
+			
+		}
+
+
+		function WaitForBusy()
+		{			
+			if (parent.frames["scriptframe"].ActiwatchFailed == true)
+			{
+				parent.frames["scriptframe"].ActiwatchSaving = false;
+
+Kinetics.AssertWrite("xxx", "0", "failure in WaitForBusy on actiwatch-saving");
+				
+				window.location='actiwatch-failed.html';
+			}
+			else if (parent.frames["scriptframe"].ActiwatchBusy == true)
+			{
+//Kinetics.AssertWrite("xxx", "0", "Watch now busy in WaitForBusy on actiwatch-saving");
+
+				setTimeout('WaitForFailure()',500);
+				Kinetics.SetLedState(4,1);
+				Kinetics.WatchSaveStart("WATCH");	// last, since it can throw an exception!
+
+			}
+			else if (parent.frames["scriptframe"].ActiwatchSaveComplete == true)
+			{
+				setTimeout('WaitForFailure()',500);			
+			}
+			else if (parent.frames["scriptframe"].watchVisible == false)
+			{
+				parent.frames["scriptframe"].ActiwatchSaving = false;
+				window.location='actiwatch-failed.html';
+			}
+			else
+			{
+				setTimeout('WaitForBusy()',500);			
+			}
+		}			
+					
+					
+		function WaitForFailure()
+		{		
+			if (parent.frames["scriptframe"].ActiwatchFailed == true)
+			{
+Kinetics.AssertWrite("xxx", "0", "failure in WaitForFailure on actiwatch-saving");
+
+				parent.frames["scriptframe"].ActiwatchSaving = false;
+				window.location='actiwatch-failed.html';			
+			}
+			else if (parent.frames["scriptframe"].ActiwatchSaveComplete == true)
+			{
+//Kinetics.AssertWrite("xxx", "0", "actiwatch-saving completed.  Now destroying data");
+
+				parent.frames["scriptframe"].ActiwatchSaving = false;
+				updateProgress(100);
+				setTimeout('Kinetics.WatchDataDestroyStart()',500);
+			}
+			else
+			{
+				Kinetics.SetLedState(4,LEDState);
+
+				if (LEDState == 0)
+					LEDState = 1;
+				else
+					LEDState = 0;
+
+				setTimeout('WaitForFailure()',500);			
+			}
+		}			
+					
+		// updates progress bar with percentage passed
+		function updateProgress(pct)
+		{
+			progressbar.style.width=pct+"%";
+		}
+
+		function keyDownLocal()
+		{
+			// placeholder
+		}
+
+										
+		</script>
+	</head>
+	<body onload="init()" onkeydown="keyDownLocal()">
+		<div id="header" class="header">
+			Tremorwatch
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:40px; width:258px; height:130px;">
+			Please wait while the data on your Tremorwatch is being saved.
+			
+			<br><br>
+			
+			<div id="progressframe" style="width: 255; height: 20; border-top: solid #aaaaaa 2px; border-left: solid #aaaaaa 2px;border-bottom: solid #dddddd 1px; border-right: solid #dddddd 1px;">
+				<div id="progressbar" style="position:absolute;left:0;height: 17; background-color: #7FBF40;font-size:8pt;width:0%;">
+					 
+				</div>
+			</div>					
+			
+		</div>
+	</body>
+</html>

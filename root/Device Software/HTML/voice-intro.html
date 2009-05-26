@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Voice Test Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "voice-demo.html";
+		links[2] = "voice-pretest.html"; 	
+			
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					window.location = "debug-menu.html";
+				}
+				else
+				{
+					window.location = "voice-intro.html";
+				}
+			}
+		}
+					
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,1);
+			Kinetics.SetLedState(6,1);
+			
+			menuSelect(1);
+			
+			// don't replay the intro audio if we're coming from the instructions page
+			var url = String(window.location);
+			if (url.indexOf("quiet") == -1)
+			{			
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\voice\\voice_intro.wav");			
+			}	
+			else
+			{
+				menuSelect(2);				
+			}				
+		}
+						
+		</script>
+	</head>
+	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal();keyDown();">
+		<div id="sidebar" class="sidebar">
+			<img src="images/sidebar.gif">
+		</div>
+		<div id="leftillus" style="position: absolute; left: 0px; top:37px;">
+			<img src="images/illus-voiceleft.gif">
+		</div>
+		<div id="rightillus" style="background-image:url(images/illus-voiceright.gif); background-repeat:no-repeat; position: absolute; left: 168px; top:105px;">
+			<div id="rightillusinner" style="position: relative; left: 15; top:12; width:153; height:117;">
+				<div style="width:130">
+					<font class="grey8" style="font-size:10pt; line-height:13pt;">			
+						Do not cover your ears<br><br>
+						Keep the microphone boom straight and in front of your mouth
+					</font>
+				</div>
+			</div>
+		</div>
+		<div id="header" class="header">
+			Voice Test
+		</div>
+		<div id="notes" style="position: absolute; left: 185px; top:8px; width:120px;">
+			<font class="grey8">Put on the microphone as shown, then start the test.</font>
+		</div>
+		<div id="Buttons" style="position: absolute; left: 176px; top:43px;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82">Instructions</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>				
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Test Session Complete</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		parent.frames["scriptframe"].waitingForStorageRemoval = true;
+		
+		// local (this page) event handler for keyUp
+		function keyDownLocal()
+		{
+			// h key (help)
+			/*
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\misc\\excellent.wav");	
+			}
+			*/
+		}
+						
+		function init()
+		{
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);			
+			
+			focus();
+		}
+		
+		</script>
+	</head>
+	<body onload="init()" onkeydown="keyDownLocal()">
+		<div id="header" class="header">
+			Test Session Complete
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 28px; top:45px; width:272px; height:130px;">
+			<img src="images/thumbdrive-illust-remove.gif" border="0" align="right">
+			Congratulations.  You have completed this testing session.	<p style="padding-top:2px;">It is now time to deliver your test data.  Remove the storage device as shown.
+		</div>
+	</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Device Locked</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		
+		<style type="text/css">
+		
+		.tumbler
+		{
+			font-family: arial;
+			font-size: 24px;
+			width: 50px;
+		}
+		
+		</style>
+		<script language="javascript">
+		
+		// state variables for the select elements
+		var tumbler = "a";
+
+		// shortcut to control
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		
+		// detect keypress event and move menu selection accordingly
+		function keyDownLocal()
+		{
+			parent.frames["scriptframe"].resetActivityTimer();
+			if (event.keyCode == 13)
+			{
+				if (tumbler != "b")
+				{
+					document.unlock.b.focus();
+					tumbler = "b";
+				}
+				else				
+				{
+					checkCombo();
+				}
+			}		
+			
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.history.go(-1);
+			}
+								
+		}
+		
+		// called if enter is pressed after the 2nd "tumbler" (select element) is focused
+		function checkCombo()
+		{
+			var a = document.unlock.a.value;
+			var b = document.unlock.b.value;
+			
+			if (( a == "3" ) && ( b == "1" ))
+			{
+				// combination is good.  Start the session
+				Kinetics.SessionStart();
+			
+				// Record whether we are in the test window or not
+				Kinetics.ActivityConfig(7, "QUESTIONS", 0, 0);
+				Kinetics.ActivityStart(0);
+				if (Kinetics.InSessionWindow != 0)			
+					Kinetics.QuestionResponse("Q0","In Test Window");
+				else
+					Kinetics.QuestionResponse("Q0","Not In Test Window");
+					
+				Kinetics.ActivityEndNormal();
+			
+				// and off we go...
+				window.location = "pretest.html";
+			}
+			else if (( a == "4" ) && ( b == "4" ))
+			{
+ 				// combination is backdoor.  Start the session at tremor watch section
+				Kinetics.SessionStart();
+			
+				// Record whether we are in the test window or not
+				Kinetics.ActivityConfig(7, "QUESTIONS", 0, 0);
+				Kinetics.ActivityStart(0);
+				if (Kinetics.InSessionWindow != 0)			
+					Kinetics.QuestionResponse("Q0","In Test Window");
+				else
+					Kinetics.QuestionResponse("Q0","Not In Test Window");
+					
+				Kinetics.ActivityEndNormal();
+			
+				// and off we go...
+				parent.frames["scriptframe"].DebugMenuAvailable = true;
+				window.location = "pretest.html";
+			}
+			else
+			{
+				location="login-wrong.html";
+			}
+		}
+		
+		// set focus to this frame and the first select element
+		function init()
+		{
+			this.window.focus();
+			document.unlock.a.focus();		
+		}
+	
+			
+		</script>
+	</head>
+	<body onload="focus();init();" onkeydown="keyDownLocal()">
+		<div id="header" class="header">
+			Device is Locked
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="150" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:45px; width: 254px; height: 130px; ">
+			Use the UP and DOWN buttons to change a number. Use the SELECT button to move to the 
+			next number or check your two digit combination. Your code can be found on the inside cover of your 
+			subject guide.
+			<br/>
+			
+			<form name="unlock">				
+				<select name="a" onchange="tumbler='a';" class="tumbler">
+					<option value="0">0			
+					<option value="1">1			
+					<option value="2">2			
+					<option value="3">3			
+					<option value="4">4			
+					<option value="5">5			
+				</select>
+				&nbsp;
+				<select name="b" onchange="tumbler='b';" class="tumbler">
+					<option value="0">0			
+					<option value="1">1			
+					<option value="2">2			
+					<option value="3">3			
+					<option value="4">4			
+					<option value="5">5			
+				</select>
+			</form>
+						
+		</div>
+		
+	</body>
+</html>

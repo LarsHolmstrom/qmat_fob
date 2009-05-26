@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Kinetics</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics; 
+		var practiceMode;
+		var ledId;
+
+		var months = new Array("January","Feburary","March","April","May","June","July","August","September","October","November","December");
+		var months = new Array("January","Feburary","March","April","May","June","July","August","September","October","November","December");
+		var days = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+		var shortdays = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+					
+		var nextTestCaption;		
+		var buttonCaption;
+		
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "login.html"; 
+		links[2] = "intro1.html";
+			
+		// keep the date/time updated
+		function jsClock()
+		{
+			// variables
+			var d = new Date();
+			var month = d.getMonth();
+			var day = d.getDate();
+			var dayofweek = d.getDay();
+			var hours = d.getHours();
+			var minutes = d.getMinutes();
+			var strMinutes = minutes;
+			var tod = "AM";
+			
+			// convert to 12 hour time
+			if ( hours > 12 )
+			{
+				hours = (hours - 12);
+				tod = "PM";
+			}
+				
+			if ( hours == 12)
+				tod = "PM";
+			
+			if ( hours == 0 )
+				hours = 12;
+								
+			// make minutes double-digit
+			if ( minutes < 10 )
+			{
+				strMinutes = "0" + minutes;
+			}
+			
+			// variables to update date/time UI
+			var sTime = hours + ":" + strMinutes;
+			var sDate = days[dayofweek] + ", " + months[month] + " " + day;		
+			
+			timecaption.innerHTML = sTime + "<font style='font-size:9pt'> " + tod + "</font>";
+			datecaption.innerText = sDate;
+			setTimeout('jsClock()',30000);
+		}
+		
+		// hide the alert div
+		function notInTestWindow()
+		{
+			var el = document.getElementById("Buttons");
+			el.style.visibility = "visible";
+			headerhome.innerText="At-Home Testing Program";
+			el = document.getElementById("alert");
+			el.style.visibility = "hidden";
+			NextTest.style.paddingTop = "0";
+			NextTest.style.paddingLeft = "2";			
+			NextTest.innerHTML = '<font style="color:#333333;line-height:22px;">Next test session</font><br> ' + nextTestCaption;
+			testbutton.innerText = buttonCaption;
+			instructionsbutton.innerText = "Instructions";
+			links[1] = "testwarning.html";			
+		}
+		
+		// show the alert div
+		function inTestWindow()
+		{
+			var el = document.getElementById("Buttons");
+			el.style.visibility = "visible";
+			headerhome.innerText="At-Home Testing Program";
+			el = document.getElementById("alert");
+			el.style.visibility = "visible";
+			NextTest.style.paddingTop = "6";			
+			NextTest.style.paddingLeft = "5";			
+			NextTest.innerHTML = '<font style="font-size:12pt;line-height:17pt;color:white;">It is time to take<br>your next test<br></font>';
+			testbutton.innerText = buttonCaption;
+			instructionsbutton.innerText = "Instructions";
+			links[1] = "login.html";			
+		}
+		
+		function alarmBlink()
+		{
+			if ( Kinetics.InSessionWindow != 0 )
+			{
+				ledId = Kinetics.BlinkLed(1,3,500)
+			}
+			setTimeout("alarmBlink()",2000);
+		}
+				
+		function checkInTestWindow()
+		{			
+			var strNextTestStart = Kinetics.GetNextSessionStart();
+			var strNextTestEnd = Kinetics.GetNextSessionEnd();
+			
+			var nextTestStart = new Date(strNextTestStart);	
+			var nextTestEnd = new Date(strNextTestEnd);	
+						
+			var nextTestMonthStart = nextTestStart.getMonth();
+			var nextTestDateStart = nextTestStart.getDate();
+			var nextTestDayStart = nextTestStart.getDay();
+			var nextTestHourStart = nextTestStart.getHours();
+			var nextTestMinuteStart = nextTestStart.getMinutes();
+			
+			var nextTestMonthEnd = nextTestEnd.getMonth();
+			var nextTestDateEnd = nextTestEnd.getDate();
+			var nextTestDayEnd = nextTestEnd.getDay();
+			var nextTestHourEnd = nextTestEnd.getHours();
+			var nextTestMinuteEnd = nextTestEnd.getMinutes();
+			
+			var todStart = "am";
+			var todEnd = "am";
+			
+			var strMinutesStart;
+			var strMinutesEnd;
+		
+			// convert to 12 hour time
+			if ( nextTestHourStart == 0)
+				nextTestHourStart = 12;
+			else if ( nextTestHourStart > 12 )
+			{
+				nextTestHourStart = (nextTestHourStart - 12);
+				todStart = "pm";
+			}
+			else if ( nextTestHourStart == 12)
+				todStart = "pm";
+
+				
+			// make minutes double-digit
+			if ( nextTestMinuteStart < 10 )
+				strMinutesStart = "0" + nextTestMinuteStart;
+			else
+				strMinutesStart = nextTestMinuteStart;
+
+			// convert to 12 hour time
+			if ( nextTestHourEnd == 0)
+				nextTestHourEnd = 12;
+			else if ( nextTestHourEnd > 12 )
+			{
+				nextTestHourEnd = (nextTestHourEnd - 12);
+				todEnd = "pm";
+			}
+			else if ( nextTestHourEnd == 12)
+				todEnd = "pm";
+				
+			// make minutes double-digit
+			if ( nextTestMinuteEnd < 10 )
+				strMinutesEnd = "0" + nextTestMinuteEnd;
+			else
+				strMinutesEnd = nextTestMinuteEnd;
+							
+			// this is ugly but it works
+			nextTestCaption = days[nextTestDayStart] + " " + (nextTestMonthStart+1) + "/" + nextTestDateStart + "<BR>" + nextTestHourStart + ":" + strMinutesStart + todStart + " - " + nextTestHourEnd + ":" + strMinutesEnd + todEnd;
+			
+			// are we in practice mode?			
+			if (Kinetics.PracticeMode == 0)
+			{
+				buttonCaption = "Take Tests";
+				practiceMode = false;
+			}
+			else
+			{
+				buttonCaption = "Practice";
+				practiceMode = true;
+			}
+						
+			// should we be taking a test?
+			if ( Kinetics.InSessionWindow != 0 )
+				inTestWindow();
+			else
+				notInTestWindow();		
+				
+			// check again every 3 seconds
+			setTimeout("checkInTestWindow()",3000);			
+		}
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			parent.frames["scriptframe"].InitializeVariables();
+	
+			this.window.focus();
+			menuSelect(1);						
+			
+			// start the date/time display
+			jsClock();				
+	
+			setTimeout("initWait()", 1000);	
+		}
+		
+		// need to make sure the control has actually loaded in the script frame first
+		function initWait()
+		{			
+			if( parent.frames["scriptframe"].is_kinetics_opened )
+			{
+				Kinetics = parent.frames["scriptframe"].Kinetics;		
+				checkInTestWindow();
+				
+				// if we're on the device
+				if (Kinetics.HaveHardware > 0)
+				{
+					// turn on actiwatch power now
+					Kinetics.SetWatchPower(1);	
+
+					// check storage capacity (default to 20 if for some reason it can't read it)
+					var minDiskSpace = eval(Kinetics.ParameterRead("MinFreeSpaceMB","20"));
+					if (Kinetics.FreeStoreMB < minDiskSpace )
+					{
+						location = "storage-full.html";
+					} 
+								
+					// turn on nav LED's
+					Kinetics.SetLedState(4,1);
+					Kinetics.SetLedState(5,1);
+					Kinetics.SetLedState(6,1);
+				}
+				
+				focus();
+				
+				// kick off the timer that watches to see when we're in a test session window or not
+				alarmBlink();
+
+				// don't replay the welcome audio if we're coming from the instructions page
+				var url = String(window.location);
+				if (url.indexOf("quiet") == -1)
+				{		
+					parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\hello_and_welcome.wav");
+				}
+			}
+			else
+			{
+				setTimeout("initWait()", 2000);
+			}
+		}
+		</script>
+				
+	</head>
+	<body class="home" onload="init();" onkeydown="keyDown()">
+		<div id="headerhome" class="header-home">
+			Loading...Please Wait
+		</div>
+		<div id="Time" style="position: absolute; left: 30px; top:70px;">
+			<div id="timecaption" class="timecaption"></div>
+			<div id="datecaption" class="datecaption"></div>
+		</div>
+		<div id="alert" style="position: absolute; left: 14; top:147;visibility:hidden">
+			<img src="images/alert-green.gif" border="0">
+		</div>
+		<div id="NextTest" style="position: absolute; left: 25px; top:155px; line-height:13pt;font-family:Arial; color:234368; font-size:11pt;font-weight:bold;">
+			<br>Checking Memory...<br>Build 53
+		</div>
+		<div id="Buttons" style="position: absolute; left: 176px; top:67px;visibility:hidden">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82"><div id="testbutton">Take Tests</div></td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="82"><div id="instructionsbutton">Instructions</div></td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>				
+			</table>
+		</div>
+		<div id="MoveUp" style="position: absolute; left: 181px; top:155px;">
+			<font style="font-family:Arial Narrow; color:444444; font-size:8pt;">Move Up</font>
+		</div>
+		<div id="MoveDown" style="position: absolute; left: 170px; top:188px;">
+			<font style="font-family:Arial Narrow; color:444444; font-size:8pt;">Move Down</font>
+		</div>
+		<div id="Select" style="position: absolute; left: 271px; top:173px;">
+			<font style="font-family:Arial Narrow; color:444444; font-size:8pt;">Select</font>
+		</div>
+	</body>
+	
+	<script language="javascript">
+
+	function handleErrors(msg,url,linenumber)
+	{
+		parent.frames["scriptframe"].writeToFile("TRAPPED on " + url + ": " + msg + " (line " + linenumber + ")");
+		parent.frames["scriptframe"].Kinetics.AssertWrite(url, linenumber, msg);
+		// return true;  // comment this line to show the jscript error dialogs
+	}
+
+	window.onerror = handleErrors;
+
+	</script>
+	
+</html>

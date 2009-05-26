@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Reaction Test Instructions</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+		menuItems = 1;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "reaction-intro.html";
+					
+		var handtap, handtapglow, i, handpos, oldhandpos;
+		handtap = new Image(); 
+		handtap.src = "images/hand-tap.gif"; 
+		handtapglow = new Image(); 
+		handtapglow.src = "images/hand-tap-glow.gif";
+		handpos = 11;
+		oldhandpos = -2;
+		i = 1;
+
+		function moveside(spot,target)
+		{
+			if (spot<target)
+			{
+			moveright(spot, target);
+			}
+
+			else if (spot>target)
+			{
+			moveleft(spot, target);
+			}
+		}
+
+		function moveright(spot, target)
+		{
+
+			var picture=hand.style;
+
+			if (spot<target)
+			{
+				picture.left= spot;
+				spot+=8;
+				setTimeout('moveright('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				picture.left=target;
+				handchange(0);
+				setTimeout('handchange(1)',2201);
+				if (i<4)
+				{
+				setTimeout('moveleft(236, 31)',2202);
+				i++;
+				}
+				else
+				{
+				setTimeout('moveup(114, 240)',2202);
+				}
+			}
+
+		}
+
+		function moveleft(spot, target)
+		{
+			var picture=hand.style;
+
+			if (spot>target)
+			{
+				picture.left= spot;
+				spot-=8;
+				setTimeout('moveleft('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				picture.left=target;
+				handchange(0);
+				setTimeout('handchange(1)',2201);
+				setTimeout('moveright(31, 236)',2202);
+			}
+
+		}
+
+		function moveleftintro(spot, target)
+		{
+			var picture=hand.style;
+			if (spot>target)
+			{
+				picture.left= spot;
+				spot-=8;
+				setTimeout('moveleftintro('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				picture.left=target;
+				handchange(0);
+				setTimeout('handchange(1)',2501);
+				setTimeout('moveleft(236, 31)',2502);
+			}
+		}
+
+		function movetop(spot,target)
+		{
+			if (spot<target)
+			{
+			moveup(spot, target);
+			}
+
+			else if (spot>target)
+			{
+			movedown(spot, target);
+			}
+		}
+
+		function moveup(spot, target)
+		{
+			var picture=hand.style;
+			if (spot<target)
+			{
+				picture.top= spot;
+				spot+=2;
+				setTimeout('moveup('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				//this.window.location = "reaction-intro.html";
+			}
+		}
+
+		function movedown(spot, target)
+		{
+		var picture=hand.style;
+			if (spot>target)
+			{
+				picture.top= spot;
+				spot-=2;
+				setTimeout('movedown('+spot+', '+target+')',10);
+			}      
+
+		}
+
+
+		function instantmoveside(divname, newplace)
+		{
+			divname.style.left=newplace;
+		}
+
+		function instantmovetop(divname, newplace)
+		{
+			divname.style.top=newplace;
+		}
+
+		function handchange(handstatus)
+		{
+			if (handstatus==0)
+			{
+				handimg.src=handtapglow.src
+			}
+
+			else if (handstatus==1)
+			{
+				beeper.style.visibility = "visible";
+				setTimeout("beeper.style.visibility = 'hidden';",1000);
+				handimg.src=handtap.src
+			}
+
+		}
+
+		function tapper()
+		{
+			i=1;
+			moveleftintro(340, 236);
+		}
+
+		function tap()
+		{
+			if (i<4)
+			{
+			handchange(1);
+			moveleft(236, 30);
+			i++;
+			}
+		}
+		
+		// local (this page) event handler for keyUp
+		function keyUpLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.location = "reaction-intro.html";
+			}
+
+			// enter key
+			if (event.keyCode == 13)
+			{			
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+				location = "reaction-intro.html?quiet";
+			}
+		}
+				
+		// start the animation and audio
+		function init()
+		{		
+
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			tapper(); 
+						
+			// blink capsit LED's
+			parent.frames["scriptframe"].Kinetics.BlinkLed(2,3,500);
+			parent.frames["scriptframe"].Kinetics.BlinkLed(3,3,500);
+			
+			// tell the control to play the instruction audio
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\reaction\\reaction_instructions.wav");
+			
+			// redirect back to the test intro page after the audio
+			setTimeout("location='reaction-intro.html?quiet'",19000);			
+
+			beeper.style.visibility = "hidden";
+						
+		}
+		
+		</script>
+	</head>
+	<body class="hands" onload="init();focus()" onkeydown="keyUpLocal()">
+		<div id="device" class="device">
+			<img src="images/device.gif">
+		</div>
+	
+		</div>
+		<div id="hand" style="position: absolute; left: 340px; top:114px;">
+			<img name="handimg" src="images/hand-tap.gif">
+		</div>
+		<div id="header" class="header">
+			Reaction Test
+		</div>
+		
+		<div id="beeper" style="background:url('images/reaction-demo-beep-bg.gif');background-repeat:no-repeat;position:absolute; height:100px;left:110; top:35; width:120; font-family:arial;font-size:28px;font-weight:bold;color:333333;">
+			
+		</div>
+	</body>
+</html>

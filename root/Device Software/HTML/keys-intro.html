@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Keyboarding Test Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+	
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+			
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "keys-demo.html";
+		links[2] = "keys-pad.html"; 	
+				
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					window.location = "debug-menu.html";
+				}
+				else
+				{
+					window.location = "keys-intro.html";
+				}
+			}
+		}
+						
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			menuSelect(1);			
+			
+			// don't replay the intro audio if we're coming from the instructions page
+			var url = String(window.location);
+			if (url.indexOf("quiet") == -1)
+			{			
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");			
+			}	
+			else
+			{
+				menuSelect(2);				
+			}
+			
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,1);
+			Kinetics.SetLedState(6,1);
+						
+		}
+						
+		</script>
+	</head>
+	<body class="hands" onload="focus();init();" onkeydown="keyDownLocal();keyDown();">
+		<div id="device" class="device">
+			<img src="images/device.gif">
+		</div>
+		<div id="sidebar" class="sidebar">
+			<img src="images/sidebar.gif" height="110">
+		</div>
+		<div id="header" class="header">
+			Keyboard Test
+		</div>
+		<div id="notes" style="position: absolute; left: 182px; top:8px; width:130px;">
+			<font class="grey8">Tap keys as quickly as you can until you are instructed to stop<br></font>
+		</div>
+		<div id="Buttons" style="position: absolute; left: 176px; top:55px;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82">Instructions</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>				
+			</table>
+		</div>
+	</body>
+</html>

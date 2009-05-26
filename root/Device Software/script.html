@@ -1,0 +1,943 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Kinetics</title>
+		
+		<style type="text/css">
+			body		{ font-family: arial; font-size: 11px; }
+			.button		{ font-family: arial; font-size: 11px; height: 20px; }
+			.radidio	{ background-color: #e0e0e0; color: green; }
+		</style>
+		
+		<script language="javascript" src="audio.js"></script>
+		<script language="javascript" src="HTML\\constants.js"></script>
+		<script language="javascript">
+				
+			var currentTest = "";			// text variable for current test 
+
+			var watchVisible = false;		// is the watch visible or not
+			var ActiwatchBusy = false;		// is the watch currently being read? (or saving, deleting)
+			var ActiwatchFailed = false;	// if watch is removed during reading/saving
+			var ActiwatchSaving = false;
+			var ActiwatchSaveComplete = false;
+			var ActiwatchSkipped = false;
+			
+			var DebugMenuAvailable = false;
+			var LidIsOpen;					// might need this one welcome page if lid is closed
+			
+			var lastPegsInLeft = 0;			// latest bitmap of pegs in the left side.
+			var lastPegsInRight = 0;		// same for the right.
+			var pegCountRight = 1;			// used to keep track of round of right hand peg activity
+			var pegCountLeft = 1;			// used to keep track of round of left hand peg activity
+			var pegDirection = "";			// direction pegs are supposed to be moving
+			
+			var ignoreCapsitRight			// used to irgnore first press on tap test/reaction test
+			var ignoreCapsitLeft			// used to irgnore first press on tap test/reaction test
+			
+			var is_capsit_right_down = false;
+			var is_capsit_left_down = false;
+
+			var the_view_frame = parent.frames["viewframe"];
+
+			var waitingForStorageRemoval = false;
+			var waitingForStorageInsert = false;
+			
+			var waitingToStartRight = false;
+			var waitingToStartLeft = false;
+
+			var fso = null, log_file = null;
+			var useragent = navigator.userAgent;
+			var is_pegs_filled = false;
+			var timeoutID = setTimeout("parent.frames['viewframe'].location='HTML/session-timeout.html'", INACTIVITY_TIMEOUT);
+			var array_of_non_time_limited_pages = new Array( 
+				"actiwatch-saving"
+				, "home"
+				, "startup-failed"
+				, "session-saving"
+				, "session-done"
+				, "storage-failed"
+				, "storage-full"
+				, "storage-remove"
+				, "storage-uploaded"
+				, "storage-invalid"
+				, "storage-missing"
+				, "session-timeout"
+				, "actiwatch-failedagain"
+				, "actiwatch-terminal"
+				, "debug-menu"
+			);
+			var is_kinetics_opened = false;
+
+			if (useragent.indexOf("Windows NT") != -1) // if we're on windows XP/NT (not the device)
+			{
+				fso = new ActiveXObject("Scripting.FileSystemObject");
+				if( fso ) log_file = fso.CreateTextFile("C:\\ParkinsonismBox.log", true);
+			}
+
+			function InitializeVariables()
+			{
+				currentTest = "";
+				ActiwatchBusy = false;
+				ActiwatchFailed = false;
+				ActiwatchSaving = false;
+				ActiwatchSaveComplete = false;
+				ActiwatchSkipped = false;
+				lastPegsInLeft = 0;
+				lastPegsInRight = 0;
+				pegCountRight = 1;
+				pegCountLeft = 1;
+				pegDirection = "";
+				waitingForStorageRemoval = false;
+				waitingForStorageInsert = false;
+				waitingToStartRight = false;
+				waitingToStartLeft = false;
+				is_pegs_filled = false;
+				DebugMenuAvailable = false;
+			}
+
+
+			function writeToFile(l) 
+			{
+				try {
+					if( log_file )
+						log_file.writeline(l);
+					//log_file.Close();
+				}
+				catch(err)
+				{
+					var strErr = 'Error:';
+					strErr += '\nNumber:' + err.number;
+					strErr += '\nDescription:' + err.description;
+					document.write(strErr);
+				}
+			}
+
+			// this traps any and all js errors, IE doesn't pass line numbers (like mozilla!) so we can't trap specific errors
+			function handleErrors(msg,url,linenumber)
+			{
+				writeToFile("TRAPPED on script.html: " + msg + " (line " + linenumber + ")");
+				Kinetics.AssertWrite(url, linenumber, msg);
+				// return true;  // comment this line to show the jscript error dialogs
+			}
+
+			window.onerror = handleErrors;
+						
+			
+			// returns true if the given peg hole is filed; false if it is empty.
+			// pegNum - 1 = left peg hole nearest display;
+			//          8 = left peg hole nearest the front;
+			//          9 = right peg hole nearest display;
+			//          16 = right peg hole nearest the front.
+			function pegIsIn(pegNum)
+			{
+				var pegIdx;			// index within the side of the desired peg.
+				if (pegNum < 1) {
+					alert("pegNum too small.");
+				} else if (pegNum <= 8) {
+					pegIdx = pegNum - 1;
+					if ((lastPegsInLeft & (1 << pegIdx)) != 0) {
+						return true;
+					}
+				} else if (pegNum <= 16) {
+					pegIdx = pegNum - 9;
+					if ((lastPegsInRight & (1 << pegIdx)) != 0) {
+						return true;
+					}
+				} else {
+					var err = "pegNum too big.";
+					alert(err);
+					writeToFile("ERROR: "+err);
+				}
+				return false;
+			}
+
+			// Calls SimPegsMap() based on the current state of the checkboxes.
+			function simPegsMoved()
+			{
+				var pegsInLeft;		// the bitmap for the left pegs.
+				var pegsInRight;	// the bitmap for the right pegs.
+
+				pegsInLeft = 0;
+				if (peg1.checked) {
+					pegsInLeft |= 1;
+				}
+				if (peg2.checked) {
+					pegsInLeft |= 2;
+				}
+				if (peg3.checked) {
+					pegsInLeft |= 4;
+				}
+				if (peg4.checked) {
+					pegsInLeft |= 8;
+				}
+				if (peg5.checked) {
+					pegsInLeft |= 16;
+				}
+				if (peg6.checked) {
+					pegsInLeft |= 32;
+				}
+				if (peg7.checked) {
+					pegsInLeft |= 64;
+				}
+				if (peg8.checked) {
+					pegsInLeft |= 128;
+				}
+
+				pegsInRight = 0;
+				if (peg9.checked) {
+					pegsInRight |= 1;
+				}
+				if (peg10.checked) {
+					pegsInRight |= 2;
+				}
+				if (peg11.checked) {
+					pegsInRight |= 4;
+				}
+				if (peg12.checked) {
+					pegsInRight |= 8;
+				}
+				if (peg13.checked) {
+					pegsInRight |= 16;
+				}
+				if (peg14.checked) {
+					pegsInRight |= 32;
+				}
+				if (peg15.checked) {
+					pegsInRight |= 64;
+				}
+				if (peg16.checked) {
+					pegsInRight |= 128;
+				}
+
+				Kinetics.SimPegsMap(999, pegsInLeft, pegsInRight);
+			}
+						
+			// open the activeX control
+			function init()
+			{
+				var kopen = Kinetics.Open();	
+				if (kopen == 0)
+				{
+					is_kinetics_opened = false;
+					//Kinetics.AssertWrite(url, linenumber, msg);
+					parent.frames["viewframe"].location = "HTML/startup-failed.html";				
+				}
+				else
+				{
+					is_kinetics_opened = true;
+				}
+				
+			}
+			
+			// trace output to the textarea
+			function trace(s)
+			{
+				//traceoutput.value = traceoutput.value + s + "\n";		
+				traceoutput.value = s;
+				writeToFile(s);
+			}
+			
+			// for manually jumping to a page in the select box
+			function jumpTo(sPath)
+			{
+				if (sPath != "script.html")
+					the_view_frame.location=sPath;
+			}
+
+			// If the right button is pressed
+			// and currently taking TAP or REACTION test
+			// and not ignoring the right button press
+			// and no press of the button has occurred
+			// and no audio is running then start right.
+
+			// right capsit pressed down
+			function capsitRight(pressed, ticksSinceGo)
+			{
+				trace("EVENT: CapsitRight(" + pressed + ", " + ticksSinceGo + ")");
+
+				is_capsit_right_down = pressed;
+
+				// if in tap test
+				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
+				{
+					if (ignoreCapsitRight != true)
+					{
+						// and this is the first press
+						if (the_view_frame.haspressed == false)
+						{
+							the_view_frame.haspressed = true;									
+							if( ! Audio.isRunning() )
+							{
+								waitingToStartRight = false;
+								the_view_frame.startRight();
+							}
+							else
+							{
+								waitingToStartRight = true;
+							}
+						}
+						
+						the_view_frame.rightPressCount++;
+						the_view_frame.debugright.innerText = the_view_frame.rightPressCount;
+					}
+				}	
+
+				if(      currentTest == "REACTION" 
+					&& the_view_frame.haspressed 
+					&& ! waitingToStartRight
+				)
+				{
+					the_view_frame.reaction_start_key_press(1, pressed);
+				}
+			}
+				
+			// left capsite pressed down
+			function capsitLeft(pressed, ticksSinceGo)
+			{
+				trace("EVENT: CapsitLeft(" + pressed + ", " + ticksSinceGo + ")");
+				
+				is_capsit_left_down = pressed;
+
+				// if we're in the tap test
+				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
+				{
+					if (ignoreCapsitLeft != true)
+					{
+						// and this is the first press
+						if (the_view_frame.haspressed == false)
+						{
+							the_view_frame.haspressed = true;		
+							if( ! Audio.isRunning() )
+							{
+								waitingToStartLeft = false;
+								the_view_frame.startLeft();
+							}
+							else
+							{
+								waitingToStartLeft = true;
+							}
+						}
+						
+						the_view_frame.leftPressCount++;
+						the_view_frame.debugleft.innerText = the_view_frame.leftPressCount;
+					}
+				}
+
+				if( 	   currentTest == "REACTION" 
+					&& the_view_frame.haspressed 
+					&& ! waitingToStartLeft
+				)
+				{
+					the_view_frame.reaction_start_key_press(0, pressed);
+				}
+			}
+	
+
+			function isPegsReady( peg_code )
+			{
+				if( 255 == peg_code )
+					return true;
+				return false;
+			}
+			// TODO:  *** Move the rest of the code in handlers up to their own functions here
+	
+			function resetActivityTimer()
+			{
+				cancelActivityTimer();
+				setActivityTimer();
+				resetViewActivityTimer();
+			}
+
+			function resetViewActivityTimer()
+			{
+				if( parent.frames['viewframe'].resetViewActivityTimer )
+					parent.frames['viewframe'].resetViewActivityTimer();
+			}
+
+			function cancelActivityTimer()
+			{
+				if( null != timeoutID )
+					clearTimeout(timeoutID);
+				timeoutID = null;
+			}
+
+			/**
+			 * If we are not on one of the pages that should never timeout, and the
+			 * activity timeout timer is not already running, then start the activity
+			 * timeout timer. If we are on a page that should not have activity timeout
+			 * and the activity timeout timer is runnning, shut it down.
+			  */
+			function setActivityTimer()
+			{
+				// debugging
+				{
+					/*
+					writeToFile( "setActivityTimer: " 
+						+ String( parent.frames['viewframe'].location ) 
+					);
+					writeToFile( "setActivityTimer location.host: " 
+						+ String( parent.frames['viewframe'].location.host ) 
+					);
+					writeToFile( "setActivityTimer location.hostname: " 
+						+ String( parent.frames['viewframe'].location.hostname ) 
+					);
+					writeToFile( "setActivityTimer location.pathname: " 
+						+ String( parent.frames['viewframe'].location.pathname ) 
+					);
+					writeToFile( "setActivityTimer location.href: " 
+						+ String( parent.frames['viewframe'].location.href ) 
+					);
+					writeToFile( "setActivityTimer location.href.split: " 
+						+ String( parent.frames['viewframe'].location.href.split('/') ) 
+					);
+					a = String( parent.frames['viewframe'].location.href ).split('/') ;
+					writeToFile( "setActivityTimer location.href.split.last: " 
+							+ a[ a.length - 1 ]
+					);
+					*/
+				}
+
+				is_page_with_timeout = true;
+				{
+					a = String( parent.frames['viewframe'].location.href ).split('/');
+					the_page = a[ a.length - 1 ];
+					the_page = (the_page.split('.html'))[0];
+					len = array_of_non_time_limited_pages.length;
+					for( indx =0 ; len > indx; ++indx )
+					{
+						if( array_of_non_time_limited_pages[indx] == the_page )
+						{
+							is_page_with_timeout = false;
+							break;
+						}
+					}
+				}
+
+				if( is_page_with_timeout )
+				{
+					// debugging
+					/*
+					writeToFile( "setActivityTimer timeout applies to: " 
+						+ a[ a.length - 1 ]
+					);
+					*/
+					if( null == timeoutID )
+					{
+						timeoutID = setTimeout(
+							"parent.frames['viewframe'].location='HTML/session-timeout.html'"
+							, INACTIVITY_TIMEOUT
+						);
+					}
+				}
+				else if( null != timeoutID )
+				{
+					cancelActivityTimer();
+				}
+				else
+				{
+					writeToFile("Global activity timeout is null on: " 
+						+ String( parent.frames['viewframe'].location ) 
+					);
+				}
+			}
+
+			/**
+			 * I'm concerned that it may be possible to migrate to a page after the event
+			 * that caused the migration to occur is handled.  So this function checks 
+			 * periodically if the activity timeout timer is not set when it should be.
+			  */
+			function checkForActivityTimeoutTimer()
+			{
+				setActivityTimer();
+				setTimeout( "checkForActivityTimeoutTimer()", 60000);
+			}
+			checkForActivityTimeoutTimer();
+			
+			function KineticsAudioPlay( wav )
+			{
+				Kinetics.CancelAudioPlay();
+				Kinetics.AudioPlay(wav);
+			}
+			
+
+			function PowerUpWatch()
+			{
+				Kinetics.SetWatchPower(1);		
+			}
+
+		</script>
+		
+
+		<!-- event handling -->
+		<script for="Kinetics" event="DigitoLeftDownward(ticksSinceGo,deltaTicks)">
+			trace("EVENT: DigitoLeftDownward" + "(" + ticksSinceGo + "," + deltaTicks + ")");
+			resetActivityTimer();
+		</script>
+
+		<script for="Kinetics" event="DigitoLeftUpward(ticksSinceGo,deltaTicks)">
+			trace("EVENT: DigitoLeftUpward" + "(" + ticksSinceGo + "," + deltaTicks + ")");
+			resetActivityTimer();
+		</script>
+		
+		<script for="Kinetics" event="DigitoRightDownward(ticksSinceGo,deltaTicks)">
+			trace("EVENT: DigitoRightDownward" + "(" + ticksSinceGo + "," + deltaTicks + ")");
+			resetActivityTimer();
+		</script>
+		
+		<script for="Kinetics" event="DigitoRightUpward(ticksSinceGo,deltaTicks)">
+			trace("EVENT: DigitoRightUpward" + "(" + ticksSinceGo + "," + deltaTicks + ")");
+			resetActivityTimer();
+		</script>		
+				
+		<script for="Kinetics" event="CapsitLeftDown(ticksSinceGo)">
+			resetActivityTimer();
+			capsitLeft(true, ticksSinceGo); 						
+		</script>
+
+		<script for="Kinetics" event="CapsitLeftUp(ticksSinceGo)">
+			capsitLeft(false, ticksSinceGo);  
+		</script>
+		
+		<script for="Kinetics" event="CapsitRightDown(ticksSinceGo)">
+			resetActivityTimer();
+			capsitRight(true, ticksSinceGo); 		
+		</script>
+		
+		<script for="Kinetics" event="CapsitRightUp(ticksSinceGo)">
+			capsitRight(false, ticksSinceGo);
+		</script>		
+								
+		<script for="Kinetics" event="PegsMap(ticksSinceGo,pegsInLeft,pegsInRight)">
+			trace("EVENT: PegsMap" + "(" + ticksSinceGo + "," + pegsInLeft + "," + pegsInRight + ")");
+
+			// easter egg
+			if ((pegsInLeft == 170) && (pegsInRight == 85))
+			{
+				parent.frames["viewframe"].location = "HTML/about.html";
+			}
+			
+			resetActivityTimer();
+			
+			// save the pegs for later
+			lastPegsInLeft = pegsInLeft;
+			lastPegsInRight = pegsInRight;
+					
+			// if we're in the pegboard test
+			if (currentTest == "PEG" && ! is_pegs_filled )
+			{
+				if (pegsInLeft == 255 && pegDirection == "left")
+				{
+					is_pegs_filled = true;
+					the_view_frame.allPegsMoved("right");
+				}
+				else if (pegsInRight == 255 && pegDirection == "right")
+				{
+					is_pegs_filled = true;
+					the_view_frame.allPegsMoved("left");
+				}
+			}
+
+			// if we're on the "setup right side pegs" screen
+			if (currentTest == "NOPEGSRIGHT")
+			{
+				// if all 8 show up on the right
+				if (isPegsReady(pegsInRight))
+				{	
+					parent.frames["viewframe"].pegsReady();
+				}
+				
+				// tell the other frame if a peg just went in
+				for (i=9; i<17; i++)
+				{
+					if( pegIsIn(i) )
+					{
+						parent.frames["viewframe"].pegIn(i);
+					}
+				    else
+					{
+						parent.frames["viewframe"].pegOut(i);
+					}
+				}
+			}
+
+			// if we're on the "setup left side pegs" screen
+			if (currentTest == "NOPEGSLEFT")
+			{
+				// if all 8 show up on the left
+				if (isPegsReady(pegsInLeft))
+				{	
+					parent.frames["viewframe"].pegsReady();
+				}
+				
+				// tell the other frame if a peg just went in
+				for (i=1; i<9; i++)
+				{
+					if ( pegIsIn(i) )
+					{
+						parent.frames["viewframe"].pegIn(i);
+					}
+				    else
+					{
+						parent.frames["viewframe"].pegOut(i);
+					}
+				}
+			}
+
+		</script>		
+
+		<script for="Kinetics" event="SimWatchSaveProgress(percent)">
+			trace("EVENT: SimWatchSaveProgress(" + percent + ")");
+		</script>	
+		
+		<script for="Kinetics" event="AudioPlayEnded(endCauseID)">
+			trace("EVENT: AudioPlayEnded(" + endCauseID + ")");
+			Audio.stopEvent();
+			if( waitingToStartRight )
+			{
+				waitingToStartRight = false;
+				the_view_frame.startRight();
+			}
+			else if( waitingToStartLeft )
+			{
+				waitingToStartLeft = false;
+				the_view_frame.startLeft();
+			}
+		</script>		
+		
+		<script for="Kinetics" event="ActivityEnded()">
+			trace("EVENT: ActivityEnded()");
+		</script>	
+		
+		<script for="Kinetics" event="LidMoved(isOpen)">
+			trace("EVENT: LidMoved()");
+			if (isOpen > 0)
+			{
+				Kinetics.SetBacklightPower(1);
+				LidIsOpen = true;
+			}
+			else
+			{
+				Kinetics.SetBacklightPower(0);
+				LidIsOpen = false;
+			}
+		</script>		
+		
+		<script for="Kinetics" event="WatchVisible(isVisible)">
+			trace("EVENT: WatchVisible(" + isVisible + ")");
+
+			resetActivityTimer();
+				
+			if (isVisible) 
+			{
+				watchVisible = true;
+				ActiwatchFailed = false;
+				ActiwatchBusy = false;	
+			}
+			else
+			{ 
+				watchVisible = false;
+				if (ActiwatchBusy == true)
+				{
+					Kinetics.SetWatchPower(0);		
+					ActiwatchFailed = true;
+					ActiwatchBusy = false;				
+					Kinetics.AssertWrite("xxx", "0", "actiwatch undocked while busy!");
+				}
+			}
+
+		</script>
+
+		<script for="Kinetics" event="WatchParametersRead(endCauseID)">
+			trace("EVENT: WatchParametersRead(" + endCauseID + ")");
+//Kinetics.AssertWrite("xxx", "0", "actiwatch parameters read: " + endCauseID);
+
+			if (endCauseID == 0)
+			{
+				ActiwatchFailed = false;
+				ActiwatchBusy = true;
+			}
+			else
+			{
+				Kinetics.AssertWrite("xxx", "0", "Error reading actiwatch params: " + endCauseID);
+				Kinetics.SetWatchPower(0);		
+				setTimeout( "PowerUpWatch()", 1000);
+				ActiwatchBusy = false;
+				ActiwatchFailed = true;
+			}
+			
+			ActiwatchSaveComplete = false;
+			
+		</script>
+
+		<script for="Kinetics" event="WatchSaveProgress(percent)">
+			trace("EVENT: WatchSaveProgress(" + percent + ")");
+
+			// if the actiwatch-saving screen is loaded in the view frame
+			if (ActiwatchSaving == true)
+				parent.frames["viewframe"].updateProgress(percent);
+			
+		</script>		
+
+		<script for="Kinetics" event="WatchSaveEnded(endCauseID)">
+			trace("EVENT: WatchSaveEnded(" + endCauseID + ")");
+
+			ActiwatchBusy = false;
+			
+			if (endCauseID == 0)
+			{
+				ActiwatchFailed = false;
+				ActiwatchSaveComplete = true;
+				
+//Kinetics.AssertWrite("xxx", "0", "actiwatch success saving");
+			}
+			else
+			{
+				Kinetics.SetWatchPower(0);		
+				ActiwatchFailed = true;				
+				Kinetics.AssertWrite("xxx", "0", "actiwatch error saving: " + endCauseID);
+			}
+			
+		</script>					
+
+		<script for="Kinetics" event="WatchDataDestroyEnded(endCauseID)">
+			trace("EVENT: WatchDataDestroyEnded(" + endCauseID + ")");	
+//Kinetics.AssertWrite("xxx", "0", "actiwatch data destroy ended");
+			Kinetics.SetWatchPower(0);		
+			parent.frames["viewframe"].location = "HTML/actiwatch-done.html";	
+		</script>	
+				
+		<script for="Kinetics" event="AudioRecordProgress(maxVolume,secondsRecorded)">
+			trace("EVENT: AudioRecordProgress(" + maxVolume + "," + secondsRecorded + ")");		
+				if ((currentTest == "AHH") || (currentTest == "TALKING"))
+				{
+					if (secondsRecorded > 0)
+					{
+						parent.frames["viewframe"].volume(true);						
+					}																
+				}
+				resetActivityTimer();
+		</script>
+				
+		<script for="Kinetics" event="AudioRecordEnded(endCauseID)">
+			trace("EVENT: AudioRecordEnded(" + endCauseID + ")");				
+				if ((currentTest == "AHH") || (currentTest == "TALKING"))
+				{
+					parent.frames["viewframe"].doneRecording();						
+				}														
+		</script>
+		
+		<script for="Kinetics" event="SessionEnded(endCauseID)">
+			trace("EVENT: SessionEnded(" + endCauseID + ")");				
+			
+			if (endCauseID == 0)	
+			{
+				parent.frames["viewframe"].location = "HTML/session-done.html";	
+			}
+			else
+			{
+				Kinetics.AssertWrite("xxx", "0", "session ended with error: " + endCauseID);
+				parent.frames["viewframe"].location = "HTML/session-timeout.html";						
+			}
+				
+		</script>
+		
+		<script for="Kinetics" event="DataStoreVisible(newState) ">
+			trace("EVENT: DataStoreVisible(" + newState + ")");				
+						
+			if (newState == 0)
+			{
+				if ( waitingForStorageRemoval == true)
+					parent.frames["viewframe"].location = "HTML/storage-remove.html";		
+				else
+					parent.frames["viewframe"].location = "HTML/storage-missing.html";		
+			}
+			
+			if (newState == 1)
+			{
+				if ( waitingForStorageInsert == true)
+					parent.frames["viewframe"].location = "HTML/storage-uploaded.html";
+				else
+					Kinetics.Reboot();			
+			}			
+
+			if (newState == 2)
+			{
+				parent.frames["viewframe"].location = "HTML/storage-invalid.html";
+			}			
+
+		</script>
+		
+		
+		
+	</head>
+	<body onload="init();" onFocus="the_view_frame.focus();" topmargin="5">
+
+		<!-- embedded kinetics activex control  -->
+		<script language="javascript">
+		var useragent = navigator.userAgent;
+		if (useragent.indexOf("Windows NT") != -1)
+			document.write('<object id="Kinetics" width="1" height="1" classid="CLSID:4C4A7336-DDB7-4DE3-8E21-BFEA4DEB634E" tabindex="-1"></object>');
+		else
+			document.write('<object id="Kinetics" width="1" height="1" classid="CLSID:198CD931-4467-4B5F-8141-286991CC4601" tabindex="-1"></object>');
+		</script>
+		
+		<!-- for trace output -->	
+		<b>Trace output:</b><br/>
+		<input name="traceoutput" size="50" style="font-size:11px;" ID="traceoutput" style="border:0px;" tabindex="-1">
+		
+		<!-- interface to simulate events -->
+		<p><table border="0" width=300>
+		<tr>
+			<td valign="top">
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg1" NAME="peg1" tabindex="-1"><br>		
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg2" NAME="peg2" tabindex="-1"><br>			
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg3" NAME="peg3" tabindex="-1"><br>			
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg4" NAME="peg4" tabindex="-1"><br>			
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg5" NAME="peg5" tabindex="-1"><br>			
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg6" NAME="peg6" tabindex="-1"><br>		
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg7" NAME="peg7" tabindex="-1"><br>		
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg8" NAME="peg8" tabindex="-1"><br>		
+			</td>
+			<td valign="top" style="padding-right:20px;">
+				<table border="0" width="100%">
+					<tr>
+						<td valign="top" align="left">
+							<input type="image" src="HTML/images/debug-button.gif" onmousedown="Kinetics.SimCapsitLeftDown(0);" onmouseup="Kinetics.SimCapsitLeftUp(0);" ID="Image1" NAME="Image1" tabindex="-1">
+						</td>
+						<td valign="top" align="right">
+							<input type="image" src="HTML/images/debug-button.gif"  onmousedown="Kinetics.SimCapsitRightDown(0);" onmouseup="Kinetics.SimCapsitRightUp(0);" ID="Image2" NAME="Image2" tabindex="-1">
+						</td>
+					</tr>
+					<tr>
+						<td valign="top" align="right">
+							<input type="image" src="HTML/images/debug-key.gif" value="down" onmousedown="Kinetics.SimDigitoLeftDownward(0,0);" onmouseup="Kinetics.SimDigitoLeftUpward(0,0);" tabindex="-1">
+						</td>
+						<td valign="top" align="left">	
+							<input type="image" src="HTML/images/debug-key.gif" value="down" onmousedown="Kinetics.SimDigitoRightDownward(0,0);" onmouseup="Kinetics.SimDigitoRightUpward(0,0);" tabindex="-1">
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td valign="top">
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg9" NAME="peg9" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg10" NAME="peg10" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg11" NAME="peg11" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg12" NAME="peg12" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg13" NAME="peg13" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg14" NAME="peg14" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg15" NAME="peg15" tabindex="-1">	<br>	
+				<input type="checkbox" value="0" onclick="simPegsMoved();" ID="peg16" NAME="peg16" tabindex="-1">	<br>	
+			</td>
+		</tr>
+		</table>
+		
+		<br/>
+		
+		<p><b>Tremorwatch:</b><br>
+		<input type="button" class="button" value="power on" onclick="Kinetics.SetWatchPower(1)" tabindex="-1">
+		<input type="button" class="button" value="power off" onclick="Kinetics.SetWatchPower(1)" tabindex="-1">
+		<input type="button" class="button" value="visible" onclick="Kinetics.SimWatchVisible(1)" tabindex="-1">
+		<input type="button" class="button" value="not visible" onclick="Kinetics.SimWatchVisible(0)" tabindex="-1">
+
+		<p><b>Storage:</b><br>
+		<input type="button" class="button" value="removed" onclick="Kinetics.SimDataStoreVisible(0)" tabindex="-1">
+		<input type="button" class="button" value="inserted" onclick="Kinetics.SimDataStoreVisible(1)" tabindex="-1">
+		<input type="button" class="button" value="not valid" onclick="Kinetics.SimDataStoreVisible(2)" tabindex="-1">
+		
+		
+		<!-- static links to pages for development purposes -->
+		<p><b>Manually Jump To:</b><br/>
+		<select name="jumper" onchange="jumpTo(this.value);" ID="Select1" tabindex="-1">
+			<option value="script.html" style="color:black">---general screens</b>
+			<option value="HTML/login.html" style="color:#666666;">device locked
+			<option value="HTML/login-wrong.html" style="color:#666666;">login wrong
+			<option value="HTML/home.html" style="color:#666666;">home
+			<option value="HTML/testwarning.html" style="color:#666666;">test warning
+		
+			<option value="script.html" style="color:black">---introduction</b>
+			<option value="HTML/intro1.html" style="color:#666666;">intro 1
+			<option value="HTML/intro2.html" style="color:#666666;">intro 2
+			<option value="HTML/intro3.html" style="color:#666666;">intro 3
+			<option value="HTML/intro4.html" style="color:#666666;">intro 4
+			<option value="HTML/intro5.html" style="color:#666666;">intro 5
+			
+			<option value="script.html" style="color:black">---questions 			
+			<option value="HTML/questions1.html" style="color:#666666;">how ill are you?
+			<option value="HTML/questions2.html" style="color:#666666;">are you feeling better or worse?
+			<option value="HTML/questions3.html" style="color:#666666;">how much better?
+			<option value="HTML/questions4.html" style="color:#666666;">how much worse?
+
+			<option value="script.html" style="color:black;">---peg test 
+			<option value="HTML/peg-nopegs-right.html" style="color:#666666;">setup right pegs
+			<option value="HTML/peg-nopegs-left.html" style="color:#666666;">setup left pegs
+			<option value="HTML/peg-intro.html" style="color:#666666;">intro
+			<option value="HTML/peg-demo.html" style="color:#666666;">instructions
+			<option value="HTML/peg-pretest.html" style="color:#666666;">pre-test
+			<option value="HTML/peg-test.html" style="color:#666666;">test
+			
+			<option value="script.html" style="color:black">---tap test 
+			<option value="HTML/tap-intro.html" style="color:#666666;">intro
+			<option value="HTML/tap-demo.html" style="color:#666666;">instructions
+			<option value="HTML/tap-pretest.html" style="color:#666666;">pre-test
+			<option value="HTML/tap-test.html" style="color:#666666;">test
+			
+			<option value="script.html" style="color:black">---reaction test 
+			<option value="HTML/reaction-intro.html" style="color:#666666;">intro
+			<option value="HTML/reaction-demo.html" style="color:#666666;">instructions
+			<option value="HTML/reaction-pretest.html" style="color:#666666;">pre-test
+			<option value="HTML/reaction-test.html" style="color:#666666;">test
+			
+			<option value="script.html" style="color:black">---keyboard test 
+			<option value="HTML/keys-intro.html" style="color:#666666;">intro
+			<option value="HTML/keys-demo.html" style="color:#666666;">instructions 
+			<option value="HTML/keys-pretest.html" style="color:#666666;">pre-test 
+			<option value="HTML/keys-test.html" style="color:#666666;">test 
+			
+			<option value="script.html" style="color:black">---tremorwatch 
+			<option value="HTML/actiwatch-demo.html" style="color:#666666;">instructions 
+			<option value="HTML/actiwatch-skipped.html" style="color:#666666;">skip docking 
+			<option value="HTML/actiwatch-docked.html" style="color:#666666;">tremorwatch docked
+			<option value="HTML/actiwatch-failed.html" style="color:#666666;">tremorwatch failed 
+			<option value="HTML/actiwatch-saving.html" style="color:#666666;">tremorwatch saving 
+			<option value="HTML/actiwatch-remember.html" style="color:#666666;">tremorwatch remember 
+			<option value="HTML/actiwatch-done.html" style="color:#666666;">tremorwatch done 
+		
+			<option value="script.html" style="color:black">---voice test 
+			<option value="HTML/voice-intro.html" style="color:#666666;">intro
+			<option value="HTML/voice-pretest.html" style="color:#666666;">pre-test
+			<option value="HTML/voice-ahh.html" style="color:#666666;">ahh 1
+			<option value="HTML/voice-ahh2.html" style="color:#666666;">ahh 2
+			<option value="HTML/voice-ahh3.html" style="color:#666666;">ahh 3
+			<option value="HTML/voice-talking.html" style="color:#666666;">talking test 1
+			<option value="HTML/voice-talking2.html" style="color:#666666;">talking test 2
+			<option value="HTML/voice-ahh6.html" style="color:#666666;">ahh 6
+			<option value="HTML/voice-ahh7.html" style="color:#666666;">ahh 7
+			<option value="HTML/voice-ahh8.html" style="color:#666666;">ahh 8
+	
+			<option value="script.html" style="color:black">---storage 
+			<option value="HTML/storage-full.html" style="color:#666666;">storage device full
+			<option value="HTML/storage-remove.html" style="color:#666666;">storage remove
+			<option value="HTML/storage-uploaded.html" style="color:#666666;">storage uploaded
+	
+			<option value="script.html" style="color:black">---session 
+			<option value="HTML/session-done.html" style="color:#666666;">session done
+			<option value="HTML/session-saving.html" style="color:#666666;">session saving
+			<option value="HTML/session-timeout.html" style="color:#666666;">session timeout
+	
+		</select>		
+
+		<!-- interface to play/test audio -->
+		<p><b>Audio:</b><br/>
+		<input type="button" value="test" class="button" onclick="Audio.start('\\hard disk\\audio\\misc\\excellent.wav')" ID="Button1" NAME="Button1" tabindex="-1">
+		<input type="button" value="stop" class="button" onclick="Audio.stop()" style="width:50px;" ID="Button2" NAME="Button2" tabindex="-1">		
+		<input type="button" value="beep" class="button" onclick="Kinetics.ActivityBeep()" style="width:50px;" ID="Button3" NAME="Button3" tabindex="-1">		
+									
+	</body>
+	
+	<script language="javascript">
+
+
+
+	</script>
+
+</html>

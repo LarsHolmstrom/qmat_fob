@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Questionnaire</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+
+
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+		menuItems = 1;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "session-saving.html";	
+
+
+		function init()
+		{
+			
+			Kinetics.SetLedState(2,0);
+			Kinetics.SetLedState(3,0);
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			menuSelect(1);
+			parent.frames["scriptframe"].ActiwatchSkipped = true;		
+		}
+
+
+		</script>
+				
+	</head>
+	<body onload=="init();focus()" onkeydown="keyDown()">
+		<div id="header" class="header">
+			Tremorwatch Error
+		</div>
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 35px; top:50px; width:260px; height:130px;">
+			There appears to be a serious problem with your Tremorwatch.  Please 
+			contact your doctor to report this problem and get instructions.
+			
+			<div id="questions" style="position: absolute; left: 55; top:105;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="80">Continue</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+	</body>
+</html>

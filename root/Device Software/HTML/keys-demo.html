@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Keyboarding Test Demo</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		var handkeys, handkeysleft, handtkeysright, i, handpos, oldhandpos;
+		handkeys = new Image(); 
+		handkeys.src = "images/hand-keys.gif"; 
+		handkeysleft = new Image(); 
+		handkeysleft.src = "images/hand-keys-left.gif";
+		handkeysright = new Image(); 
+		handkeysright.src = "images/hand-keys-right.gif";
+		handpos = 11;
+		oldhandpos = -2;
+		i = 1;
+
+		function moveside(spot,target)
+		{
+			if (spot<target)
+			{
+			moveright(spot, target);
+			}
+
+			else if (spot>target)
+			{
+			moveleft(spot, target);
+			}
+		}
+
+		function moveright(spot, target)
+		{
+		var picture=hand.style;
+			if (spot<target)
+			{
+				picture.left= spot;
+				spot+=3;
+				setTimeout('moveright('+spot+', '+target+')',10);
+			}      
+
+		}
+
+		function moveleft(spot, target)
+		{
+		var picture=hand.style;
+			if (spot>target)
+			{
+				picture.left= spot;
+				spot-=3;
+				setTimeout('moveleft('+spot+', '+target+')',10);
+			}      
+
+		}
+
+		function movetop(spot,target)
+		{
+			if (spot<target)
+			{
+			moveup(spot, target);
+			}
+
+			else if (spot>target)
+			{
+			movedown(spot, target);
+			}
+		}
+
+		function moveup(spot, target)
+		{
+		var picture=hand.style;
+			if (spot<target)
+			{
+				picture.top= spot;
+				spot+=2;
+				setTimeout('moveup('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				//this.window.location = "keys-intro.html";
+			}
+		}
+
+		function movedown(spot, target)
+		{
+		var picture=hand.style;
+			if (spot>target)
+			{
+				picture.top= spot;
+				spot-=4;
+				setTimeout('movedown('+spot+', '+target+')',10);
+			}      
+			else
+			{
+				picture.top= target;
+				setTimeout('handchange(2)', 5000);
+				setTimeout('handchange(1)', 9000);
+				setTimeout('tap()', 11000);
+			}
+
+		}
+
+
+		function instantmoveside(divname, newplace)
+		{
+			divname.style.left=newplace;
+		}
+
+		function instantmovetop(divname, newplace)
+		{
+			divname.style.top=newplace;
+		}
+
+		function handchange(handstatus)
+		{
+			if (handstatus==0)
+			{
+			handimg.src=handkeys.src
+			}
+
+			else if (handstatus==1)
+			{
+			handimg.src=handkeysleft.src
+			}
+
+			else if (handstatus==2)
+			{
+			handimg.src=handkeysright.src
+			}
+		}
+
+		function tapper()
+		{
+			i=1;
+			setTimeout('movedown(240, 113)', 5000);
+		}
+
+		function tap()
+		{
+			if (i<20)
+			{
+			setTimeout('handchange(2)',100);
+			setTimeout('handchange(1)',1100);
+			i++;
+			setTimeout('tap()',2000);
+			}
+			else
+			{
+				handchange(0);
+				moveup(113, 240);
+			}
+		}
+
+		// local (this page) event handler for keydown
+		function keyDownLocal()
+		{	
+			parent.frames["scriptframe"].resetActivityTimer();
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.location = "keys-intro.html";
+			}
+
+			// enter key
+			if (event.keyCode == 13)
+			{			
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+				location = "keys-intro.html?quiet";
+			}
+		}
+			
+		// start the animation and audio
+		function init()
+		{
+			tapper();
+			
+			// tell the control to play the instruction audio
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\keyboard\\keyboard_instructions.wav");
+			
+			// redirect back to the test intro page after the audio
+			setTimeout("location='keys-intro.html?quiet'",30000);
+			
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+						
+			focus();
+			
+		}
+	
+
+		
+		</script>
+	</head>
+	<body class="hands" onload="init()" onkeydown="keyDownLocal()">
+		<div id="device" class="device">
+			<img src="images/device.gif">
+		</div>
+
+
+		<div id="hand" style="position: absolute; left: 127px; top:240px;">
+			<img name="handimg" src="images/hand-keys.gif">
+		</div>
+		<div id="header" class="header">
+			<a href="javascript:tapper()">Keyboard Test</a>
+		</div>
+	</body>
+</html>

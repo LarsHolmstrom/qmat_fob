@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Keyboarding Test</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+						
+		// TODO: make constants for all tests in contants.js
+		// TODO: swap out the hardcoded timeout for in between tests
+		//       to use ACTIVITY_SPACING_TIME in constants.js
+				
+		parent.frames["scriptframe"].currentTest = "KEYBOARD";
+		
+		var countRight = 0;
+		var countLeft = 0;
+
+		function init()
+		{
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			readyRight();
+
+		}
+
+		function resetActivityTimer()
+		{
+			// do nothing here in the event a capsit button is pressed	
+		}
+			
+		// prepare for right hand
+		function readyRight()
+		{
+			debugdiv.innerText = "right: " + countRight;
+			
+			// first round
+			if (countRight == 0)
+			{
+				header.innerText = "Keyboard Test - Round " + eval(countRight + 1) + " of 2";
+				panel.style.paddingTop = 0;
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			
+				Kinetics.ActivityEndNormal();
+				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+			
+				setTimeout('startRight()',WAIT_GET_READY_DELAY);
+			}
+
+			// second round, eyes closed
+			if (countRight == 1)
+			{
+				header.innerText = "Keyboard Test - Round " + eval(countRight + 1) + " of 2";
+				panel.style.paddingTop = 0;
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			
+				Kinetics.ActivityEndNormal();
+				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard_right_eyes_closed.wav");
+			
+				setTimeout('startRight()',14000);			
+			}
+			
+			// both rounds done
+			if (countRight == 2)
+			{
+				Kinetics.ActivityEndNormal();	
+				endTest();
+			}			
+		}
+
+		// prepare for left hand
+		function readyLeft()
+		{
+
+			debugdiv.innerText = "left: " + countLeft;
+			
+			// first round
+			if (countLeft == 0)
+			{
+				header.innerText = "Keyboard Test - Round " + eval(countLeft + 1) + " of 2";
+				panel.style.paddingTop = 0;
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			
+				Kinetics.ActivityEndNormal();
+				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\keyboard\\repeat_left_begin_at_beep_get_ready.wav");
+			
+				setTimeout('startLeft()',7000);
+			}
+
+			// second round, eyes closed
+			if (countLeft == 1)
+			{
+				header.innerText = "Keyboard Test - Round " + eval(countLeft + 1) + " of 2";
+				panel.style.paddingTop = 0;
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			
+				Kinetics.ActivityEndNormal();
+				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\keyboard\\keyboard_left_eyes_closed.wav");
+			
+				setTimeout('startLeft()',14300);			
+			}
+			
+		}
+				
+		// begin test with right hand
+		function startRight()
+		{
+			countRight++;
+			panel.style.paddingTop = 12;
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
+			
+			if (countLeft < 1)
+			{
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Right Hand<br>Test In Progress';",2000);
+				Kinetics.ActivityStart(1);
+			}
+			else
+			{
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
+				Kinetics.ActivityStart(1);
+				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
+			}
+			
+			setTimeout('stopRight()',KEY_TIMEOUT);
+		}
+		
+		// begin test with left hand
+		function startLeft()
+		{
+			countLeft++;
+			panel.style.paddingTop = 12;
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
+			
+			if (countLeft < 2)
+			{
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Left Hand<br>Test In Progress';",2000);
+				Kinetics.ActivityStart(1);
+			}
+			else
+			{
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
+				Kinetics.ActivityStart(1);
+				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
+			}
+			
+
+			setTimeout('stopLeft()',KEY_TIMEOUT);
+		}
+		
+		// stop right
+		function stopRight()
+		{
+			Kinetics.MaskWithNoise = 0;								
+			
+			if (countRight > 1)		
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
+			else
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\stop.wav");	
+				
+			panel.style.paddingTop=12;
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
+			
+			if (countRight > 1)
+				setTimeout('readyLeft()',6000);
+			else
+				setTimeout('readyLeft()',ACTIVITY_SPACING_TIME); 			
+		}
+		
+		// stop left
+		function stopLeft()
+		{
+			Kinetics.MaskWithNoise = 0;								
+			
+			if (countLeft > 1)		
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
+			else
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\stop.wav");	
+					
+			panel.style.paddingTop=12;
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";			
+					
+			if (countLeft > 1)
+				setTimeout('readyRight()',6000);
+			else
+				setTimeout('readyRight()',ACTIVITY_SPACING_TIME); 	
+		}
+				
+		// after three rounds
+		function endTest()
+		{
+			header.innerText = "Keyboard Test - Complete";
+			panel.style.paddingTop=0;
+			panel.innerHTML = "&nbsp;&nbsp;Keyboard Test<br>&nbsp;&nbsp;Complete";
+			parent.frames["scriptframe"].currentTest = "";
+			setTimeout("location='actiwatch-demo.html';",5000);
+		}
+		
+		// return to home screen for now (temporary for demo purposes)
+		function keyDownLocal()
+		{
+			parent.frames["scriptframe"].resetActivityTimer();
+			// m key (menu)
+			if (event.keyCode == 77)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				window.location = "debug-menu.html";
+			}
+		}
+
+	</script>
+				
+	</head>
+	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+		<div id="device" class="device">
+			<img src="images/device.gif">
+		</div>
+		<div id="header" class="header">
+			Keyboard Test - Round 1 of 1
+		</div>
+		<div id="bluebg" style="position: absolute; left: 0; top:0;">
+			<img src="images/halfblue.gif">
+		</div>
+		<div id="boundingboxtest" class="boundingboxtest" style="top:85">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td><img src="images/boundingbox-topleft.gif"></td>
+				<td width="100" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td height="60" background="images/boundingbox-left.gif"></td>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="60" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td><img src="images/boundingbox-bottomleft.gif"></td>
+				<td width="100" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="panel" class="inprogress">
+			
+		</div>
+		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
+			blah
+		</div>
+	</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head> 
+		<title>Voice - Talking</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+	
+		parent.frames["scriptframe"].currentTest = "TALKING";
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		var volumeTimer;
+		
+		function init()
+		{
+			parent.frames["scriptframe"].resetActivityTimer();
+		
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			// get the last pic index
+			var photoIndex = eval(Kinetics.NVParameterRead("NextPictureIndex",0))+1;
+			
+			// in case we've loaded all the photos already
+			if (photoIndex < 44)
+			{
+				Kinetics.NVParameterWrite("NextPictureIndex",photoIndex+"");
+			}
+			else
+			{
+				photoIndex = 1;
+				Kinetics.NVParameterWrite("NextPictureIndex","1");
+			}
+			
+			document.photo.src = "../../hard disk/voicepics/"+photoIndex+".jpg";
+		
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\voice\\look_at_picture_tell_story.wav");
+			
+			setTimeout("readyToRecord()",13600);			
+		}
+
+		function readyToRecord()
+		{
+			Kinetics.ActivityConfig(4, "TALKING1", 0, 0);			
+			Kinetics.ActivityStart(1);
+			volume(true);
+
+			Kinetics.RecStartTimeoutS = 30;   
+			Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
+			Kinetics.AudioRecord(0, VOICE_TALK_FIXED_TIMEOUT);  
+		}
+		
+		// called from the script frame when progress event fires, or from local timer no events have come for a while
+		function volume(b)
+		{
+			var el = document.getElementById("recording");
+			
+			if (b == true)
+			{
+				el.style.color = "maroon";
+				el.style.left = 225;
+				el.innerHTML = "Recording";
+			}
+			else
+			{
+				el.style.color = "A4B5C9";
+				el.style.left = 200;
+				el.innerHTML = "Not Recording";
+			}
+		}		
+		
+		// called from the script when audio recording is done (based on volume or timeout)
+		function doneRecording()
+		{
+			Kinetics.ActivityEndNormal();		
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\stop.wav");
+			
+			innerbody.innerHTML = "";
+			photodiv.style.visibility = "hidden";
+			stopdiv.style.visibility = "visible";
+			
+			// delay so the stop audio doesn't step over the intro audio on the next screen
+			setTimeout('location="voice-talking2.html"',2000);
+		}
+		
+		function keyDownLocal()
+		{
+			// placeholder
+		}
+		
+		</script>
+
+	</head>
+	<body onload="focus();init();" onkeydown="keyDownLocal()">
+		<div id="header" class="header">
+			Talking Test
+		</div>
+		<div id="recording" style="position: absolute; left: 200; top: 9px; font-family: Arial Narrow; font-size: 13pt; font-weight: bold;	color: #A4B5C9;">
+			Not Recording
+		</div>
+		
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:33px; width:270px; height:130px;">
+			<font class="boldgrey10">Tell a story about this until instructed to stop.</font>
+		</div>
+		<div id="photodiv" style="position: absolute; left: 30px; top:53px;">
+			<img src="images/illus-talking.gif" id="photo" name="photo">
+		</div>	
+		<div id="stopdiv" class="inprogress" style="visibility:hidden;left:120;top:110;font-size:28px;color:maroon;">
+			STOP
+		</div>					
+	</body>
+</html>

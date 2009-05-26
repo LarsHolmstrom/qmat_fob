@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Menu Template</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />
+		
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		// menu setup
+		menuItems = 5;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "http://www.google.com";
+		links[2] = "http://www.google.com";
+		links[3] = "http://www.google.com";
+		links[4] = "http://www.google.com";
+		links[5] = "http://www.google.com";
+				
+		</script>
+		
+	</head>
+	<body onload="focus();menuSelect(1)" onkeydown="keyDown()">
+		<div id="header" class="header">
+			Menu Template
+		</div>
+		<div id="boundingbox" class="boundingbox">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
+				<tr>
+					<td><img src="images/boundingbox-topleft.gif"></td>
+					<td width="260" height="14" background="images/boundingbox-top.gif"></td>
+					<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+					<td height="150" background="images/boundingbox-left.gif"></td>
+					<td background="images/boundingbox-bg.gif"></td>
+					<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+					<td><img src="images/boundingbox-bottomleft.gif"></td>
+					<td width="250" height="14" background="images/boundingbox-bottom.gif"></td>
+					<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="menu" style="position: absolute; left: 30px; top:67px;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="100">One</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="100">Two</td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m3-left"></td>
+					<td class="menu-mid"	id="m3-mid" width="100">Three</td>
+					<td class="menu-right"	id="m3-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m4-left"></td>
+					<td class="menu-mid"	id="m4-mid" width="100">Four</td>
+					<td class="menu-right"	id="m4-right"></td>
+				</tr>								
+				<tr>
+					<td class="menu-left"	id="m5-left"></td>
+					<td class="menu-mid"	id="m5-mid" width="100">Five</td>
+					<td class="menu-right"	id="m5-right"></td>
+				</tr>				
+			</table>
+		</div>
+		
+	</body>
+</html>
