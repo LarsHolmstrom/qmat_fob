@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Keyboarding Test Intro</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+	
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+        parent.frames["scriptframe"].currentTest = "";
+			
+		// menu setup
+		menuItems = 2;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 2;		
+		
+		// links specific to this page
+		links[1] = "foot-demo.html";
+		links[2] = "foot-test.html"; 	
+				
+		// local handler for help (or "do over" button)
+		function keyDownLocal()
+		{
+			// h key (help)
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					window.location = "debug-menu.html";
+				}
+				else
+				{
+					window.location = "foot-intro.html";
+				}
+			}
+		}
+						
+		// initialize menu and play audio (if applicable)	
+		function init()
+		{
+			menuSelect(1);			
+			
+			// don't replay the intro audio if we're coming from the instructions page
+			var url = String(window.location);
+			if (url.indexOf("quiet") == -1)
+			{			
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\foottapping\\foot-tapping-intro.wav");
+            	setTimeout("location='foot-demo.html'",2500);	
+                Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0);
+			}	
+			else
+			{
+                document.getElementById("lower_sidebar").style.visibility = 'visible';
+                document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
+				document.getElementById("upper_sidebar").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';			
+				Kinetics.SetLedState(5,1);
+				Kinetics.SetLedState(6,1);
+				menuSelect(2);				
+			}
+
+						
+		}
+						
+		</script>
+	</head>
+	<body class="hands" onload="focus();init();" onkeydown="keyDownLocal();keyDown();">
+		<div id="animation" style="position: absolute; left: 0px; top:37px;">
+            <img src="images/foot-tapping.gif">
+        </div>
+		<div id="upper_sidebar" class="sidebar" style="position: absolute; left: 168px; top:10px; visibility:hidden;">
+			<img src="images/sidebar_short.gif" height="55">
+		</div>
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:72px; visibility:hidden;">
+            <img src="images/sidebar_med.gif" height="150">
+        </div>
+		<div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 155px; top:85px; font-size:10pt; visibility:hidden;">
+		<ul>
+            <li>Place the ear muffs over your ears</li>
+            <li>Keep your eyes closed during the test</li>
+            <li>Each foot will be tested for 45 seconds</li>
+        </ul>
+        </div>
+		<div id="header" class="header">
+			Foot Tapping Test
+		</div>
+		<div id="Buttons" style="position: absolute; left: 176px; top:12px; visibility:hidden;">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="82">Instructions</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>
+				<tr>
+					<td class="menu-left"	id="m2-left"></td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
+					<td class="menu-right"	id="m2-right"></td>
+				</tr>				
+			</table>
+		</div>
+	</body>
+</html>

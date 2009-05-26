@@ -32,7 +32,11 @@
 			
 			Kinetics.RecStartTimeoutS = 50;   
 			Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
-			Kinetics.AudioRecord(3, VOICE_AHH_FIXED_TIMEOUT);   
+			Kinetics.AudioRecord(0, VOICE_AHH_FIXED_TIMEOUT);   
+			            
+            var el = document.getElementById("recording");
+            el.style.color = "maroon";
+            el.innerHTML = "Recording";
 		}
 		
 		// called from the script frame when progress event fires, or from local timer no events have come for a while
@@ -65,7 +69,9 @@
 		function doneRecording()
 		{
 			Kinetics.ActivityEndNormal();
-			location = "HTML\\voice-ahh3.html";
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\stop.wav");
+			setTimeout("location = 'voice-ahh3.html'",2000);
 		}
 		
 		function keyDownLocal()
@@ -75,9 +81,9 @@
 		
 		</script>
 	</head>
-	<body onload="init();focus()" onkeydown="keyDownLocal()">
+	<body onload="init();focus();" onkeydown="keyDownLocal()">
 		<div id="header" class="header">
-			Ahh Test - Round 2 of 3
+			Ahh Test - Round 2 of 4
 		</div>
 		<div id="boundingbox-questions" class="boundingbox-questions">
 			<table border="0" cellpadding="0" cellspacing="0">
@@ -96,7 +102,7 @@
 			</table>
 		</div>
 		<div id="innerbody" style="position: absolute; left: 30px; top:40px; width:250px; height:130px;">
-			<font class="boldgrey10">At the tone, take a deep breath, sit up straight, and say “Ahhh” for as long as you can. </font>
+			<font class="boldgrey10">Once again, when you hear the tone, take a deep breath, sit up straight, and say “Ahhh” for as long as you can. </font>
 		</div>
 		<div id="photo" style="position: absolute; left: 25px; top:115px;">
 			<table border=0 width="250" ID="Table1">

@@ -71,6 +71,22 @@
 			setTimeout('jsClock()',30000);
 		}
 		
+		function ready()
+		{
+			var el = document.getElementById("Buttons");
+			el.style.visibility = "visible";
+			headerhome.innerText = "At-Home Testing Program";
+			el = document.getElementById("alert");
+			el.style.visibility = "visible";
+			NextTest.style.paddingTop = "6";
+			NextTest.style.paddingLeft = "5";
+			NextTest.innerHTML = '<font style="font-size:12pt;line-height:17pt;color:white;">Ready for<br>testing<br></font>';
+			testbutton.innerText = "Take Tests";
+			instructionsbutton.innerText = "Instructions";
+			links[1] = "login.html";
+		}
+
+		/*
 		// hide the alert div
 		function notInTestWindow()
 		{
@@ -101,8 +117,7 @@
 			testbutton.innerText = buttonCaption;
 			instructionsbutton.innerText = "Instructions";
 			links[1] = "login.html";			
-		}
-		
+		}		
 		function alarmBlink()
 		{
 			if ( Kinetics.InSessionWindow != 0 )
@@ -111,7 +126,7 @@
 			}
 			setTimeout("alarmBlink()",2000);
 		}
-				
+			
 		function checkInTestWindow()
 		{			
 			var strNextTestStart = Kinetics.GetNextSessionStart();
@@ -197,6 +212,8 @@
 			// check again every 3 seconds
 			setTimeout("checkInTestWindow()",3000);			
 		}
+		*/
+		
 		// initialize menu and play audio (if applicable)	
 		function init()
 		{
@@ -217,16 +234,18 @@
 			if( parent.frames["scriptframe"].is_kinetics_opened )
 			{
 				Kinetics = parent.frames["scriptframe"].Kinetics;		
-				checkInTestWindow();
+				// This bypasses the check to make sure a test is scheduled
+				ready();
+				//checkInTestWindow();
 				
 				// if we're on the device
 				if (Kinetics.HaveHardware > 0)
 				{
 					// turn on actiwatch power now
-					Kinetics.SetWatchPower(1);	
+				//	Kinetics.SetWatchPower(1);	
 
 					// check storage capacity (default to 20 if for some reason it can't read it)
-					var minDiskSpace = eval(Kinetics.ParameterRead("MinFreeSpaceMB","20"));
+					var minDiskSpace = eval(Kinetics.ParameterRead("MinFreeSpaceMB","20")); //[FIXME] How much space do we need for the new tests?
 					if (Kinetics.FreeStoreMB < minDiskSpace )
 					{
 						location = "storage-full.html";
@@ -241,7 +260,7 @@
 				focus();
 				
 				// kick off the timer that watches to see when we're in a test session window or not
-				alarmBlink();
+				// alarmBlink();
 
 				// don't replay the welcome audio if we're coming from the instructions page
 				var url = String(window.location);
@@ -270,7 +289,7 @@
 			<img src="images/alert-green.gif" border="0">
 		</div>
 		<div id="NextTest" style="position: absolute; left: 25px; top:155px; line-height:13pt;font-family:Arial; color:234368; font-size:11pt;font-weight:bold;">
-			<br>Checking Memory...<br>Build 54c
+			<br>Checking Memory...<br>Build 101
 		</div>
 		<div id="Buttons" style="position: absolute; left: 176px; top:67px;visibility:hidden">
 			<table border="0" cellpadding="0" cellspacing="0">

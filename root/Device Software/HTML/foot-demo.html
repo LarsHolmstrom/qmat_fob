@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+    <head>
+        <title>Voice Test Intro</title>
+        <link rel="stylesheet" type="text/css" href="_style.css" /> 
+        <script language="javascript" src="menu.js"></script>
+        <script language="javascript">
+    
+        var Kinetics = parent.frames["scriptframe"].Kinetics;
+            
+        // initialize menu and play audio (if applicable)   
+        function init()
+        {
+            Kinetics.SetLedState(4,1);
+            Kinetics.SetLedState(5,0);
+            Kinetics.SetLedState(6,0);
+            
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\foottapping\\foot-tapping-instructions.wav");   
+            setTimeout("location='foot-intro.html?quiet'",16500);      
+        }
+                        
+        function keyDownLocal()
+        {
+                
+            // h key (help)
+            if (event.keyCode == 72)
+            {
+                parent.frames["scriptframe"].Kinetics.CancelAudioPlay();        
+                window.location = "foot-intro.html";
+            }
+
+            // enter key
+            if (event.keyCode == 13)
+            {           
+                parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+                location = "foot-intro.html?quiet";
+            }
+        }
+        
+        </script>
+    </head>
+    <body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
+        <div id="sidebar" class="sidebar" style="top:37">
+            <img src="images/sidebar_tall.gif">
+        </div>
+        <div id="animation" style="position: absolute; left: 0px; top:37px;">
+            <img src="images/foot-tapping.gif">
+        </div>
+
+        <div id="header" class="header">
+            Foot Tapping Test
+        </div>
+        <div id="notes" style="position: absolute; left: 185px; top:50px; width:120px;">
+            <font class="grey8">
+            This test will measure how quickly you tap
+your foot on the pedal. You will repeat this action over and over as fast as you can until you are
+instructed to stop.  Be sure to pivot from your foot from the heel.
+This test will be performed with your eyes closed and the ear muffs on.
+            <br></font>
+        </div>
+    </body>
+</html>

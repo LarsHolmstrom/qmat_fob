@@ -16,7 +16,7 @@
 		
 		// links specific to this page
 		links[1] = "tap-demo.html";
-		links[2] = "tap-pretest.html"; 		
+		links[2] = "tap-test.html"; 		
 		
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -50,11 +50,20 @@
 			if (url.indexOf("quiet") == -1)
 			{
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\tapping\\tapping_intro.wav");			
+					"\\hard disk\\audio\\tapping\\tapping_intro.wav");	
+			    setTimeout("location='tap-demo.html'",3000);	
+	            Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0);
 			}	
 			else
 			{
-				menuSelect(2);				
+				document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("notes").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';
+				menuSelect(2);		
+                Kinetics.SetLedState(5,1);
+                Kinetics.SetLedState(6,1);		
 			}		
 			
 			// turn on capsit LED's
@@ -68,16 +77,16 @@
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
-		<div id="sidebar" class="sidebar">
+		<div id="sidebar" class="sidebar" style="visibility=hidden;">
 			<img src="images/sidebar.gif">
 		</div>
 		<div id="header" class="header">
 			Tapping Test
 		</div>
-		<div id="notes" style="position: absolute; left: 185px; top:8px; width:120px;">
+		<div id="notes" style="position: absolute; left: 185px; top:8px; width:120px; visibility=hidden;">
 			<font class="grey8">Tap as quickly as you can until you are told to stop</font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:43px;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:43px; visibility=hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -86,7 +95,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>

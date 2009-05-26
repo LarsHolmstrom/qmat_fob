@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+    <head> 
+        <title>Voice - Standard Speech</title>
+        <link rel="stylesheet" type="text/css" href="_style.css" /> 
+        <script language="javascript" src="constants.js"></script>
+        <script language="javascript" src="menu.js"></script>
+        <script language="javascript">
+        
+        parent.frames["scriptframe"].currentTest = "TALKING";
+        
+        var Kinetics = parent.frames["scriptframe"].Kinetics;
+        var volumeTimer;
+        
+        function init()
+        {
+            parent.frames["scriptframe"].resetActivityTimer();
+            
+            Kinetics.SetLedState(4,0);
+            Kinetics.SetLedState(5,0);
+            Kinetics.SetLedState(6,0);
+            
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\voice\\story_test.wav");
+            setTimeout("readyToRecord()",7000);        
+        }
+
+        function readyToRecord()
+        {
+            Kinetics.ActivityConfig(4, "SPEECH2", 0, 0);         
+            Kinetics.ActivityStart(1);
+                        
+            var el = document.getElementById("recording");
+            el.style.color = "maroon";
+            el.innerHTML = "Recording";
+			
+            Kinetics.RecStartTimeoutS = 50;   
+            Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
+            Kinetics.AudioRecord(0, VOICE_TALK_FIXED_TIMEOUT);   
+        }
+        
+        // called from the script frame when progress event fires, or from local timer no events have come for a while
+        function volume(b)
+        {
+            var el = document.getElementById("recording");
+            
+            if (b == true)
+            {
+                el.style.color = "maroon";
+                el.innerHTML = "Recording";
+                clearTimeout(volumeTimer);
+                volumeTimer = setTimeout("volumeTimeout()",1000);
+            }
+            else
+            {
+                el.style.color = "d0d0d0";
+                el.innerHTML = "Not Recording";
+                clearTimeout(volumeTimer);
+            }
+        }
+        
+        // this should fire once a second of no volume has passed
+        function volumeTimeout()
+        {
+            volume(false);
+        }
+        
+        // called from the script when audio recording is done (based on volume or timeout)
+        function doneRecording()
+        {
+            Kinetics.ActivityEndNormal();
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\stop.wav");
+            el = document.getElementById("innerbody");
+            el.innerHTML = "";
+            var el = document.getElementById("complete");
+            el.innerHTML = "<font style='font-size:28px;color:maroon;'>STOP</font>";
+//            setTimeout("location='voice-pre_standard_speech_test3.html';",2000);
+            setTimeout("location='voice-standard_speech3.html';",2000);
+        }
+                
+        // local key down event handler
+        function keyDownLocal()
+        {
+            // placeholder
+        }
+        
+        </script>
+    </head>
+    <body onload="init();" onkeydown="keyDownLocal();keyDown();">
+        <div id="boundingbox" style="position: absolute; left: 5px; top: 5px;">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td><img src="images/boundingbox-topleft.gif"></td>
+                <td width="280" height="14" background="images/boundingbox-top.gif"></td>
+                <td><img src="images/boundingbox-topright.gif"></td>
+                </tr>
+                <tr>
+                <td height="200" background="images/boundingbox-left.gif"></td>
+                <td background="images/boundingbox-bg.gif"></td>
+                <td height="200" background="images/boundingbox-right.gif"></td>
+                </tr>
+                <tr>
+                <td><img src="images/boundingbox-bottomleft.gif"></td>
+                <td width="280" height="14" background="images/boundingbox-bottom.gif"></td>
+                <td><img src="images/boundingbox-bottomright.gif"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="innerbody" style="font: 1.1em 'Times New Roman', Times, serif; position: absolute; left: 10px; top:5px; width:304px; height:180px;">
+When the sunlight strikes
+raindrops in the air, they act like
+a prism and form a rainbow. The
+rainbow is a division of white
+light into many beautiful colors.
+These take the shape of a long
+round arch, with its path high
+above, and its two ends
+apparently beyond the horizon.
+There is, according to legend, a
+boiling pot of gold at one end.
+People look, but no one ever
+finds it. When a man looks for
+something beyond his reach, his
+friends say he is looking for the
+pot of gold at the end of the
+rainbow.
+        </div>
+        <div id="complete" style="position: absolute; left: 125px; top:98px; width:304px; height:180px;">
+        </div>
+        <div id="photo" style="position: absolute; left: 145px; top:195px;">
+            <table border=0 width="250">
+            <tr>
+                <td id="recording" align="center" style="height:50;color:#d0d0d0;font-size:10pt;">
+                    Not Recording
+                </td>
+            </tr>
+            </table>
+        </div>
+    </body>
+</html>

@@ -12,11 +12,11 @@
 		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 1;		
+		currentItem = 2;		
 		
 		// links specific to this page
 		links[1] = "voice-demo.html";
-		links[2] = "voice-pretest.html"; 	
+		links[2] = "voice-ahh1.html"; 	
 			
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -51,24 +51,34 @@
 			if (url.indexOf("quiet") == -1)
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\voice\\voice_intro.wav");			
+					"\\hard disk\\audio\\voice\\voice_intro.wav");		
+                setTimeout("location='voice-demo.html'",2500);    
+	            Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0);
 			}	
 			else
 			{
-				menuSelect(2);				
+                document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("rightillus").style.visibility = 'visible';
+                document.getElementById("notes").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';
+				menuSelect(2);			
+                Kinetics.SetLedState(5,1);
+                Kinetics.SetLedState(6,1);	
 			}				
 		}
 						
 		</script>
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal();keyDown();">
-		<div id="sidebar" class="sidebar">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
+		<div id="sidebar" class="sidebar" style="visibility=hidden;">
 			<img src="images/sidebar.gif">
 		</div>
 		<div id="leftillus" style="position: absolute; left: 0px; top:37px;">
 			<img src="images/illus-voiceleft.gif">
 		</div>
-		<div id="rightillus" style="background-image:url(images/illus-voiceright.gif); background-repeat:no-repeat; position: absolute; left: 168px; top:105px;">
+		<div id="rightillus" style="background-image:url(images/illus-voiceright.gif); background-repeat:no-repeat; position: absolute; left: 168px; top:105px; visibility=hidden;">
 			<div id="rightillusinner" style="position: relative; left: 15; top:12; width:153; height:117;">
 				<div style="width:130">
 					<font class="grey8" style="font-size:10pt; line-height:13pt;">			
@@ -81,10 +91,10 @@
 		<div id="header" class="header">
 			Voice Test
 		</div>
-		<div id="notes" style="position: absolute; left: 185px; top:8px; width:120px;">
+		<div id="notes" style="position: absolute; left: 185px; top:8px; width:120px; visibility=hidden;">
 			<font class="grey8">Put on the microphone as shown, then start the test.</font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:43px;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:43px; visibility=hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -93,7 +103,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>

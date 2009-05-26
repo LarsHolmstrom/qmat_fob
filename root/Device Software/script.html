@@ -511,10 +511,10 @@
 			trace("EVENT: PegsMap" + "(" + ticksSinceGo + "," + pegsInLeft + "," + pegsInRight + ")");
 
 			// easter egg
-			if ((pegsInLeft == 170) && (pegsInRight == 85))
-			{
-				//parent.frames["viewframe"].location = "HTML/about.html";
-			}
+//			if ((pegsInLeft == 170) && (pegsInRight == 85))
+//			{
+//				parent.frames["viewframe"].location = "HTML/about.html";
+//			}
 			
 			resetActivityTimer();
 			
@@ -720,7 +720,7 @@
 				
 		<script for="Kinetics" event="AudioRecordEnded(endCauseID)">
 			trace("EVENT: AudioRecordEnded(" + endCauseID + ")");				
-				if ((currentTest == "AHH") || (currentTest == "TALKING"))
+				if ((currentTest == "AHH") || (currentTest == "TALKING") || (currentTest == "FOOT"))
 				{
 					parent.frames["viewframe"].doneRecording();						
 				}														
@@ -731,7 +731,8 @@
 			
 			if (endCauseID == 0)	
 			{
-				parent.frames["viewframe"].location = "HTML/session-done.html";	
+//				parent.frames["viewframe"].location = "HTML/session-done.html";	
+                parent.frames["viewframe"].location = "HTML/home.html"; 
 			}
 			else
 			{
@@ -847,84 +848,73 @@
 		
 		<!-- static links to pages for development purposes -->
 		<p><b>Manually Jump To:</b><br/>
-		<select name="jumper" onchange="jumpTo(this.value);" ID="Select1" tabindex="-1">
-			<option value="script.html" style="color:black">---general screens</b>
-			<option value="HTML/login.html" style="color:#666666;">device locked
-			<option value="HTML/login-wrong.html" style="color:#666666;">login wrong
-			<option value="HTML/home.html" style="color:#666666;">home
-			<option value="HTML/testwarning.html" style="color:#666666;">test warning
-		
-			<option value="script.html" style="color:black">---introduction</b>
-			<option value="HTML/intro1.html" style="color:#666666;">intro 1
-			<option value="HTML/intro2.html" style="color:#666666;">intro 2
-			<option value="HTML/intro3.html" style="color:#666666;">intro 3
-			<option value="HTML/intro4.html" style="color:#666666;">intro 4
-			<option value="HTML/intro5.html" style="color:#666666;">intro 5
-			
-			<option value="script.html" style="color:black">---questions 			
-			<option value="HTML/questions1.html" style="color:#666666;">how ill are you?
-			<option value="HTML/questions2.html" style="color:#666666;">are you feeling better or worse?
-			<option value="HTML/questions3.html" style="color:#666666;">how much better?
-			<option value="HTML/questions4.html" style="color:#666666;">how much worse?
-
-			<option value="script.html" style="color:black;">---peg test 
-			<option value="HTML/peg-nopegs-right.html" style="color:#666666;">setup right pegs
-			<option value="HTML/peg-nopegs-left.html" style="color:#666666;">setup left pegs
-			<option value="HTML/peg-intro.html" style="color:#666666;">intro
-			<option value="HTML/peg-demo.html" style="color:#666666;">instructions
-			<option value="HTML/peg-pretest.html" style="color:#666666;">pre-test
-			<option value="HTML/peg-test.html" style="color:#666666;">test
-			
-			<option value="script.html" style="color:black">---tap test 
-			<option value="HTML/tap-intro.html" style="color:#666666;">intro
-			<option value="HTML/tap-demo.html" style="color:#666666;">instructions
-			<option value="HTML/tap-pretest.html" style="color:#666666;">pre-test
-			<option value="HTML/tap-test.html" style="color:#666666;">test
-			
-			<option value="script.html" style="color:black">---reaction test 
-			<option value="HTML/reaction-intro.html" style="color:#666666;">intro
-			<option value="HTML/reaction-demo.html" style="color:#666666;">instructions
-			<option value="HTML/reaction-pretest.html" style="color:#666666;">pre-test
-			<option value="HTML/reaction-test.html" style="color:#666666;">test
-			
-			<option value="script.html" style="color:black">---keyboard test 
-			<option value="HTML/keys-intro.html" style="color:#666666;">intro
-			<option value="HTML/keys-demo.html" style="color:#666666;">instructions 
-			<option value="HTML/keys-pretest.html" style="color:#666666;">pre-test 
-			<option value="HTML/keys-test.html" style="color:#666666;">test 
-			
-			<option value="script.html" style="color:black">---tremorwatch 
-			<option value="HTML/actiwatch-demo.html" style="color:#666666;">instructions 
-			<option value="HTML/actiwatch-skipped.html" style="color:#666666;">skip docking 
-			<option value="HTML/actiwatch-docked.html" style="color:#666666;">tremorwatch docked
-			<option value="HTML/actiwatch-failed.html" style="color:#666666;">tremorwatch failed 
-			<option value="HTML/actiwatch-saving.html" style="color:#666666;">tremorwatch saving 
-			<option value="HTML/actiwatch-remember.html" style="color:#666666;">tremorwatch remember 
-			<option value="HTML/actiwatch-done.html" style="color:#666666;">tremorwatch done 
-		
-			<option value="script.html" style="color:black">---voice test 
-			<option value="HTML/voice-intro.html" style="color:#666666;">intro
-			<option value="HTML/voice-pretest.html" style="color:#666666;">pre-test
-			<option value="HTML/voice-ahh.html" style="color:#666666;">ahh 1
-			<option value="HTML/voice-ahh2.html" style="color:#666666;">ahh 2
-			<option value="HTML/voice-ahh3.html" style="color:#666666;">ahh 3
-			<option value="HTML/voice-talking.html" style="color:#666666;">talking test 1
-			<option value="HTML/voice-talking2.html" style="color:#666666;">talking test 2
-			<option value="HTML/voice-ahh6.html" style="color:#666666;">ahh 6
-			<option value="HTML/voice-ahh7.html" style="color:#666666;">ahh 7
-			<option value="HTML/voice-ahh8.html" style="color:#666666;">ahh 8
-	
-			<option value="script.html" style="color:black">---storage 
-			<option value="HTML/storage-full.html" style="color:#666666;">storage device full
-			<option value="HTML/storage-remove.html" style="color:#666666;">storage remove
-			<option value="HTML/storage-uploaded.html" style="color:#666666;">storage uploaded
-	
-			<option value="script.html" style="color:black">---session 
-			<option value="HTML/session-done.html" style="color:#666666;">session done
-			<option value="HTML/session-saving.html" style="color:#666666;">session saving
-			<option value="HTML/session-timeout.html" style="color:#666666;">session timeout
-	
-		</select>		
+        <select name="jumper" onchange="jumpTo(this.value);" ID="Select1" tabindex="-1">
+            <option value="script.html" style="color:black">---general screens</b>
+            <option value="HTML/login.html" style="color:#666666;">device locked
+            <option value="HTML/login-wrong.html" style="color:#666666;">login wrong
+            <option value="HTML/home.html" style="color:#666666;">home
+            <option value="HTML/testwarning.html" style="color:#666666;">test warning
+            <option value="HTML/debug-menu.html" style="color:#666666;">debug menu
+        
+            <option value="script.html" style="color:black">---introduction</b>
+            <option value="HTML/intro1.html" style="color:#666666;">intro 1
+            <option value="HTML/intro2.html" style="color:#666666;">intro 2
+            <option value="HTML/intro3.html" style="color:#666666;">intro 3
+            <option value="HTML/intro4.html" style="color:#666666;">intro 4
+            <option value="HTML/intro5.html" style="color:#666666;">intro 5
+            
+            <option value="script.html" style="color:black">---foot tapping test 
+            <option value="HTML/foot-intro.html" style="color:#666666;">intro
+            <option value="HTML/foot-demo.html" style="color:#666666;">instructions 
+            <option value="HTML/foot-test.html" style="color:#666666;">test 
+            
+            <option value="script.html" style="color:black;">---peg test 
+            <option value="HTML/peg-nopegs-right.html" style="color:#666666;">setup right pegs
+            <option value="HTML/peg-nopegs-left.html" style="color:#666666;">setup left pegs
+            <option value="HTML/peg-intro.html" style="color:#666666;">intro
+            <option value="HTML/peg-demo.html" style="color:#666666;">instructions
+            <option value="HTML/peg-test.html" style="color:#666666;">test
+            
+            <option value="script.html" style="color:black">---tap test 
+            <option value="HTML/tap-intro.html" style="color:#666666;">intro
+            <option value="HTML/tap-demo.html" style="color:#666666;">instructions
+            <option value="HTML/tap-test.html" style="color:#666666;">test
+            
+            <option value="script.html" style="color:black">---reaction test 
+            <option value="HTML/reaction-intro.html" style="color:#666666;">intro
+            <option value="HTML/reaction-demo.html" style="color:#666666;">instructions
+            <option value="HTML/reaction-test.html" style="color:#666666;">test
+            
+            <option value="script.html" style="color:black">---keyboard test 
+            <option value="HTML/keys-intro.html" style="color:#666666;">intro
+            <option value="HTML/keys-demo.html" style="color:#666666;">instructions
+            <option value="HTML/keys-test.html" style="color:#666666;">test 
+            
+    
+            <option value="script.html" style="color:black">---voice test 
+            <option value="HTML/voice-intro.html" style="color:#666666;">intro
+            <option value="HTML/voice-ahh1.html" style="color:#666666;">ahh 1
+            <option value="HTML/voice-ahh2.html" style="color:#666666;">ahh 2
+            <option value="HTML/voice-ahh3.html" style="color:#666666;">ahh 3
+            <option value="HTML/voice-ahh4.html" style="color:#666666;">ahh 4
+            <option value="HTML/voice-standard_speech1.html" style="color:#666666;">speech test 1
+            <option value="HTML/voice-standard_speech2.html" style="color:#666666;">speech test 2
+            <option value="HTML/voice-standard_speech3.html" style="color:#666666;">speech test 3
+            <option value="HTML/voice-pre_ddk.html" style="color:#666666;">ddk intro
+            <option value="HTML/voice-ddk1.html" style="color:#666666;">ddk 1
+            <option value="HTML/voice-ddk2.html" style="color:#666666;">ddk 2
+    
+            <option value="script.html" style="color:black">---storage 
+            <option value="HTML/storage-full.html" style="color:#666666;">storage device full
+            <option value="HTML/storage-remove.html" style="color:#666666;">storage remove
+            <option value="HTML/storage-uploaded.html" style="color:#666666;">storage uploaded
+    
+            <option value="script.html" style="color:black">---session 
+            <option value="HTML/session-done.html" style="color:#666666;">session done
+            <option value="HTML/session-saving.html" style="color:#666666;">session saving
+            <option value="HTML/session-timeout.html" style="color:#666666;">session timeout
+    
+        </select>   
 
 		<!-- interface to play/test audio -->
 		<p><b>Audio:</b><br/>

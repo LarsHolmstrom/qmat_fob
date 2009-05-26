@@ -7,17 +7,16 @@
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
-		parent.frames["scriptframe"].currentTest = "";
 		
 		// menu setup
 		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 1;		
+		currentItem = 2;		
 		
 		// links specific to this page
 		links[1] = "peg-demo.html";
-		links[2] = "peg-pretest.html"; 		
+		links[2] = "peg-test.html"; 		
 		
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -52,17 +51,25 @@
 			if (url.indexOf("quiet") == -1)
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");			
+					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");	
+				setTimeout("location='peg-demo.html'",3000);
+				// turn off nav LED's
+	            Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0);  
 			}	
 			else
 			{
+				document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("notes").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';
+				// turn on nav LED's
+                Kinetics.SetLedState(5,1);
+                Kinetics.SetLedState(6,1);  
 				menuSelect(2);				
 			}		
 			
-			// turn off nav LED's
-			Kinetics.SetLedState(4,1);
-			Kinetics.SetLedState(5,1);
-			Kinetics.SetLedState(6,1);				
+			
 		}
 						
 		</script>
@@ -71,16 +78,16 @@
 		<div id="device" class="device">
 			<img src="images/device-peg.gif">
 		</div>
-		<div id="sidebar" class="sidebar-peg">
+		<div id="sidebar" class="sidebar-peg" style="visibility:hidden">
 			<img src="images/sidebar-peg.gif">
 		</div>
 		<div id="header" class="header">
-			&nbsp;Peg Test
+			&nbsp;Pegboard Test
 		</div>
-		<div id="notes" style="position: absolute; left: 185px; top:125px; width:120px;">
+		<div id="notes" style="position: absolute; left: 185px; top:125px; width:120px; visibility=hidden;">
 			<font class="grey8">Move the pegs from the right side to the left side as quickly as you can.<br></font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:172px;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:172px; visibility:hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -89,7 +96,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>

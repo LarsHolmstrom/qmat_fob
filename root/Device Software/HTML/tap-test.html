@@ -93,7 +93,7 @@
 					the_script_frame.ignoreCapsitLeft = true;
 			
 					panel.style.paddingTop = 0;
-					panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;Finger Down";
+					panel.innerHTML = "&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;Finger Down";
 
 					BlinkWhileWaiting(3, 1);
 					the_script_frame.Audio.start("\\hard disk\\audio\\tapping\\tapping_press_hold_right.wav");
@@ -129,7 +129,7 @@
 				the_script_frame.ignoreCapsitRight = true;
 	
 				panel.style.paddingTop = 0;
-				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Finger Down";
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Finger Down";
 
 				BlinkWhileWaiting(2, 1);
 				the_script_frame.Audio.start("\\hard disk\\audio\\tapping\\tapping_press_hold_left.wav");		
@@ -155,10 +155,9 @@
 				Kinetics.SetLedState(2,1);
 				Kinetics.SetLedState(3,1);
 		
-//				countRight++;
 				panel.style.paddingTop=12;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Right Hand<br>Test In Progress';",2000);
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;Right Hand<br>Test In Progress';",2000);
 			
 				Kinetics.ActivityStart(1);
 				setTimeout('stopRight()',TAP_TIMEOUT);
@@ -172,7 +171,7 @@
 		function startLeft()
 		{
 			panel.style.paddingTop = 0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Get Ready";
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Get Ready";
 			
 			the_script_frame.Audio.start("\\hard disk\\audio\\begin_at_beep_get_ready.wav");			
 			setTimeout('testLeft()',WAIT_GET_READY_DELAY);
@@ -189,10 +188,9 @@
 				Kinetics.SetLedState(2,1);
 				Kinetics.SetLedState(3,1);
 		
-//				countLeft++;
 				panel.style.paddingTop=12;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Left Hand<br>Test In Progress';",2000);
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;Left Hand<br>Test In Progress';",2000);
 		
 				Kinetics.ActivityStart(1);
 				setTimeout('stopLeft()',TAP_TIMEOUT);
@@ -225,7 +223,7 @@
 			Kinetics.SetLedState(2,0);
 			Kinetics.SetLedState(3,0);
 			countLeft++;
-			setTimeout('readyRight()',ACTIVITY_SPACING_TIME);
+			setTimeout('readyRight()',1000);
 		}
 		
 		// after three rounds
@@ -239,7 +237,7 @@
 			panel.style.paddingTop=0;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tap Test<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete";
 			the_script_frame.currentTest = "";
-			setTimeout("location='reaction-intro.html';",3000);
+			setTimeout("location='reaction-intro.html';",1500);
 		}
 		
 		function keyDownLocal()
@@ -268,7 +266,7 @@
 		</script>
 				
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal();">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
@@ -298,7 +296,6 @@
 			</table>
 		</div>
 		<div id="panel" class="inprogress">
-			
 		</div>
 		<div id="debugleft" style="position:absolute;top:350;left:25;font-size:20pt;">
 			0

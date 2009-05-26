@@ -73,14 +73,15 @@
 		{
 			the_script_frame.pegDirection = "left";
 
-			if (the_script_frame.pegCountRight > 3)
+			if (the_script_frame.pegCountRight > 1)
 			{
 				Kinetics.ActivityEndNormal();	
 				endTest();
 			} 
 			else if (checkPegsRight())
 			{
-				header.innerText = "Peg Test - Round " + the_script_frame.pegCountRight + " of 3";
+				//header.innerText = "Peg Test - Round " + the_script_frame.pegCountRight + " of 2";
+                header.innerText = "Pegboard Test - Right Hand";
 				panel.style.paddingTop = 0;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 				
@@ -102,14 +103,15 @@
 		{
 			the_script_frame.pegDirection = "right";
 			
-			if (the_script_frame.pegCountLeft > 3)
+			if (the_script_frame.pegCountLeft > 1)
 			{
 				Kinetics.ActivityEndNormal();	
 				endTest();
 			}
 			else if (checkPegsLeft())
 			{
-				header.innerText = "Peg Test - Round " + the_script_frame.pegCountLeft + " of 3";
+				//header.innerText = "Peg Test - Round " + the_script_frame.pegCountLeft + " of 2";
+                header.innerText = "Pegboard Test - Left Hand";
 				panel.style.paddingTop = 0;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 		
@@ -180,7 +182,7 @@
 			the_script_frame.pegCountRight = 1;	// used to keep track of round of right hand peg activity
 			the_script_frame.pegCountLeft = 1;	// used to keep track of round of left hand peg activity
 
-			setTimeout("location='tap-intro.html';",3000);
+			setTimeout("location='tap-intro.html';",1200);
 		}
 		
 		// fired from the script frame once all pegs are on left (overrides local javascript timers)
@@ -257,12 +259,12 @@
 		</script>
 				
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="device" class="device">
 			<img src="images/device-peg.gif">
 		</div>
 		<div id="header" class="header">
-			Peg Test - Round 1 of 3
+			Pegboard Test - Right Hand
 		</div>
 		<div id="bluebg" style="position: absolute; left: 0; top:0;">
 			<img src="images/halfblue.gif">

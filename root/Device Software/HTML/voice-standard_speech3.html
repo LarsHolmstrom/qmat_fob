@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+    <head> 
+        <title>Voice - Standard Speech</title>
+        <link rel="stylesheet" type="text/css" href="_style.css" /> 
+        <script language="javascript" src="constants.js"></script>
+        <script language="javascript" src="menu.js"></script>
+        <script language="javascript">
+        
+        parent.frames["scriptframe"].currentTest = "TALKING";
+        
+        var Kinetics = parent.frames["scriptframe"].Kinetics;
+        var volumeTimer;
+        
+        function init()
+        {
+            parent.frames["scriptframe"].resetActivityTimer();
+            
+            Kinetics.SetLedState(4,0);
+            Kinetics.SetLedState(5,0);
+            Kinetics.SetLedState(6,0);
+            
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\voice\\story_test.wav");
+            setTimeout("readyToRecord()",7000);      
+        }
+
+        function readyToRecord()
+        {
+            Kinetics.ActivityConfig(4, "SPEECH3", 0, 0);         
+            Kinetics.ActivityStart(1);
+            
+            var el = document.getElementById("recording");
+            el.style.color = "maroon";
+            el.innerHTML = "Recording";
+			
+            Kinetics.RecStartTimeoutS = 50;   
+            Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
+            Kinetics.AudioRecord(0, VOICE_TALK_FIXED_TIMEOUT_2);   
+        }
+        
+        // called from the script frame when progress event fires, or from local timer no events have come for a while
+        function volume(b)
+        {
+            var el = document.getElementById("recording");
+            
+            if (b == true)
+            {
+                el.style.color = "maroon";
+                el.innerHTML = "Recording";
+                clearTimeout(volumeTimer);
+                volumeTimer = setTimeout("volumeTimeout()",1000);
+            }
+            else
+            {
+                el.style.color = "d0d0d0";
+                el.innerHTML = "Not Recording";
+                clearTimeout(volumeTimer);
+            }
+        }
+        
+        // this should fire once a second of no volume has passed
+        function volumeTimeout()
+        {
+            volume(false);
+        }
+        
+        // called from the script when audio recording is done (based on volume or timeout)
+        function doneRecording()
+        {
+            Kinetics.ActivityEndNormal();
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\stop.wav");
+            el = document.getElementById("innerbody");
+            el.innerHTML = "";
+			var el = document.getElementById("complete");
+			el.innerHTML = "<font style='font-size:28px;color:maroon;'>STOP</font>";
+            setTimeout("location='voice-pre_ddk.html';",2000);
+        }
+                
+        // local key down event handler
+        function keyDownLocal()
+        {
+            // placeholder
+        }
+        
+        </script>
+    </head>
+    <body onload="init();" onkeydown="keyDownLocal();keyDown();">
+        <div id="boundingbox" style="position: absolute; left: 5px; top: 5px;">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td><img src="images/boundingbox-topleft.gif"></td>
+                <td width="280" height="14" background="images/boundingbox-top.gif"></td>
+                <td><img src="images/boundingbox-topright.gif"></td>
+                </tr>
+                <tr>
+                <td height="200" background="images/boundingbox-left.gif"></td>
+                <td background="images/boundingbox-bg.gif"></td>
+                <td height="200" background="images/boundingbox-right.gif"></td>
+                </tr>
+                <tr>
+                <td><img src="images/boundingbox-bottomleft.gif"></td>
+                <td width="280" height="14" background="images/boundingbox-bottom.gif"></td>
+                <td><img src="images/boundingbox-bottomright.gif"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="innerbody" style="font: 1em 'Times New Roman', Times, serif; position: absolute; left: 10px; top:5px; width:304px; height:190px;font-size:12pt; line-height:0.95;">
+You wish to know all about my grandfather. Well, he is nearly 93 years 
+old; He dresses himself in an ancient, black frock coat, usually minus 
+several buttons; yet he still thinks as swiftly as ever. A long, flowing 
+beard clings to his chin, giving those who observe him a pronounced 
+feeling of the utmost respect. When he speaks his voice is just a bit 
+cracked and quivers a trifle. Twice each day he plays skillfully and 
+with zest upon our small organ. Except in the winter when the ooze or 
+snow or ice prevents, he slowly takes a short walk in the open air each 
+day. We have often urged him to walk more and smoke less but he always 
+answers, "Banana oil!" Grandfather likes to be modern in his language.
+        </div>
+		<div id="complete" style="position: absolute; left: 125px; top:98px; width:304px; height:180px;">
+		</div>
+        <div id="photo" style="position: absolute; left: 145px; top:195px;">
+            <table border=0 width="250">
+            <tr>
+                <td id="recording" align="center" style="height:50;color:#d0d0d0;font-size:10pt;">
+                    Not Recording
+                </td>
+            </tr>
+            </table>
+        </div>
+    </body>
+</html>

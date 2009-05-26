@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head> 
+		<title>Voice - DDK Round 1 of 2</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript" src="constants.js"></script>
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		parent.frames["scriptframe"].currentTest = "AHH";
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		var volumeTimer;
+		
+		function init()
+		{
+			parent.frames["scriptframe"].resetActivityTimer();
+			
+			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			parent.frames["scriptframe"].KineticsAudioPlay(
+				"\\hard disk\\audio\\voice\\DDK_test.wav");
+			setTimeout("readyToRecord()",18200);			
+		}
+
+		function readyToRecord()
+		{
+			Kinetics.ActivityConfig(4, "DDK1", 0, 0);			
+			Kinetics.ActivityStart(1);
+			
+			Kinetics.RecStartTimeoutS = 50;   
+			Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
+			Kinetics.AudioRecord(0, VOICE_AHH_FIXED_TIMEOUT);   
+			
+			var el = document.getElementById("recording");
+			el.style.color = "maroon";
+            el.innerHTML = "Recording";
+		}
+		
+		// called from the script frame when progress event fires, or from local timer no events have come for a while
+		function volume(b)
+		{
+		}
+		
+		// this should fire once a second of no volume has passed
+		function volumeTimeout()
+		{
+		}
+		
+		// called from the script when audio recording is done (based on volume or timeout)
+		function doneRecording()
+		{
+			Kinetics.ActivityEndNormal();
+            Kinetics.ActivityBeep();
+			el = document.getElementById("innerbody");
+            el.innerHTML = "";
+			el = document.getElementById("recording");
+			el.innerHTML = "STOP";
+			el.style.color = "000000";
+            parent.frames["scriptframe"].currentTest = "";
+            setTimeout("location='voice-ddk2.html';",3000);
+		}
+				
+		// local key down event handler
+		function keyDownLocal()
+		{
+			// placeholder
+		}
+		
+		</script>
+	</head>
+	<body onload="init();focus();" onkeydown="keyDownLocal();">
+		<div id="header" class="header" of >
+			DDK Test - Round 1 of 2
+		</div>
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 30px; top:50px; width:250px; height:130px;">
+			<font class="boldgrey10">After the beep say "puh-tuh-kuh" repeatedly as quickly as you can, while trying to be intelligible. A second beep will signal the end of the test.</font>
+		</div>
+		<div id="photo" style="position: absolute; left: 25px; top:115px;">
+			<table border=0 width="250">
+			<tr>
+				<td id="recording" align="center" style="height:50;color:#d0d0d0;font-size:18pt;">
+					Not Recording
+				</td>
+			</tr>
+			</table>
+		</div>
+	</body>
+</html>

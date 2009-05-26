@@ -12,11 +12,11 @@
 		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 1;		
+		currentItem = 2;		
 		
 		// links specific to this page
 		links[1] = "keys-demo.html";
-		links[2] = "keys-pad.html"; 	
+		links[2] = "keys-test.html"; 	
 				
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -46,16 +46,25 @@
 			if (url.indexOf("quiet") == -1)
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");			
+					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");	
+                setTimeout("location='keys-demo.html'",2000);    	
+	            Kinetics.SetLedState(2,0);
+	            Kinetics.SetLedState(3,0);          
+	            Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0);
 			}	
 			else
 			{
-				menuSelect(2);				
+                document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("lower_sidebar").style.visibility = 'visible';
+                document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
+                document.getElementById("notes").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';
+				menuSelect(2);		
+                Kinetics.SetLedState(5,1);
+                Kinetics.SetLedState(6,1);		
 			}
-			
-			Kinetics.SetLedState(4,1);
-			Kinetics.SetLedState(5,1);
-			Kinetics.SetLedState(6,1);
 						
 		}
 						
@@ -65,16 +74,25 @@
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
-		<div id="sidebar" class="sidebar">
+		<div id="sidebar" class="sidebar" style="visibility=hidden;">
 			<img src="images/sidebar.gif" height="110">
 		</div>
+		<div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:120px;; visibility:hidden;">
+            <img src="images/sidebar.gif" height="110">
+        </div>
+        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 155px; top:132px; font-size:10pt; visibility:hidden;">
+        <ul>
+            <li>Place the ear muffs over your ears</li>
+            <li>Keep your eyes closed during the test</li>
+        </ul>
+        </div>
 		<div id="header" class="header">
 			Keyboard Test
 		</div>
-		<div id="notes" style="position: absolute; left: 182px; top:8px; width:130px;">
+		<div id="notes" style="position: absolute; left: 182px; top:8px; width:130px; visibility=hidden;">
 			<font class="grey8">Tap keys as quickly as you can until you are instructed to stop<br></font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:55px;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:55px; visibility=hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -83,7 +101,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>

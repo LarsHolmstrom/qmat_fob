@@ -9,10 +9,7 @@
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 						
-		// TODO: make constants for all tests in contants.js
-		// TODO: swap out the hardcoded timeout for in between tests
-		//       to use ACTIVITY_SPACING_TIME in constants.js
-				
+			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
 		var countRight = 0;
@@ -25,7 +22,6 @@
 			Kinetics.SetLedState(6,0);
 			
 			readyRight();
-
 		}
 
 		function resetActivityTimer()
@@ -41,34 +37,20 @@
 			// first round
 			if (countRight == 0)
 			{
-				header.innerText = "Keyboard Test - Round " + eval(countRight + 1) + " of 2";
+                header.innerText = "Keyboard Test - Right Hand";
 				panel.style.paddingTop = 0;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 			
 				Kinetics.ActivityEndNormal();
-				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				Kinetics.ActivityConfig(6, "KEYRIGHT", 0, 0);
 				parent.frames["scriptframe"].KineticsAudioPlay(
 					"\\hard disk\\audio\\begin_at_beep_get_ready.wav");
 			
 				setTimeout('startRight()',WAIT_GET_READY_DELAY);
 			}
-
-			// second round, eyes closed
+	
+			// Right hand done
 			if (countRight == 1)
-			{
-				header.innerText = "Keyboard Test - Round " + eval(countRight + 1) + " of 2";
-				panel.style.paddingTop = 0;
-				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-			
-				Kinetics.ActivityEndNormal();
-				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
-				parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard_right_eyes_closed.wav");
-			
-				setTimeout('startRight()',14000);			
-			}
-			
-			// both rounds done
-			if (countRight == 2)
 			{
 				Kinetics.ActivityEndNormal();	
 				endTest();
@@ -84,33 +66,17 @@
 			// first round
 			if (countLeft == 0)
 			{
-				header.innerText = "Keyboard Test - Round " + eval(countLeft + 1) + " of 2";
+                header.innerText = "Keyboard Test - Left Hand";
 				panel.style.paddingTop = 0;
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 			
 				Kinetics.ActivityEndNormal();
-				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
+				Kinetics.ActivityConfig(6, "KEYLEFT", 0, 0);
 				parent.frames["scriptframe"].KineticsAudioPlay(
 					"\\hard disk\\audio\\keyboard\\repeat_left_begin_at_beep_get_ready.wav");
 			
 				setTimeout('startLeft()',7000);
 			}
-
-			// second round, eyes closed
-			if (countLeft == 1)
-			{
-				header.innerText = "Keyboard Test - Round " + eval(countLeft + 1) + " of 2";
-				panel.style.paddingTop = 0;
-				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-			
-				Kinetics.ActivityEndNormal();
-				Kinetics.ActivityConfig(6, "KEYBOARD", 0, 0);
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\keyboard_left_eyes_closed.wav");
-			
-				setTimeout('startLeft()',14300);			
-			}
-			
 		}
 				
 		// begin test with right hand
@@ -122,7 +88,7 @@
 			
 			if (countLeft < 1)
 			{
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Right Hand<br>Test In Progress';",2000);
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
 				Kinetics.ActivityStart(1);
 			}
 			else
@@ -144,7 +110,7 @@
 			
 			if (countLeft < 2)
 			{
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Left Hand<br>Test In Progress';",2000);
+				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
 				Kinetics.ActivityStart(1);
 			}
 			else
@@ -161,12 +127,13 @@
 		// stop right
 		function stopRight()
 		{
-			Kinetics.MaskWithNoise = 0;								
+//			Kinetics.MaskWithNoise = 0;								
+			Kinetics.ActivityBeep();
 			
-			if (countRight > 1)		
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
-			else
+//			if (countRight > 1)		
+//				parent.frames["scriptframe"].KineticsAudioPlay(
+//					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
+//			else
 				parent.frames["scriptframe"].KineticsAudioPlay(
 					"\\hard disk\\audio\\stop.wav");	
 				
@@ -174,20 +141,21 @@
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 			
 			if (countRight > 1)
-				setTimeout('readyLeft()',6000);
+				setTimeout('readyLeft()',2000);
 			else
-				setTimeout('readyLeft()',ACTIVITY_SPACING_TIME); 			
+				setTimeout('readyLeft()',ACTIVITY_SPACING_TIME);	
 		}
 		
 		// stop left
 		function stopLeft()
 		{
-			Kinetics.MaskWithNoise = 0;								
+//			Kinetics.MaskWithNoise = 0;		                        
+            Kinetics.ActivityBeep();						
 			
-			if (countLeft > 1)		
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
-			else
+//			if (countLeft > 1)		
+//				parent.frames["scriptframe"].KineticsAudioPlay(
+//					"\\hard disk\\audio\\keyboard\\stop_you_can_open_your_eyes_now.wav");	
+//			else
 				parent.frames["scriptframe"].KineticsAudioPlay(
 					"\\hard disk\\audio\\stop.wav");	
 					
@@ -195,7 +163,7 @@
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";			
 					
 			if (countLeft > 1)
-				setTimeout('readyRight()',6000);
+				setTimeout('readyRight()',2000);
 			else
 				setTimeout('readyRight()',ACTIVITY_SPACING_TIME); 	
 		}
@@ -204,10 +172,17 @@
 		function endTest()
 		{
 			header.innerText = "Keyboard Test - Complete";
-			panel.style.paddingTop=0;
-			panel.innerHTML = "&nbsp;&nbsp;Keyboard Test<br>&nbsp;&nbsp;Complete";
+			
+			panel.innerHTML = "";
+			
+			var el = document.getElementById("sessionDone");
+			el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+			
 			parent.frames["scriptframe"].currentTest = "";
-			setTimeout("location='actiwatch-demo.html';",5000);
+			
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
+			
+			setTimeout("location='voice-intro.html';",4000);
 		}
 		
 		// return to home screen for now (temporary for demo purposes)
@@ -225,12 +200,12 @@
 	</script>
 				
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
 		<div id="header" class="header">
-			Keyboard Test - Round 1 of 1
+			Keyboard Test
 		</div>
 		<div id="bluebg" style="position: absolute; left: 0; top:0;">
 			<img src="images/halfblue.gif">
@@ -255,10 +230,11 @@
 			</table>
 		</div>
 		<div id="panel" class="inprogress">
-			
 		</div>
+		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
+        </div>
 		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
-			blah
-		</div>
+            blah
+        </div>
 	</body>
 </html>

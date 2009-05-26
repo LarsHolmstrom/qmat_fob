@@ -136,7 +136,7 @@
 				the_script_frame.ignoreCapsitRight = true;				
 	
 				panel.style.paddingTop=0;
-				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Finger Down";
+				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Finger Down";
 		
 				BlinkWhileWaiting(2, 1);
 			}
@@ -230,7 +230,7 @@
 
 			sideStarted = "LEFT";
 			panel.style.paddingTop=0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
 			the_script_frame.Audio.start("\\hard disk\\audio\\begin_at_beep_get_ready.wav");			
 			setTimeout('testLeft()',WAIT_GET_READY_DELAY);
 		}
@@ -461,7 +461,7 @@
 		</script>
 
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
@@ -491,7 +491,7 @@
 			</table>
 		</div>
 		<div id="panel" class="inprogress">
-			
+			&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Finger Down
 		</div>
 		<div id="debugleft" style="position:absolute;top:350;left:25;font-size:20pt;">
 			0

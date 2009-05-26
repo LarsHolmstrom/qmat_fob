@@ -11,13 +11,13 @@
 		// initialize menu and play audio (if applicable)	
 		function init()
 		{
-			Kinetics.SetLedState(4,0);
+			Kinetics.SetLedState(4,1);
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
 			
 			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\voice\\voice_instructions.wav");	
-			setTimeout("location='voice-intro.html?quiet'",21500);		
+				"\\hard disk\\audio\\voice\\voice_instructions2.wav");	
+			setTimeout("location='voice-intro.html?quiet'",15500);		
 		}
 						
 		function keyDownLocal()
@@ -40,9 +40,10 @@
 		
 		</script>
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyDownLocal()">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="sidebar" class="sidebar" style="top:37">
-			<img src="images/sidebar.gif">
+			<!--img src="images/sidebar.gif"-->
+            <img src="images/sidebar_tall.gif">
 		</div>
 		<div id="leftillus" style="position: absolute; left: 0px; top:37px;">
 			<img src="images/illus-voiceleft.gif">
@@ -51,11 +52,12 @@
 		<div id="header" class="header">
 			Voice Test
 		</div>
-		<div id="notes" style="position: absolute; left: 185px; top:41px; width:120px;">
-			<font class="grey8">
-			Make sure the pads do not cover your ears, the microphone boom is straight, and the microphone is in front of the right side of your mouth.
-			<br></font>
-		</div>
 
+        <div id="notes" style="position: absolute; left: 185px; top:41px; width:120px;">
+            <font class="grey8">
+            As pictured, place the microphone strap on your head with the boom on your right side. Make sure that the pads are on your temples and not covering your ears. Ensure that the boom is straight and that the microphone is level and two finger’s width away from the right corner of your mouth.
+            <br>
+			</font>
+        </div>
 	</body>
 </html>

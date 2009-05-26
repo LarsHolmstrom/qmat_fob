@@ -236,7 +236,7 @@
 		function init()
 		{		
 			
-			parent.frames["scriptframe"].Kinetics.SetLedState(4,0);
+			parent.frames["scriptframe"].Kinetics.SetLedState(4,1);
 			parent.frames["scriptframe"].Kinetics.SetLedState(5,0);
 			parent.frames["scriptframe"].Kinetics.SetLedState(6,0);	
 
@@ -247,18 +247,18 @@
 				"\\hard disk\\audio\\pegboard\\pegboard_instructions.wav");
 			
 			// redirect back to the test intro page after the audio
-			setTimeout("location='peg-intro.html?quiet'",35200);	
+			setTimeout("location='peg-intro.html?quiet'",33200);	
 						
 		}
 			
 		</script>
 	</head>
-	<body class="hands" onload="init();focus()" onkeydown="keyUpLocal()">
+	<body class="hands" onload="init();focus();" onkeydown="keyUpLocal()">
 		<div id="device" class="device">
 			<img src="images/device-peg.gif">
 		</div>
 		<div id="header" class="header">
-			&nbsp;Peg Test
+			&nbsp;Pegboard Test
 		</div>
 		<div id="peg1" style="position: absolute; left: 292px; top:4px;">
 			<img src="images/peg.gif">

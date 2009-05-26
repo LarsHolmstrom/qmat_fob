@@ -12,11 +12,11 @@
 		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 1;		
+		currentItem = 2;		
 		
 		// links specific to this page
 		links[1] = "reaction-demo.html";
-		links[2] = "reaction-pretest.html"; 	
+		links[2] = "reaction-test.html"; 	
 		
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -39,9 +39,7 @@
 		// initialize menu and play audio (if applicable)	
 		function init()
 		{
-			Kinetics.SetLedState(4,1);
-			Kinetics.SetLedState(5,1);
-			Kinetics.SetLedState(6,1);
+
 					
 			menuSelect(1);
 			// don't replay the intro audio if we're coming from the instructions page
@@ -49,11 +47,20 @@
 			if (url.indexOf("quiet") == -1)
 			{
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\reaction\\reaction_intro.wav");			
+					"\\hard disk\\audio\\reaction\\reaction_intro.wav");	
+                setTimeout("location='reaction-demo.html'",3000);   
+				Kinetics.SetLedState(4,1);
+	            Kinetics.SetLedState(5,0);
+	            Kinetics.SetLedState(6,0); 		
 			}			
 			else
 			{
+                document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("notes").style.visibility = 'visible';
+                document.getElementById("Buttons").style.visibility = 'visible';
 				menuSelect(2);
+                Kinetics.SetLedState(5,1);
+                Kinetics.SetLedState(6,1); 
 			}
 
 			// turn on capsit LED's
@@ -67,16 +74,16 @@
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
-		<div id="sidebar" class="sidebar">
+		<div id="sidebar" class="sidebar" style="visibility=hidden;">
 			<img src="images/sidebar.gif">
 		</div>
 		<div id="header" class="header">
 			Reaction Test
 		</div>
-		<div id="notes" style="position: absolute; left: 180px; top:8px; width:132px;">
+		<div id="notes" style="position: absolute; left: 180px; top:8px; width:132px; visibility=hidden;">
 			<font class="grey8">When you hear a tone, move to the opposite button.</font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:43px;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:43px; visibility=hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -85,7 +92,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>
