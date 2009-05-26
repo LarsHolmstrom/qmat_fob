@@ -160,7 +160,9 @@
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;Right Hand<br>Test In Progress';",2000);
 			
-				Kinetics.ActivityStart(1);
+                Kinetics.ActivityStart(1);
+                // This is needed for debouncing the buttons in script.html
+                the_script_frame.resetCapsitTicksSinceGo();
 				setTimeout('stopRight()',TAP_TIMEOUT);
 			} else
 			{
@@ -194,6 +196,8 @@
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;Left Hand<br>Test In Progress';",2000);
 		
 				Kinetics.ActivityStart(1);
+				// This is needed for debouncing the buttons in script.html
+                the_script_frame.resetCapsitTicksSinceGo();
 				setTimeout('stopLeft()',TAP_TIMEOUT);
 			} else
 			{

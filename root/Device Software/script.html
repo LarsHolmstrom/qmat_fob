@@ -13,6 +13,8 @@
 		<script language="javascript" src="HTML\\constants.js"></script>
 		<script language="javascript">
 				
+		    var isWin32Build= false;        // Boolean variable determining whether we are in Win32 simulation or not
+		
 			var currentTest = "";			// text variable for current test 
 
 			var watchVisible = false;		// is the watch visible or not
@@ -44,6 +46,10 @@
 			
 			var waitingToStartRight = false;
 			var waitingToStartLeft = false;
+			
+			var capsitDebounceMS = 50;
+			var rightCapsitTicksSinceGo = 0;
+			var leftCapsitTicksSinceGo = 0;
 
 			var fso = null, log_file = null;
 			var useragent = navigator.userAgent;
@@ -225,6 +231,17 @@
 					is_kinetics_opened = true;
 				}
 				
+				// Cache a varaiable indicating whether we are in a Win32 simulation mode
+				// so we don't need to repeatedly complete this search.
+				var useragent = navigator.userAgent;
+                if (useragent.indexOf("Windows NT") != -1) {
+					isWin32Build = true;
+				}
+				else
+				{
+                    isWin32Build = false;
+				}
+					
 			}
 			
 			// trace output to the textarea
@@ -252,9 +269,7 @@
 			function capsitRight(pressed, ticksSinceGo)
 			{
 				trace("EVENT: CapsitRight(" + pressed + ", " + ticksSinceGo + ")");
-
-				is_capsit_right_down = pressed;
-
+				
 				// if in tap test
 				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
 				{
@@ -294,8 +309,6 @@
 			{
 				trace("EVENT: CapsitLeft(" + pressed + ", " + ticksSinceGo + ")");
 				
-				is_capsit_left_down = pressed;
-
 				// if we're in the tap test
 				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
 				{
@@ -328,6 +341,12 @@
 				{
 					the_view_frame.reaction_start_key_press(0, pressed);
 				}
+			}
+			
+			function resetCapsitTicksSinceGo()
+			{
+				rightCapsitTicksSinceGo = 0;
+                leftCapsitTicksSinceGo = 0;
 			}
 	
 
@@ -488,21 +507,49 @@
 		</script>		
 				
 		<script for="Kinetics" event="CapsitLeftDown(ticksSinceGo)">
-			resetActivityTimer();
-			capsitLeft(true, ticksSinceGo); 						
+			is_capsit_left_down = true;
+			if (ticksSinceGo > leftCapsitTicksSinceGo + capsitDebounceMS || isWin32Build) {
+				catpsitLeftTicksSinceGo = ticksSinceGo;
+				resetActivityTimer();
+				capsitLeft(true, ticksSinceGo);
+			} 
+			else {
+                trace("EVENT: CapsitLeftDown" + "(" + ticksSinceGo + "). Detected as hardware bounce.");
+			}
 		</script>
 
 		<script for="Kinetics" event="CapsitLeftUp(ticksSinceGo)">
-			capsitLeft(false, ticksSinceGo);  
+			is_capsit_left_down = false;
+            if (ticksSinceGo > leftCapsitTicksSinceGo + capsitDebounceMS || isWin32Build) {
+				catpsitLeftTicksSinceGo = ticksSinceGo;
+				capsitLeft(false, ticksSinceGo);
+			} 
+			else {
+                trace("EVENT: CapsitLeftUp" + "(" + ticksSinceGo + "). Detected as hardware bounce.");
+			}
 		</script>
 		
 		<script for="Kinetics" event="CapsitRightDown(ticksSinceGo)">
-			resetActivityTimer();
-			capsitRight(true, ticksSinceGo); 		
+			is_capsit_right_down = true;
+            if (ticksSinceGo > rightCapsitTicksSinceGo + capsitDebounceMS || isWin32Build) {
+				catpsitRightTicksSinceGo = ticksSinceGo;
+				resetActivityTimer();
+				capsitRight(true, ticksSinceGo);
+			}
+			else {
+				trace("EVENT: CapsitRightDown" + "(" + ticksSinceGo + "). Detected as hardware bounce.");
+			}
 		</script>
 		
 		<script for="Kinetics" event="CapsitRightUp(ticksSinceGo)">
-			capsitRight(false, ticksSinceGo);
+			is_capsit_right_down = false;
+            if (ticksSinceGo > rightCapsitTicksSinceGo + capsitDebounceMS || isWin32Build) {
+				catpsitRightTicksSinceGo = ticksSinceGo;
+				capsitRight(false, ticksSinceGo);
+			}
+			else {
+                trace("EVENT: CapsitRightUp" + "(" + ticksSinceGo + "). Detected as hardware bounce.");
+			}
 		</script>		
 								
 		<script for="Kinetics" event="PegsMap(ticksSinceGo,pegsInLeft,pegsInRight)">

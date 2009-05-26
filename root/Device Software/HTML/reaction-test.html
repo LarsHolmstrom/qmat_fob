@@ -27,15 +27,11 @@
 		var releaseRequired;  //beep happened but button has not been released yet
 		var beep_count=0;   // number of beeps in this test so far
 		var is_stopped = true;  //current test has ended - suppress final beep
-		var debounceReleaseID = 0;  //debounce timer
-		var debouncePressID = 0;    //other debounce timer
 		var isPressed = false;  // debounced pressed indicator
 		var timeout_timer_id = null;  // overall timeout timer progress
 		var timeoutIDblink = null; // Blink while waiting timer
 		var side_active = "right";  // which test we're running
 		var beeperID = 0; // our beep timer ID
-		
-		var debounce_msec = 50;  //number of msec before action not considered bounce
 
 		function init()
 		{
@@ -204,6 +200,8 @@
 			else 
 			{
 				Kinetics.ActivityStart(1);
+                // This is needed for debouncing the buttons in script.html
+                the_script_frame.resetCapsitTicksSinceGo();
 				Kinetics.SetLedState(2,1);
 				Kinetics.SetLedState(3,0);
 			}
@@ -279,6 +277,8 @@
 			else
 			{
 				Kinetics.ActivityStart(1); 
+                // This is needed for debouncing the buttons in script.html
+                the_script_frame.resetCapsitTicksSinceGo();
 				Kinetics.SetLedState(3,1);
 				Kinetics.SetLedState(2,0);
 			}
@@ -373,24 +373,25 @@
 
 		function doRelease()
 		{
-			isPressed = false;
-			debounceReleaseID = 0;
-			releaseRequired = false;
-			
-			// record time for use in accumulated release
-			
-			if (beeperID != 0)
-			{
-			  clearTimeout(beeperID);
-			  beeperID = 0;
+			// Only register a release if neither button is depressed
+			// This prevents a cheat where both buttons are depressed
+			// and a user just lifts one finger and depresses it at each beep.
+			if (!the_script_frame.is_capsit_left_down && !the_script_frame.is_capsit_right_down) {
+				isPressed = false;
+				releaseRequired = false;
+				
+				// record time for use in accumulated release
+				
+				if (beeperID != 0) {
+					clearTimeout(beeperID);
+					beeperID = 0;
+				}
 			}
-
 		}
 
 		function doPress()
 		{
 			isPressed = true;
-			debouncePressID = 0;
 
 			// add time since recorded release time to accumulated release
 
@@ -410,28 +411,12 @@
 		 * Clear all existing beeps and initiate a new one.
 		  */
 		function reaction_start_key_press( side, pressed )
-		{
-			//the_script_frame.writeToFile("DEBUG: Entered reaction_start_key_press");
-			if (debounceReleaseID)//(releaseRequired && releasePending)
-			{
-				clearTimeout(debounceReleaseID);
-				debounceReleaseID = 0;
-			}
-			
-			if (debouncePressID)
-			{
-				clearTimeout(debouncePressID);
-				debouncePressID = 0;
-			}
-
-
-			if (pressed)
-			{
-				debouncePressID = setTimeout('doPress()', debounce_msec);
-			} else
-			{
-				debounceReleaseID = setTimeout('doRelease()', debounce_msec);
-			}
+		{			
+            if (pressed) {
+                doPress();
+            } else {
+                doRelease();
+            }
 		}
 
 		// return to home screen for now (temporary for demo purposes)
