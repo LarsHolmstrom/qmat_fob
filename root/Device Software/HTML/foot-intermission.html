@@ -10,14 +10,14 @@
         parent.frames["scriptframe"].currentTest = "";
 			
 		// menu setup
-		menuItems = 2;
+		menuItems = 1;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 2;		
+		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "foot-demo.html";
-		links[2] = "foot-test-right.html"; 	
+//		links[1] = "foot-demo.html";
+		links[1] = "foot-test-left.html"; 	
 				
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -44,26 +44,11 @@
 			
 			// don't replay the intro audio if we're coming from the instructions page
 			var url = String(window.location);
-			if (url.indexOf("quiet") == -1)
-			{			
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\foottapping\\foot-tapping-intro.wav");
-            	setTimeout("location='foot-demo.html'",2500);	
-                Kinetics.SetLedState(4,1);
-	            Kinetics.SetLedState(5,0);
-	            Kinetics.SetLedState(6,0);
-			}	
-			else
-			{
-				header.innerText = "Prepare Right Foot"
-                document.getElementById("lower_sidebar").style.visibility = 'visible';
-                document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
-				document.getElementById("upper_sidebar").style.visibility = 'visible';
-                document.getElementById("Buttons").style.visibility = 'visible';			
-				Kinetics.SetLedState(5,1);
-				Kinetics.SetLedState(6,1);
-				menuSelect(2);				
-			}	
+            Kinetics.SetLedState(4,1);
+			menuSelect(1);		
+			
+	        parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\foottapping\\foot-tapping_left_side.wav");
 		}
 						
 		</script>
@@ -72,34 +57,29 @@
 		<div id="animation" style="position: absolute; left: 0px; top:37px;">
             <img src="images/foot-tapping.gif">
         </div>
-		<div id="upper_sidebar" class="sidebar" style="position: absolute; left: 168px; top:165px; visibility:hidden;">
+		<!--div id="upper_sidebar" class="sidebar" style="position: absolute; left: 168px; top:10px; visibility:visible;">
 			<img src="images/sidebar_short.gif" height="55">
-		</div>
-        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:10px; visibility:hidden;">
+		</div-->
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:30px; visibility:visible;">
             <img src="images/sidebar_med.gif" height="150">
         </div>
-		<div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:12px; font-size:10pt; visibility:hidden; line-height:1.3;">
+		<div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:40px; font-size:10pt; visibility:visible; line-height:1.3;">
 		<ul>
-			<li>Place your knee at a 45 degree angle</li>
-            <li>Use the ear muffs or ear plugs</li>
+			<li>Do not remove the ear muffs or ear plugs</li>
+			<li>Switch to your left foot</li>
+            <li>Place your knee at a 45 degree angle</li>
             <li>Keep your eyes closed during the test</li>
-            <li>Each foot will be tested for 45 seconds</li>
         </ul>
         </div>
 		<div id="header" class="header">
-			Foot Tapping Test
+			Foot Tapping Test - Left Side
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:167px; visibility:hidden;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:190px; visibility:visible;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
-					<td class="menu-mid"	id="m1-mid" width="82">Instructions</td>
+					<td class="menu-mid"	id="m1-mid" width="82">Continue</td>
 					<td class="menu-right"	id="m1-right"></td>
-				</tr>
-				<tr>
-					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
-					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>
 		</div>

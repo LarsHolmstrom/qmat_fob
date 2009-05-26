@@ -56,10 +56,10 @@
 			}	
 			else
 			{
-                document.getElementById("sidebar").style.visibility = 'visible';
+                document.getElementById("upper_sidebar").style.visibility = 'visible';
                 document.getElementById("lower_sidebar").style.visibility = 'visible';
                 document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
-                document.getElementById("notes").style.visibility = 'visible';
+//                document.getElementById("notes").style.visibility = 'visible';
                 document.getElementById("Buttons").style.visibility = 'visible';
 				menuSelect(2);		
                 Kinetics.SetLedState(5,1);
@@ -74,25 +74,57 @@
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
-		<div id="sidebar" class="sidebar" style="visibility=hidden;">
+        <div id="upper_sidebar" class="sidebar" style="position: absolute; left: 168px; top:165px; visibility:hidden;">
+            <img src="images/sidebar_short.gif" height="55">
+        </div>
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:10px; visibility:hidden;">
+            <img src="images/sidebar_med.gif" height="150">
+        </div>
+        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:14px; font-size:10pt; visibility:hidden; line-height:1.3;">
+        <ul>
+            <li>Tap keys as quickly as you can until you are instructed to stop</li>
+            <li>Place the wrist pad under your wrist</li>
+            <li>Use the ear muffs or ear plugs</li>
+            <li>Keep your eyes closed</li>
+        </ul>
+        </div>
+        <div id="header" class="header">
+            Keyboard Test
+        </div>
+        <div id="Buttons" style="position: absolute; left: 176px; top:167px; visibility:hidden;">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="menu-left"   id="m1-left"></td>
+                    <td class="menu-mid"    id="m1-mid" width="82">Instructions</td>
+                    <td class="menu-right"  id="m1-right"></td>
+                </tr>
+                <tr>
+                    <td class="menu-left"   id="m2-left"></td>
+                    <td class="menu-mid"    id="m2-mid" width="82">Start</td>
+                    <td class="menu-right"  id="m2-right"></td>
+                </tr>               
+            </table>
+        </div>
+		<!--div id="sidebar" class="sidebar" style="visibility=visible;">
 			<img src="images/sidebar.gif" height="110">
 		</div>
-		<div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:120px;; visibility:hidden;">
+		<div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:120px;; visibility:visible;">
             <img src="images/sidebar.gif" height="110">
         </div>
-        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 155px; top:132px; font-size:10pt; visibility:hidden;">
+        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:135px; font-size:10pt; visibility:visible;">
         <ul>
-            <li>Place the ear muffs over your ears</li>
+        	<li>Place the wrist pad under your wrist</li>
+            <li>Use the ear muffs or ear plugs</li>
             <li>Keep your eyes closed during the test</li>
         </ul>
         </div>
 		<div id="header" class="header">
 			Keyboard Test
 		</div>
-		<div id="notes" style="position: absolute; left: 182px; top:8px; width:130px; visibility=hidden;">
+		<div id="notes" style="position: absolute; left: 182px; top:8px; width:130px; visibility=visible;">
 			<font class="grey8">Tap keys as quickly as you can until you are instructed to stop<br></font>
 		</div>
-		<div id="Buttons" style="position: absolute; left: 176px; top:55px; visibility=hidden;">
+		<div id="Buttons" style="position: absolute; left: 176px; top:55px; visibility=visible;">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="menu-left"	id="m1-left"></td>
@@ -105,6 +137,6 @@
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>
-		</div>
+		</div-->
 	</body>
 </html>

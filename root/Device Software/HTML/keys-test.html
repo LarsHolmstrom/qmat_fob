@@ -86,17 +86,17 @@
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			
-			if (countLeft < 1)
-			{
+//			if (countLeft < 1)
+//			{
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
 				Kinetics.ActivityStart(1);
-			}
-			else
-			{
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
-				Kinetics.ActivityStart(1);
-				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
-			}
+//			}
+//			else
+//			{
+//				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
+//				Kinetics.ActivityStart(1);
+//				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
+//			}
 			
 			setTimeout('stopRight()',KEY_TIMEOUT);
 		}
@@ -108,17 +108,17 @@
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			
-			if (countLeft < 2)
-			{
+//			if (countLeft < 2)
+//			{
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
 				Kinetics.ActivityStart(1);
-			}
-			else
-			{
-				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
-				Kinetics.ActivityStart(1);
-				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
-			}
+//			}
+//			else
+//			{
+//				setTimeout("panel.style.paddingTop=0;panel.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;No Peeking!';",2000);
+//				Kinetics.ActivityStart(1);
+//				setTimeout("Kinetics.MaskWithNoise = 1;", 400);				
+//			}
 			
 
 			setTimeout('stopLeft()',KEY_TIMEOUT);
@@ -140,10 +140,10 @@
 			panel.style.paddingTop=12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 			
-			if (countRight > 1)
-				setTimeout('readyLeft()',2000);
-			else
-				setTimeout('readyLeft()',ACTIVITY_SPACING_TIME);	
+//			if (countRight > 1)
+//				setTimeout('readyLeft()',2000);
+//			else
+				setTimeout('readyLeft()',2000);	
 		}
 		
 		// stop left
@@ -162,10 +162,10 @@
 			panel.style.paddingTop=12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";			
 					
-			if (countLeft > 1)
-				setTimeout('readyRight()',2000);
-			else
-				setTimeout('readyRight()',ACTIVITY_SPACING_TIME); 	
+//			if (countLeft > 1)
+//				setTimeout('readyRight()',2000);
+//			else
+				setTimeout('readyRight()',2000); 	
 		}
 				
 		// after three rounds
