@@ -732,7 +732,8 @@
 			if (endCauseID == 0)	
 			{
 //				parent.frames["viewframe"].location = "HTML/session-done.html";	
-                parent.frames["viewframe"].location = "HTML/home.html"; 
+//              parent.frames["viewframe"].location = "HTML/home.html"; 
+                Kinetics.Reboot();
 			}
 			else
 			{
@@ -914,6 +915,10 @@
             <option value="HTML/session-done.html" style="color:#666666;">session done
             <option value="HTML/session-saving.html" style="color:#666666;">session saving
             <option value="HTML/session-timeout.html" style="color:#666666;">session timeout
+			
+			
+            <!--option value="script.html" style="color:black">---test
+            <option value="HTML/IOTest.html" style="color:#666666;">IO test</option-->
     
         </select>   
 

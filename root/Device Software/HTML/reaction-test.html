@@ -78,7 +78,7 @@
 			the_script_frame.ignoreCapsitLeft = false;	
 
 			Kinetics.ActivityEndNormal();		
-			Kinetics.ActivityConfig(2, "REACTION", 0, 0);
+			Kinetics.ActivityConfig(2, "REACTRIGHT", 0, 0);
 
 			haspressed = the_script_frame.is_capsit_right_down;
 
@@ -104,7 +104,7 @@
 		// prepare for left hand
 		function readyLeft()
 		{
-			the_script_frame.writeToFile("Entered readyLeft()");
+//			the_script_frame.writeToFile("Entered readyLeft()");
 			Kinetics.SetLedState(2,0);
 			Kinetics.SetLedState(3,0);
 
@@ -123,7 +123,7 @@
 			the_script_frame.ignoreCapsitRight = false;				
 			the_script_frame.ignoreCapsitLeft = false;
 
-			Kinetics.ActivityConfig(2, "REACTION", 0, 0);
+			Kinetics.ActivityConfig(2, "REACTLEFT", 0, 0);
 
 			haspressed = the_script_frame.is_capsit_left_down;
 			the_script_frame.writeToFile("is_capsit_left_down: " + haspressed);
@@ -491,7 +491,6 @@
 			</table>
 		</div>
 		<div id="panel" class="inprogress">
-			&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;Finger Down
 		</div>
 		<div id="debugleft" style="position:absolute;top:350;left:25;font-size:20pt;">
 			0

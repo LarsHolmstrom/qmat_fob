@@ -34,7 +34,6 @@
             
         // prepare for left hand
         function readyLeft2() {
-            Kinetics.ActivityEndNormal();
             Kinetics.ActivityConfig(4, "FOOTLEFT", 0, 0);   
             parent.frames["scriptframe"].KineticsAudioPlay(
                 "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
@@ -98,13 +97,14 @@
         // called from the script when audio recording is done (based on volume or timeout)
         function doneRecording()
         {
+            Kinetics.ActivityEndNormal();  
+			
             parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav"); 
             Kinetics.ActivityBeep();
                     
             panel.style.paddingTop=12;
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";         
                   
-            Kinetics.ActivityEndNormal();  
 			  
             setTimeout('endTest()',1500);
         }
