@@ -63,7 +63,7 @@
 				// Record whether we are in the test window or not
 				Kinetics.ActivityConfig(7, "QUESTIONS", 0, 0);
 				Kinetics.ActivityStart(0);
-				if (Kinetics.InSessionWindow != 0)			
+				if (Kinetics.InSessionWindow !== 0)			
 					Kinetics.QuestionResponse("Q0","In Test Window");
 				else
 					Kinetics.QuestionResponse("Q0","Not In Test Window");
@@ -81,7 +81,7 @@
 				// Record whether we are in the test window or not
 				Kinetics.ActivityConfig(7, "QUESTIONS", 0, 0);
 				Kinetics.ActivityStart(0);
-				if (Kinetics.InSessionWindow != 0)			
+				if (Kinetics.InSessionWindow !== 0)			
 					Kinetics.QuestionResponse("Q0","In Test Window");
 				else
 					Kinetics.QuestionResponse("Q0","Not In Test Window");

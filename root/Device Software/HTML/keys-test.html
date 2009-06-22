@@ -34,19 +34,11 @@
 		function readyRight()
 		{
 	        header.innerText = "Keyboard Test - Right Hand";
-	        panel.style.paddingTop = 0;
-	        panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eyes";
-	        setTimeout('readyRight2()',2000);
-		}
-		
-		function readyRight2()
-		{
             panel.style.paddingTop = 0;
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             Kinetics.ActivityConfig(6, "KEYRIGHT", 0, 0);
             parent.frames["scriptframe"].KineticsAudioPlay(
                 "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
-        
             setTimeout('startRight()',WAIT_GET_READY_DELAY);
 		}
 
@@ -55,20 +47,16 @@
 		{
             header.innerText = "Keyboard Test - Left Hand";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;Eyes Again";
-            parent.frames["scriptframe"].KineticsAudioPlay(
-                "\\hard disk\\audio\\keyboard\\repeat_left_begin_at_beep_get_ready.wav");
-            setTimeout('readyLeft2()',4000);
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+            setTimeout('readyLeft2()',2000);
 		}
 		
 		function readyLeft2()
 		{
-            panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-        
             Kinetics.ActivityConfig(6, "KEYLEFT", 0, 0);
-        
-            setTimeout('startLeft()',3500);
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+            setTimeout('startLeft()',WAIT_GET_READY_DELAY);
 		}
 				
 		// begin test with right hand
@@ -78,7 +66,7 @@
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
+            setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Alternate Pressing<br>The Keys As Fast<br>As You Can';",2000);
 			Kinetics.ActivityStart(1);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
@@ -91,7 +79,7 @@
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
+			setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Alternate Pressing<br>The Keys As Fast<br>As You Can';",2000);
 			Kinetics.ActivityStart(1);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);
@@ -102,15 +90,16 @@
 		{		
 		    Kinetics.ActivityEndNormal();  
 		  					
-			Kinetics.ActivityBeep();
+//			Kinetics.ActivityBeep();
 
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\stop.wav");	
 				
 			panel.style.paddingTop=12;
+			panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 
-			setTimeout('readyLeft()',2000);	
+			setTimeout('readyLeft()',4000);	
 		}
 		
 		// stop left
@@ -118,12 +107,13 @@
 		{                        
             Kinetics.ActivityEndNormal();  
                             
-            Kinetics.ActivityBeep();						
+//            Kinetics.ActivityBeep();						
 			
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\stop.wav");	
 					
 			panel.style.paddingTop=12;
+            panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 					
 			setTimeout('endTest();',1000); 	
@@ -137,11 +127,13 @@
 			panel.innerHTML = "";
 			
 			var el = document.getElementById("sessionDone");
-			el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+			el.innerHTML = "&nbsp;&nbsp;&nbsp;Keyboard Test<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete";
+
 			
 			parent.frames["scriptframe"].currentTest = "";
 			
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
+//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\you_can_open_eyes_now.wav");    
+
 			
 			setTimeout("location='foot-intro.html';",4000);
 		}
@@ -190,9 +182,11 @@
 				</tr>
 			</table>
 		</div>
-		<div id="panel" class="inprogress">
+        <div id="panel" class="inprogress">
+        </div>
+		<div id="panel_keys" class="inprogress_keys">
 		</div>
-		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
+		<div id="sessionDone" style="position:absolute;left:100;top:110;font-color:black;font-size:12pt;">
         </div>
 		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
             blah

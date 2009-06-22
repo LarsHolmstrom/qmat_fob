@@ -16,7 +16,7 @@
 		
 		// links specific to this page
 		links[1] = "keys-demo.html";
-		links[2] = "keys-noise-suppression-on.html"; 	
+		links[2] = "keys-test.html"; 	
 				
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -25,7 +25,7 @@
 			if (event.keyCode == 72)
 			{
 				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
-				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				if (parent.frames["scriptframe"].DebugMenuAvailable === true)
 				{
 					window.location = "debug-menu.html";
 				}
@@ -59,7 +59,6 @@
                 document.getElementById("upper_sidebar").style.visibility = 'visible';
                 document.getElementById("lower_sidebar").style.visibility = 'visible';
                 document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
-//                document.getElementById("notes").style.visibility = 'visible';
                 document.getElementById("Buttons").style.visibility = 'visible';
 				menuSelect(2);		
                 Kinetics.SetLedState(5,1);
@@ -80,12 +79,12 @@
         <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:10px; visibility:hidden;">
             <img src="images/sidebar_med.gif" height="150">
         </div>
-        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:14px; font-size:10pt; visibility:hidden; line-height:1.3;">
+        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 150px; top:23px; font-size:10pt; visibility:hidden; line-height:1.3;">
         <ul>
             <li>Place the wrist pad under your wrist</li>
-            <li>Keep your eyes closed during the test</li>
-            <li>Press the keys as quickly as you can</li>
-            <li>A beep will start and end the test</li>
+            <li>A beep will start the test</li>
+			<li>Press one key at a time</li>
+            <li>ALTERNATE PRESSING THE KEYS AS QUICKLY AS YOU CAN</li>
         </ul>
         </div>
         <div id="header" class="header">

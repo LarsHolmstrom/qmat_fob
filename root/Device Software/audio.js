@@ -26,25 +26,25 @@ new Audio();
 
 Audio.is_running = false;
 
-function Audio.start(wav)
+Audio.start = function(wav)
 { 
 	writeToFile("DEBUG: Entered Audio.start("+wav+")");
 	the_script_frame.Kinetics.CancelAudioPlay(); 
 	the_script_frame.Kinetics.AudioPlay(wav);
 	Audio.is_running = true; 
 }
-function Audio.stop()
+Audio.stop = function()
 {
 	writeToFile("DEBUG: Entered Audio.stop()");
 	the_script_frame.Kinetics.CancelAudioPlay(); 
 	Audio.is_running = false; 
 }
-function Audio.isRunning()
+Audio.isRunning = function()
 { 
 	writeToFile("DEBUG: Entered Audio.isRunning(): "+Audio.is_running);
 	return Audio.is_running; 
 }
-function Audio.stopEvent()
+Audio.stopEvent = function()
 {
 	Audio.is_running = false; 
 }

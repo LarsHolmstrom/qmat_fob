@@ -140,10 +140,10 @@
 				spot+=2;
 				setTimeout('moveup('+spot+', '+target+')',10);
 			}      
-			else
+			/*else
 			{
-				//this.window.location = "peg-intro.html";
-			}
+				this.window.location = "peg-intro.html";
+			}*/
 
 		}
 
@@ -172,14 +172,14 @@
 
 		function handchange(handstatus)
 		{
-			if (handstatus==0)
+			if (handstatus === 0)
 			{
-			handimg.src=handopen.src
+			   handimg.src=handopen.src;
 			}
 
 			else if (handstatus==1)
 			{
-			handimg.src=handpinch.src
+			   handimg.src=handpinch.src;
 			}
 
 		}
@@ -204,12 +204,12 @@
 			setTimeout('handchange(0)',2000);
 			if (i<8)
 			{
-			setTimeout('moveside(12, 283)',2000);
-			setTimeout('movetop('+oldhandpos+', '+handpos+')',3500);
-			i++
-			oldhandpos=handpos;
-			handpos+=13;
-			setTimeout('movepegs()',3700);
+				setTimeout('moveside(12, 283)',2000);
+				setTimeout('movetop('+oldhandpos+', '+handpos+')',3500);
+				i++;
+				oldhandpos=handpos;
+				handpos+=13;
+				setTimeout('movepegs()',3700);
 			}
 			}
 		}

@@ -15,7 +15,7 @@
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "reaction-intro.html";			
+		links[1] = "questions_handedness.html";			
 				
 		function keyDownLocal()
 		{
@@ -23,7 +23,7 @@
 			if (event.keyCode == 72)
 			{
 				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
-				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				if (parent.frames["scriptframe"].DebugMenuAvailable === true)
 				{
 					window.location = "debug-menu.html";
 				}

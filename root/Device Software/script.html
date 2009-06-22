@@ -33,8 +33,8 @@
 			var pegCountLeft = 1;			// used to keep track of round of left hand peg activity
 			var pegDirection = "";			// direction pegs are supposed to be moving
 			
-			var ignoreCapsitRight			// used to irgnore first press on tap test/reaction test
-			var ignoreCapsitLeft			// used to irgnore first press on tap test/reaction test
+			var ignoreCapsitRight;			// used to irgnore first press on tap test/reaction test
+			var ignoreCapsitLeft;			// used to irgnore first press on tap test/reaction test
 			
 			var is_capsit_right_down = false;
 			var is_capsit_left_down = false;
@@ -139,12 +139,12 @@
 					alert("pegNum too small.");
 				} else if (pegNum <= 8) {
 					pegIdx = pegNum - 1;
-					if ((lastPegsInLeft & (1 << pegIdx)) != 0) {
+					if ((lastPegsInLeft & (1 << pegIdx)) !== 0) {
 						return true;
 					}
 				} else if (pegNum <= 16) {
 					pegIdx = pegNum - 9;
-					if ((lastPegsInRight & (1 << pegIdx)) != 0) {
+					if ((lastPegsInRight & (1 << pegIdx)) !== 0) {
 						return true;
 					}
 				} else {
@@ -220,7 +220,7 @@
 			function init()
 			{
 				var kopen = Kinetics.Open();	
-				if (kopen == 0)
+				if (kopen === 0)
 				{
 					is_kinetics_opened = false;
 					//Kinetics.AssertWrite(url, linenumber, msg);
@@ -273,10 +273,10 @@
 				// if in tap test
 				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
 				{
-					if (ignoreCapsitRight != true)
+					if (ignoreCapsitRight !== true)
 					{
 						// and this is the first press
-						if (the_view_frame.haspressed == false)
+						if (the_view_frame.haspressed === false)
 						{
 							the_view_frame.haspressed = true;									
 							if( ! Audio.isRunning() )
@@ -312,10 +312,10 @@
 				// if we're in the tap test
 				if ( pressed && (currentTest == "TAP" || currentTest == "REACTION" ))
 				{
-					if (ignoreCapsitLeft != true)
+					if (ignoreCapsitLeft !== true)
 					{
 						// and this is the first press
-						if (the_view_frame.haspressed == false)
+						if (the_view_frame.haspressed === false)
 						{
 							the_view_frame.haspressed = true;		
 							if( ! Audio.isRunning() )
@@ -373,7 +373,7 @@
 
 			function cancelActivityTimer()
 			{
-				if( null != timeoutID )
+				if( null !== timeoutID )
 					clearTimeout(timeoutID);
 				timeoutID = null;
 			}
@@ -387,48 +387,48 @@
 			function setActivityTimer()
 			{
 				// debugging
-				{
-					/*
-					writeToFile( "setActivityTimer: " 
-						+ String( parent.frames['viewframe'].location ) 
-					);
-					writeToFile( "setActivityTimer location.host: " 
-						+ String( parent.frames['viewframe'].location.host ) 
-					);
-					writeToFile( "setActivityTimer location.hostname: " 
-						+ String( parent.frames['viewframe'].location.hostname ) 
-					);
-					writeToFile( "setActivityTimer location.pathname: " 
-						+ String( parent.frames['viewframe'].location.pathname ) 
-					);
-					writeToFile( "setActivityTimer location.href: " 
-						+ String( parent.frames['viewframe'].location.href ) 
-					);
-					writeToFile( "setActivityTimer location.href.split: " 
-						+ String( parent.frames['viewframe'].location.href.split('/') ) 
-					);
-					a = String( parent.frames['viewframe'].location.href ).split('/') ;
-					writeToFile( "setActivityTimer location.href.split.last: " 
-							+ a[ a.length - 1 ]
-					);
-					*/
-				}
+				
+				/*
+				writeToFile( "setActivityTimer: " 
+					+ String( parent.frames['viewframe'].location ) 
+				);
+				writeToFile( "setActivityTimer location.host: " 
+					+ String( parent.frames['viewframe'].location.host ) 
+				);
+				writeToFile( "setActivityTimer location.hostname: " 
+					+ String( parent.frames['viewframe'].location.hostname ) 
+				);
+				writeToFile( "setActivityTimer location.pathname: " 
+					+ String( parent.frames['viewframe'].location.pathname ) 
+				);
+				writeToFile( "setActivityTimer location.href: " 
+					+ String( parent.frames['viewframe'].location.href ) 
+				);
+				writeToFile( "setActivityTimer location.href.split: " 
+					+ String( parent.frames['viewframe'].location.href.split('/') ) 
+				);
+				a = String( parent.frames['viewframe'].location.href ).split('/') ;
+				writeToFile( "setActivityTimer location.href.split.last: " 
+						+ a[ a.length - 1 ]
+				);
+				*/
+				
 
 				is_page_with_timeout = true;
+				
+				a = String( parent.frames['viewframe'].location.href ).split('/');
+				the_page = a[ a.length - 1 ];
+				the_page = (the_page.split('.html'))[0];
+				len = array_of_non_time_limited_pages.length;
+				for( indx =0 ; len > indx; ++indx )
 				{
-					a = String( parent.frames['viewframe'].location.href ).split('/');
-					the_page = a[ a.length - 1 ];
-					the_page = (the_page.split('.html'))[0];
-					len = array_of_non_time_limited_pages.length;
-					for( indx =0 ; len > indx; ++indx )
+					if( array_of_non_time_limited_pages[indx] == the_page )
 					{
-						if( array_of_non_time_limited_pages[indx] == the_page )
-						{
-							is_page_with_timeout = false;
-							break;
-						}
+						is_page_with_timeout = false;
+						break;
 					}
 				}
+				
 
 				if( is_page_with_timeout )
 				{
@@ -438,7 +438,7 @@
 						+ a[ a.length - 1 ]
 					);
 					*/
-					if( null == timeoutID )
+					if( null === timeoutID )
 					{
 						timeoutID = setTimeout(
 							"parent.frames['viewframe'].location='HTML/session-timeout.html'"
@@ -446,7 +446,7 @@
 						);
 					}
 				}
-				else if( null != timeoutID )
+				else if( null !== timeoutID )
 				{
 					cancelActivityTimer();
 				}
@@ -681,7 +681,7 @@
 			else
 			{ 
 				watchVisible = false;
-				if (ActiwatchBusy == true)
+				if (ActiwatchBusy === true)
 				{
 					Kinetics.SetWatchPower(0);		
 					ActiwatchFailed = true;
@@ -696,7 +696,7 @@
 			trace("EVENT: WatchParametersRead(" + endCauseID + ")");
 //Kinetics.AssertWrite("xxx", "0", "actiwatch parameters read: " + endCauseID);
 
-			if (endCauseID == 0)
+			if (endCauseID === 0)
 			{
 				ActiwatchFailed = false;
 				ActiwatchBusy = true;
@@ -718,7 +718,7 @@
 			trace("EVENT: WatchSaveProgress(" + percent + ")");
 
 			// if the actiwatch-saving screen is loaded in the view frame
-			if (ActiwatchSaving == true)
+			if (ActiwatchSaving === true)
 				parent.frames["viewframe"].updateProgress(percent);
 			
 		</script>		
@@ -728,7 +728,7 @@
 
 			ActiwatchBusy = false;
 			
-			if (endCauseID == 0)
+			if (endCauseID === 0)
 			{
 				ActiwatchFailed = false;
 				ActiwatchSaveComplete = true;
@@ -774,7 +774,7 @@
 		<script for="Kinetics" event="SessionEnded(endCauseID)">
 			trace("EVENT: SessionEnded(" + endCauseID + ")");				
 			
-			if (endCauseID == 0)	
+			if (endCauseID === 0)	
 			{
 //				parent.frames["viewframe"].location = "HTML/session-done.html";	
 //              parent.frames["viewframe"].location = "HTML/home.html"; 
@@ -791,9 +791,9 @@
 		<script for="Kinetics" event="DataStoreVisible(newState) ">
 			trace("EVENT: DataStoreVisible(" + newState + ")");				
 						
-			if (newState == 0)
+			if (newState === 0)
 			{
-				if ( waitingForStorageRemoval == true)
+				if ( waitingForStorageRemoval === true)
 					parent.frames["viewframe"].location = "HTML/storage-remove.html";		
 				else
 					parent.frames["viewframe"].location = "HTML/storage-missing.html";		
@@ -801,7 +801,7 @@
 			
 			if (newState == 1)
 			{
-				if ( waitingForStorageInsert == true)
+				if ( waitingForStorageInsert === true)
 					parent.frames["viewframe"].location = "HTML/storage-uploaded.html";
 				else
 					Kinetics.Reboot();			

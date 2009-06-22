@@ -8,32 +8,32 @@
 a
 {
 	text-decoration: none; 
-	color: 234368; 
+	color: #234368; 
 }
 
 body
 {
 	margin: 0px;
-	background-color: CAEDF9;
+	background-color: #CAEDF9;
 	background-image: url(images/background-default.gif);
 	background-repeat: no-repeat;
 	font-family: Arial Narrow; 
 	font-size: 11pt; 
 	font-weight: bold;
 	line-height: 14pt;
-	color: 666666; 
+	color: #666666; 
 }
 
 body.home
 {
-	background-color: CAEDF9;
+	background-color: #CAEDF9;
 	background-image: url(images/background-home.gif);
 	background-repeat: no-repeat;
 }
 
 body.hands
 {
-	background-color: CAEDF9;
+	background-color: #CAEDF9;
 	background-image: url(images/background-hands.gif);
 	background-repeat: no-repeat;
 }
@@ -44,7 +44,7 @@ td
 	font-size: 11pt; 
 	font-weight: bold;
 	line-height: 14pt;
-	color: 666666; 
+	color: #666666; 
 }
 
 div.header
@@ -55,7 +55,7 @@ div.header
 	font-family: Arial Narrow; 
 	font-size: 13pt; 
 	font-weight: bold;
-	color: 234368; 
+	color: #234368; 
 }
 
 div.header-home
@@ -66,7 +66,7 @@ div.header-home
 	font-family: Arial Narrow; 
 	font-size: 13pt; 
 	font-weight: bold;
-	color: 234368; 
+	color: #234368; 
 }
 
 div.boundingbox
@@ -99,8 +99,60 @@ div.inprogress
 	font-size: 13pt; 
 	font-weight: bold;
 	line-height: 17pt;
-	color: 234368; 
+	color: #234368; 
 	text-align: center;
+}
+
+div.inprogress_tap
+{
+    position: absolute; 
+    left: 109px; 
+    top: 93px;
+    font-family: Arial Narrow; 
+    font-size: 12pt; 
+    font-weight: bold;
+    line-height: 13pt;
+    color: #234368; 
+    text-align: center;
+}
+
+div.inprogress_reaction
+{
+    position: absolute; 
+    left: 102px; 
+    top: 93px;
+    font-family: Arial Narrow; 
+    font-size: 13pt; 
+    font-weight: bold;
+    line-height: 17pt;
+    color: #234368; 
+    text-align: center;
+}
+
+div.inprogress_keys
+{
+    position: absolute; 
+    left: 95px; 
+    top: 92px;
+    font-family: Arial Narrow; 
+    font-size: 13pt; 
+    font-weight: bold;
+    line-height: 17pt;
+    color: #234368; 
+    text-align: center;
+}
+
+div.inprogress_foot
+{
+    position: absolute; 
+    left: 110px; 
+    top: 92px;
+    font-family: Arial Narrow; 
+    font-size: 13pt; 
+    font-weight: bold;
+    line-height: 17pt;
+    color: #234368; 
+    text-align: center;
 }
 
 div.device
@@ -127,35 +179,35 @@ div.sidebar-peg
 div.timecaption
 {
 	font-family: Arial; 
-	color: 234368; 
+	color: #234368; 
 	font-size: 16pt; 
 }
 
 div.datecaption
 {
 	font-family: Arial Narrow; 
-	color: 234368; 
+	color: #234368; 
 	font-size: 10pt; 
 }
 
 font.blue10
 {
 	font-family: Arial; 
-	color: 234368; 
+	color: #234368; 
 	font-size: 10pt;
 }
 
 font.blue8
 {
 	font-family: Arial; 
-	color: 234368; 
+	color: #234368; 
 	font-size: 8pt;
 }
 
 font.grey8
 {
 	font-family: Arial Narrow; 
-	color: 666666; 
+	color: #666666; 
 	font-size: 8pt;
 	line-height: 10pt;
 }
@@ -163,7 +215,7 @@ font.grey8
 font.boldgrey10
 {
 	font-family: Arial Narrow; 
-	color: 666666; 
+	color: #666666; 
 	font-size: 10pt;
 	font-weight: bold;
 	line-height: 13pt;
@@ -173,7 +225,7 @@ td.menu-left
 {
 	width: 24px;
 	height: 26px;
-	background: images/button-unselected-left.gif;
+	background: url(images/button-unselected-left.gif);
 }
 
 td.menu-mid
@@ -181,7 +233,7 @@ td.menu-mid
 	padding-left: 8px;
 	height: 26px;
 	font-family: Arial; 
-	color: 234368; 
+	color: #234368; 
 	font-size: 10pt;
 	font-weight: bold;
 }
@@ -204,7 +256,7 @@ td.menu-mid-sel
 	padding-left: 8px;
 	height: 26px;
 	font-family: Arial; 
-	color: FFFFFF; 
+	color: #FFFFFF; 
 	font-size: 10pt;
 	font-weight: bold;
 	background-image: url(images/button-selected-middle.gif);

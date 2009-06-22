@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Questionnaire</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		
+		<script language="javascript" src="menu.js"></script>
+		<script language="javascript">
+		
+		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+		menuItems = 4;
+		
+		// this is changed during the keyUp event and used to pick the right link out of the array below
+		currentItem = 1;		
+		
+		// links specific to this page
+		links[1] = "reaction-intro.html";	
+		links[2] = "reaction-intro.html";	
+		links[3] = "reaction-intro.html";	
+        links[4] = "reaction-intro.html";   	
+
+		function keyDownLocal()
+		{
+			// h key
+			if (event.keyCode == 72)
+			{
+				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
+				if (parent.frames["scriptframe"].DebugMenuAvailable == true)
+				{
+					window.location = "debug-menu.html";
+				}
+				else
+				{
+					window.history.go(-1);		
+				}
+			}
+
+			// select (enter) key
+			if (event.keyCode == 13)
+			{
+				// record question response
+				Kinetics.ActivityConfig(7, "Q_STATE", 0, 0);
+				Kinetics.ActivityStart(0);
+				Kinetics.QuestionResponse("Q_STATE",currentItem+"");
+				Kinetics.ActivityEndNormal();
+			}
+		}
+					
+		function init()
+		{
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,1);
+			Kinetics.SetLedState(6,1);
+			
+			menuSelect(1);
+			focus();			
+		}
+			
+		</script>
+				
+	</head>
+	<body onload="init();" onkeydown="keyDownLocal();keyDown();">
+		<div id="header" class="header">
+			Questionnaire
+		</div>
+		<div id="boundingbox-questions" class="boundingbox-questions">
+			<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-top.gif"></td>
+				<td><img src="images/boundingbox-topright.gif"></td>
+				</tr>
+				<tr>
+				<td background="images/boundingbox-bg.gif"></td>
+				<td height="160" background="images/boundingbox-right.gif"></td>
+				</tr>
+				<tr>
+				<td width="290" height="14" background="images/boundingbox-bottom.gif"></td>
+				<td><img src="images/boundingbox-bottomright.gif"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="innerbody" style="position: absolute; left: 35px; top:45px; width:270px; height:130px;">
+			What is your current motor state?
+			
+			<div id="questions" style="position: absolute; left: 0; top:45;">
+				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
+					<tr>
+						<td class="menu-left"	id="m1-left"></td>
+						<td class="menu-mid"	id="m1-mid" width="200">On</td>
+						<td class="menu-right"	id="m1-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m2-left"></td>
+						<td class="menu-mid"	id="m2-mid" width="200">Off</td>
+						<td class="menu-right"	id="m2-right"></td>
+					</tr>
+					<tr>
+						<td class="menu-left"	id="m3-left"></td>
+						<td class="menu-mid"	id="m3-mid" width="200">Can't tell</td>
+						<td class="menu-right"	id="m3-right"></td>
+					</tr>		
+					<tr>
+						<td class="menu-left"	id="m4-left"></td>
+						<td class="menu-mid"	id="m4-mid" width="200">Not applicable</td>
+						<td class="menu-right"	id="m4-right"></td>
+					</tr>		
+				</table>
+			</div>
+			
+		</div>
+	</body>
+</html>

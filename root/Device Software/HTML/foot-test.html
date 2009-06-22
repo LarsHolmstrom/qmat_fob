@@ -107,7 +107,6 @@
 			Kinetics.ActivityStart(1);
 			
             Kinetics.RecStartTimeoutS = 50;   
-//            Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate.wav";
             Kinetics.RecFormat = "\\HARD DISK\\audio\\rectemplate_8khz.wav";
             Kinetics.AudioRecord(0, FOOT_TIMEOUT);  
 		}
@@ -115,9 +114,6 @@
 		// stop right
 		function stopRight()
 		{
-//			Kinetics.MaskWithNoise = 0;								
-			
-//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav");	
 			Kinetics.ActivityBeep();
 				
 			panel.style.paddingTop=12;
@@ -129,9 +125,6 @@
 		// stop left
 		function stopLeft()
 		{
-//			Kinetics.MaskWithNoise = 0;								
-
-//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav");	
 			Kinetics.ActivityBeep();
 					
 			panel.style.paddingTop=12;
@@ -148,11 +141,11 @@
 			panel.innerHTML = "";
 			
             var el = document.getElementById("sessionDone");
-            el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+            el.innerHTML = "&nbsp;&nbsp;&nbsp;You can open<br>&nbsp;&nbsp;&nbsp;your eyes now";
             
 			parent.frames["scriptframe"].currentTest = "";
 			
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\you_can_open_eyes_now.wav");   
  
 			setTimeout("location='peg-intro.html';",4000);
 		}

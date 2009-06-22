@@ -28,12 +28,6 @@
         function readyLeft(){
             header.innerText = "Foot-Tapping Test - Left Foot";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eyes";
-            setTimeout('readyLeft2()',2000);
-        }
-            
-        // prepare for left hand
-        function readyLeft2() {
             Kinetics.ActivityConfig(4, "FOOTLEFT", 0, 0);   
             parent.frames["scriptframe"].KineticsAudioPlay(
                 "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
@@ -48,7 +42,7 @@
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
+            setTimeout("panel.innerHTML='';panel_foot.innerHTML = 'Tap The Pedal<br>As Quickly<br>As You Can';",2000);
 			Kinetics.ActivityStart(1);
 			
             Kinetics.RecStartTimeoutS = 50;   
@@ -64,13 +58,11 @@
 			panel.innerHTML = "";
 			
             var el = document.getElementById("sessionDone");
-            el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
+            el.innerHTML = "&nbsp;Foot Tapping Test<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete";
             
 			parent.frames["scriptframe"].currentTest = "";
 			
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
- 
-			setTimeout("location='peg-intro.html';",4000);
+			setTimeout("location='peg-intro.html';",2000);
 		}
 		
 		function keyDownLocal()
@@ -100,9 +92,9 @@
             Kinetics.ActivityEndNormal();  
 			
             parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav"); 
-            Kinetics.ActivityBeep();
                     
             panel.style.paddingTop=12;
+            panel_foot.innerHTML = "";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";         
                   
 			  
@@ -137,8 +129,9 @@
 		</div>
 		<div id="panel" class="inprogress">
 		</div>
-		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
-
+        <div id="panel_foot" class="inprogress_foot">
+        </div>
+		<div id="sessionDone" style="position:absolute;left:100;top:110;font-color:black;font-size:12pt;">
 		</div>
 		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
 		</div>

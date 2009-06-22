@@ -23,6 +23,8 @@
 		var sideStarted = "UNKNOWN";
 		var countRight = 0; //number of right tests
 		var countLeft = 0;  //number of left tests
+        var rightPressCount = 0;
+        var leftPressCount = 0;
 		var haspressed = false;  //active side button pressed in prep for a test
 		var releaseRequired;  //beep happened but button has not been released yet
 		var beep_count=0;   // number of beeps in this test so far
@@ -176,7 +178,7 @@
 			the_script_frame.ignoreCapsitLeft = false;			
 			panel.style.paddingTop=12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Right Hand<br>Test In Progress';",2000);
+            setTimeout("panel.innerHTML='';in_test_panel.innerHTML = 'Quickly Press<br>Opposite Button<br>After Each Beep';",2000);
 
 			beep_count = 0;
 			is_stopped = false;
@@ -217,6 +219,7 @@
 
 			the_script_frame.Audio.start("\\hard disk\\audio\\stop.wav");			
 			panel.style.paddingTop=12;
+			in_test_panel.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";		
 			setTimeout('readyLeft()',ACTIVITY_SPACING_TIME);
 		}
@@ -257,7 +260,7 @@
 			releaseRequired = true;
 
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Left Hand<br>Test In Progress';",2000);
+            setTimeout("panel.innerHTML='';in_test_panel.innerHTML = 'Quickly Press<br>Opposite Button<br>After Each Beep';",2000);
 		
 			if (!the_script_frame.is_capsit_left_down)
 			{
@@ -294,6 +297,7 @@
 
 			the_script_frame.Audio.start("\\hard disk\\audio\\stop.wav");			
 			panel.style.paddingTop=12;
+            in_test_panel.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";			
 			setTimeout('endTest()',ACTIVITY_SPACING_TIME);
 		}
@@ -311,7 +315,7 @@
 			
 			header.innerText = "Reaction Test - Complete";
 			panel.style.paddingTop=0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;Reaction Test<br>&nbsp;&nbsp;&nbsp;Complete";
+			panel.innerHTML = "&nbsp;&nbsp;Reaction Test<br>&nbsp;&nbsp;Complete";
 			the_script_frame.currentTest = "";
 			setTimeout("location='tap-intro.html';",3000);
 		}
@@ -382,7 +386,7 @@
 				
 				// record time for use in accumulated release
 				
-				if (beeperID != 0) {
+				if (beeperID !== 0) {
 					clearTimeout(beeperID);
 					beeperID = 0;
 				}
@@ -395,7 +399,7 @@
 
 			// add time since recorded release time to accumulated release
 
-			if (beeperID==0)
+			if (beeperID === 0)
 			{
 				if (!is_stopped)
 				{
@@ -478,6 +482,8 @@
 		</div>
 		<div id="panel" class="inprogress">
 		</div>
+        <div id="in_test_panel" class="inprogress_reaction">
+        </div>
 		<div id="debugleft" style="position:absolute;top:350;left:25;font-size:20pt;">
 			0
 		</div>

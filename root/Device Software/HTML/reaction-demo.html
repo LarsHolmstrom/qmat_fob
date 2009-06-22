@@ -128,10 +128,10 @@
 				spot+=2;
 				setTimeout('moveup('+spot+', '+target+')',10);
 			}      
-			else
+			/*else
 			{
-				//this.window.location = "reaction-intro.html";
-			}
+				this.window.location = "reaction-intro.html";
+			}*/
 		}
 
 		function movedown(spot, target)
@@ -159,16 +159,16 @@
 
 		function handchange(handstatus)
 		{
-			if (handstatus==0)
+			if (handstatus === 0)
 			{
-				handimg.src=handtapglow.src
+				handimg.src = handtapglow.src;
 			}
 
 			else if (handstatus==1)
 			{
 				beeper.style.visibility = "visible";
 				setTimeout("beeper.style.visibility = 'hidden';",1000);
-				handimg.src=handtap.src
+				handimg.src = handtap.src;
 			}
 
 		}

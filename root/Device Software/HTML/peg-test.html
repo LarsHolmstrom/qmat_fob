@@ -19,7 +19,7 @@
 		
 		function init()
 		{
-			if ( the_script_frame.pegDirection == "" || the_script_frame.pegDirection == "left")
+			if ( the_script_frame.pegDirection === "" || the_script_frame.pegDirection === "left")
 			{
 				the_script_frame.pegDirection = "left";
 				readyRight();
@@ -188,7 +188,7 @@
 		// fired from the script frame once all pegs are on left (overrides local javascript timers)
 		function allPegsMoved(side)
 		{
-			if (debounce != true)
+			if (debounce !== true)
 			{	
 				// clear the 40 second timeout if they get the pegs over sooner
 				clearTimeout(timerID);

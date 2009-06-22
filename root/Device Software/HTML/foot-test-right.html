@@ -27,28 +27,21 @@
 		
 		function readyRight(){
             header.innerText = "Foot-Tapping Test - Right Foot";
-            panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Eyes";
-			setTimeout('readyRight2()',2000);
-		}
-			
-		// prepare for right hand
-		function readyRight2() {
-			Kinetics.ActivityConfig(4, "FOOTRIGHT", 0, 0);   
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+            Kinetics.ActivityConfig(4, "FOOTRIGHT", 0, 0);   
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Foot<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-		
-			setTimeout('startRight()',4000);
+        
+            setTimeout('startRight()',4000);
 		}
-				
+	
 		// begin test with right hand
 		function startRight()
 		{
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 
-			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
+			setTimeout("panel.innerHTML='';panel_foot.innerHTML = 'Tap The Pedal<br>As Quickly<br>As You Can';",2000);
 			Kinetics.ActivityStart(1);
 			
 			Kinetics.RecStartTimeoutS = 50;   
@@ -84,10 +77,10 @@
         {
             Kinetics.ActivityEndNormal();  
 			
-            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav"); 
-            Kinetics.ActivityBeep();
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav");
                 
             panel.style.paddingTop=12;
+			panel_foot.innerHTML = "";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>"; 
             
             
@@ -122,6 +115,8 @@
 		</div>
 		<div id="panel" class="inprogress">
 		</div>
+        <div id="panel_foot" class="inprogress_foot">
+        </div>
 		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
 
 		</div>

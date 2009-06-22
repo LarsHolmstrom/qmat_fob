@@ -57,14 +57,14 @@ function keyDown()
 	if (event.keyCode == 38)
 	{
 		if ( currentItem > 1 )
-			menuSelect(currentItem-1)
+			menuSelect(currentItem-1);
 	}
 	
 	// down key
 	if (event.keyCode == 40)
 	{
 		if ( currentItem < menuItems )
-			menuSelect(currentItem+1)
+			menuSelect(currentItem+1);
 	}
 
 	// enter key
