@@ -83,6 +83,13 @@ div.boundingboxtest
 	top: 385px;
 }
 
+div.boundingboxleftkey
+{
+    position: absolute; 
+    left: 20px; 
+    top: 85px;
+}
+
 div.boundingbox-questions
 {
 	position: absolute; 

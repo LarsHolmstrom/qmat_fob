@@ -20,7 +20,7 @@ REACTION_TIMEOUT			= TEST_TIMEOUT;
 TAP_TIMEOUT					= 60000;
 //TAP_TIMEOUT                 = 60;
 // length of time to complete one round of the keyboard test
-KEY_TIMEOUT					= 60000;
+KEY_TIMEOUT					= 20000;
 //KEY_TIMEOUT                 = 60;
 
 // fixed time to say "ahh" (in SECONDS), also used for DDK tests.

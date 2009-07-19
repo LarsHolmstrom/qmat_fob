@@ -8,7 +8,15 @@
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
-						
+		
+		// Variables for user feedback functionality
+		var rateCalcWindow = 3000; //Milliseconds
+		var feedbackUpdateInterval = 500; //Milliseconds
+		var reminderWindow = 4000; //Milliseconds
+		var updateFeedbackTimer = null;
+//		var rateThresholds = new Array(0.2, 0.6, 1, 1.5, 2, 2.5, 3, 3.5, 5, 5.5);
+        var rateThresholds = new Array(0.2, 0.4, 0.6, 0.8, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6.0);
+		var reminderElement = null;
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
@@ -20,6 +28,9 @@
 			Kinetics.SetLedState(4,0);
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
+			
+			reminderElement = document.getElementById("reminder");
+			savingElement = document.getElementById("saving");
 			
 			readyRight();
 		}
@@ -70,6 +81,7 @@
 			Kinetics.ActivityStart(1);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
+			updateFeedback();
 		}
 		
 		// begin test with left hand
@@ -83,40 +95,55 @@
 			Kinetics.ActivityStart(1);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);
+            updateFeedback();
 		}
 		
 		// stop right
 		function stopRight()
 		{		
-		    Kinetics.ActivityEndNormal();  
-		  					
-//			Kinetics.ActivityBeep();
-
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\stop.wav");	
 				
 			panel.style.paddingTop=12;
 			panel_keys.innerHTML = "";
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
+			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";
+			reminderElement.innerHTML = "";
+            savingElement.innerHTML = "Saving Data...";
+            resetFeedback();
 
-			setTimeout('readyLeft()',4000);	
+			setTimeout('stopRight2()',2000); 
+		}
+		
+		// Forcing a delay before stopping recording ensures that the screen is updated "STOP"
+		// before the obligatory pause while writing data to the fob.
+		function stopRight2()
+		{
+            Kinetics.ActivityEndNormal();   
+            savingElement.innerHTML = "";
+			readyLeft();
 		}
 		
 		// stop left
 		function stopLeft()
-		{                        
-            Kinetics.ActivityEndNormal();  
-                            
-//            Kinetics.ActivityBeep();						
-			
+		{         
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\stop.wav");	
 					
 			panel.style.paddingTop=12;
             panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
-					
-			setTimeout('endTest();',1000); 	
+			reminderElement.innerHTML = "";
+            savingElement.innerHTML = "Saving Data...";
+            resetFeedback();
+			
+            setTimeout('stopLeft2()',2000); 
+		}
+		
+		function stopLeft2()
+		{
+            Kinetics.ActivityEndNormal();  
+            savingElement.innerHTML = "";
+            endTest();
 		}
 				
 		// after three rounds
@@ -129,11 +156,7 @@
 			var el = document.getElementById("sessionDone");
 			el.innerHTML = "&nbsp;&nbsp;&nbsp;Keyboard Test<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete";
 
-			
 			parent.frames["scriptframe"].currentTest = "";
-			
-//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\you_can_open_eyes_now.wav");    
-
 			
 			setTimeout("location='foot-intro.html';",4000);
 		}
@@ -149,19 +172,166 @@
 				window.location = "debug-menu.html";
 			}
 		}
+		
+		function resetFeedback()
+		{
+            clearTimeout(updateFeedbackTimer);
+            leftKeyMeter.src = "images/vuMeter_0.gif";
+            rightKeyMeter.src = "images/vuMeter_0.gif";
+			parent.frames["scriptframe"].leftKeyStrokes = new Array();
+            parent.frames["scriptframe"].rightKeyStrokes = new Array();
+		}
+		
+		function updateFeedback()
+		{
+			updateLeftKeyRate();
+			updateRightKeyRate();
+			updateReminders();
+            updateFeedbackTimer = setTimeout("updateFeedback();",feedbackUpdateInterval);
+		}
+		
+		function updateLeftKeyRate()
+		{
+			leftKeyStrokeEvents = parent.frames["scriptframe"].leftKeyStrokeEvents;
+			currentTime = new Date();
+			currentMilliseconds = currentTime.getTime();
+			while (leftKeyStrokeEvents.length > 0) {
+				// Remove the entry if it happened outside of the moving average window
+				if (currentMilliseconds - leftKeyStrokeEvents[0] > rateCalcWindow) {
+					leftKeyStrokeEvents.shift();
+				} else {
+					break;
+				}
+			}
+			
+            rate = leftKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
+            
+//            leftKeyRateText.value = rate;
+            if (rate < rateThresholds[0]) {
+                leftKeyMeter.src = "images/vuMeter_0.gif";
+            } else if (rate <= rateThresholds[1]){
+                leftKeyMeter.src = "images/vuMeter_5.gif";
+            } else if (rate <= rateThresholds[2]){
+                leftKeyMeter.src = "images/vuMeter_10.gif";
+            } else if (rate <= rateThresholds[3]){
+                leftKeyMeter.src = "images/vuMeter_15.gif";
+            } else if (rate <= rateThresholds[4]){
+                leftKeyMeter.src = "images/vuMeter_20.gif";
+            } else if (rate <= rateThresholds[5]){
+                leftKeyMeter.src = "images/vuMeter_25.gif";
+            } else if (rate <= rateThresholds[6]){
+                leftKeyMeter.src = "images/vuMeter_30.gif";
+            } else if (rate <= rateThresholds[7]){
+                leftKeyMeter.src = "images/vuMeter_35.gif";
+            } else if (rate <= rateThresholds[8]){
+                leftKeyMeter.src = "images/vuMeter_40.gif";
+            } else if (rate <= rateThresholds[9]){
+                leftKeyMeter.src = "images/vuMeter_45.gif";
+            } else if (rate <= rateThresholds[10]){
+                leftKeyMeter.src = "images/vuMeter_50.gif";
+            } else if (rate <= rateThresholds[11]){
+                leftKeyMeter.src = "images/vuMeter_55.gif";
+            } else if (rate <= rateThresholds[12]){
+                leftKeyMeter.src = "images/vuMeter_60.gif";
+            } else if (rate <= rateThresholds[13]){
+                leftKeyMeter.src = "images/vuMeter_65.gif";
+            } else if (rate <= rateThresholds[14]){
+                leftKeyMeter.src = "images/vuMeter_70.gif";
+            } else if (rate <= rateThresholds[15]){
+                leftKeyMeter.src = "images/vuMeter_75.gif";
+            } else if (rate <= rateThresholds[16]){
+                leftKeyMeter.src = "images/vuMeter_80.gif";
+            } else if (rate <= rateThresholds[17]){
+                leftKeyMeter.src = "images/vuMeter_85.gif";
+            } else if (rate <= rateThresholds[18]){
+                leftKeyMeter.src = "images/vuMeter_90.gif";
+            } else if (rate <= rateThresholds[19]){
+                leftKeyMeter.src = "images/vuMeter_95.gif";
+            } else {
+                leftKeyMeter.src = "images/vuMeter_100.gif";
+            }
+		}
+		
+        function updateRightKeyRate()
+        {
+            rightKeyStrokeEvents = parent.frames["scriptframe"].rightKeyStrokeEvents;
+            currentTime = new Date();
+            currentMilliseconds = currentTime.getTime();
+            while (rightKeyStrokeEvents.length > 0) {
+                // Remove the entry if it happened outside of the moving average window
+                if (currentMilliseconds - rightKeyStrokeEvents[0] > rateCalcWindow) {
+                    rightKeyStrokeEvents.shift();
+                } else {
+                    break;
+                }
+            }
+            
+            rate = rightKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
+            
+//            rightKeyRateText.value = rate;
+            if (rate < rateThresholds[0]) {
+                rightKeyMeter.src = "images/vuMeter_0.gif";
+            } else if (rate <= rateThresholds[1]){
+                rightKeyMeter.src = "images/vuMeter_5.gif";
+            } else if (rate <= rateThresholds[2]){
+                rightKeyMeter.src = "images/vuMeter_10.gif";
+            } else if (rate <= rateThresholds[3]){
+                rightKeyMeter.src = "images/vuMeter_15.gif";
+            } else if (rate <= rateThresholds[4]){
+                rightKeyMeter.src = "images/vuMeter_20.gif";
+            } else if (rate <= rateThresholds[5]){
+                rightKeyMeter.src = "images/vuMeter_25.gif";
+            } else if (rate <= rateThresholds[6]){
+                rightKeyMeter.src = "images/vuMeter_30.gif";
+            } else if (rate <= rateThresholds[7]){
+                rightKeyMeter.src = "images/vuMeter_35.gif";
+            } else if (rate <= rateThresholds[8]){
+                rightKeyMeter.src = "images/vuMeter_40.gif";
+            } else if (rate <= rateThresholds[9]){
+                rightKeyMeter.src = "images/vuMeter_45.gif";
+            } else if (rate <= rateThresholds[10]){
+                rightKeyMeter.src = "images/vuMeter_50.gif";
+            } else if (rate <= rateThresholds[11]){
+                rightKeyMeter.src = "images/vuMeter_55.gif";
+            } else if (rate <= rateThresholds[12]){
+                rightKeyMeter.src = "images/vuMeter_60.gif";
+            } else if (rate <= rateThresholds[13]){
+                rightKeyMeter.src = "images/vuMeter_65.gif";
+            } else if (rate <= rateThresholds[14]){
+                rightKeyMeter.src = "images/vuMeter_70.gif";
+            } else if (rate <= rateThresholds[15]){
+                rightKeyMeter.src = "images/vuMeter_75.gif";
+            } else if (rate <= rateThresholds[16]){
+                rightKeyMeter.src = "images/vuMeter_80.gif";
+            } else if (rate <= rateThresholds[17]){
+                rightKeyMeter.src = "images/vuMeter_85.gif";
+            } else if (rate <= rateThresholds[18]){
+                rightKeyMeter.src = "images/vuMeter_90.gif";
+            } else if (rate <= rateThresholds[19]){
+                rightKeyMeter.src = "images/vuMeter_95.gif";
+            } else {
+                rightKeyMeter.src = "images/vuMeter_100.gif";
+            }
+        }
+		
+		function updateReminders()
+		{
+            lastBothKeysPressedEvent = parent.frames["scriptframe"].lastBothKeysPressedEvent;
+            currentTime = new Date();
+            currentMilliseconds = currentTime.getTime();
+            if (lastBothKeysPressedEvent != null && currentMilliseconds - lastBothKeysPressedEvent < reminderWindow) {
+                reminderElement.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lift Each Key Completely<br>Before Depressing The Next One";
+            } else {
+				reminderElement.innerHTML = "";
+			}
+		}
 
 	</script>
 				
 	</head>
 	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
-		<div id="device" class="device">
-			<img src="images/device.gif">
-		</div>
 		<div id="header" class="header">
 			Keyboard Test
-		</div>
-		<div id="bluebg" style="position: absolute; left: 0; top:0;">
-			<img src="images/halfblue.gif">
 		</div>
 		<div id="boundingboxtest" class="boundingboxtest" style="top:85">
 			<table border="0" cellpadding="0" cellspacing="0">
@@ -182,6 +352,29 @@
 				</tr>
 			</table>
 		</div>
+        <div id="meterLeftKey" style="position: absolute; left: 30px; top: 90px;">
+    	    <input type="image" src="images/vuMeter_0.gif" id="leftKeyMeter" name="leftKeyMeter">
+        </div>
+        <div style="position: absolute; left: 20px; top: 50px;">
+            Left Key<br>&nbsp;&nbsp;Speed
+        </div>
+        <div id="meterRightKey" style="position: absolute; left: 260px; top: 90px;">
+            <input type="image" src="images/vuMeter_0.gif" id="rightKeyMeter" name="rightKeyMeter">
+        </div>
+        <div style="position: absolute; left: 245px; top: 50px;">
+            Right Key<br>&nbsp;&nbsp;&nbsp;Speed
+        </div>
+		<!--div style="position: absolute; left: 100; top: 53;">
+            <input type="text" name="leftKeyRateText" value="0" size="3" >
+        </div>
+        <div style="position: absolute; left: 170; top: 53;">
+            <input type="text" name="rightKeyRateText" value="0" size="3" >
+        </div-->
+		<div id="reminder" style="position: absolute; left: 60; top: 180; color: #ff0000; font-size:12pt;"> 
+        </div>
+        <div id="saving" style="position: absolute; left: 120; top: 60; color: #ff0000; font-size:12pt;"> 
+        </div>
+
         <div id="panel" class="inprogress">
         </div>
 		<div id="panel_keys" class="inprogress_keys">
@@ -189,7 +382,6 @@
 		<div id="sessionDone" style="position:absolute;left:100;top:110;font-color:black;font-size:12pt;">
         </div>
 		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
-            blah
         </div>
 	</body>
 </html>
