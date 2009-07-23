@@ -15,8 +15,9 @@
 		currentItem = 2;		
 		
 		// links specific to this page
-		links[1] = "keys-demo.html";
-		links[2] = "keys-test.html"; 	
+//		links[1] = "keys-demo.html";   
+        links[1] = "video_test.html";
+        links[2] = "keys-test.html";    
 				
 		// local handler for help (or "do over" button)
 		function keyDownLocal()
@@ -47,7 +48,8 @@
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
 					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");	
-                setTimeout("location='keys-demo.html'",2000);    	
+//                setTimeout("location='keys-demo.html'",2000);    	
+                setTimeout("location='video_test.html'",2000);       
 	            Kinetics.SetLedState(2,0);
 	            Kinetics.SetLedState(3,0);          
 	            Kinetics.SetLedState(4,1);

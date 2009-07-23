@@ -14,7 +14,6 @@
 		var feedbackUpdateInterval = 500; //Milliseconds
 		var reminderWindow = 4000; //Milliseconds
 		var updateFeedbackTimer = null;
-//		var rateThresholds = new Array(0.2, 0.6, 1, 1.5, 2, 2.5, 3, 3.5, 5, 5.5);
         var rateThresholds = new Array(0.2, 0.4, 0.6, 0.8, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6.0);
 		var reminderElement = null;
 			
@@ -22,6 +21,14 @@
 		
 		var countRight = 0;
 		var countLeft = 0;
+		
+		// This is set to "true" when waiting for user input in results view
+		var waitingForResultsInput = false;
+		// This is set to "true" when waiting for user input in results view
+        var waitingForPracticeInput = false;
+		// This is set to "true" when we are in the processog updating the feedback
+		var processingFeedback = false;
+		var useFeedback = false;
 
 		function init()
 		{
@@ -31,8 +38,17 @@
 			
 			reminderElement = document.getElementById("reminder");
 			savingElement = document.getElementById("saving");
-			
-			readyRight();
+
+            rightPractice();
+		}
+		
+		function initKeyCounts() {
+            
+            parent.frames["scriptframe"].leftKeyStrokeEvents = new Array();
+            parent.frames["scriptframe"].rightKeyStrokeEvents = new Array();
+            parent.frames["scriptframe"].nLeftKeyStrokeEvents = 0;
+            parent.frames["scriptframe"].nRightKeyStrokeEvents = 0;
+            parent.frames["scriptframe"].nBothKeysPressed = 0;
 		}
 
 		function resetActivityTimer()
@@ -40,31 +56,97 @@
 			// do nothing here in the event a capsit button is pressed	
 		}
 		
+		function rightPractice()
+		{
+            header.innerText = "Keyboard Test - Right Hand Practice";
+            setUpPractice();
+		}
+		
+		function leftPractice()
+        {
+            header.innerText = "Keyboard Test - Left Hand Practice";
+            setUpPractice();
+        }
+		
+		function setUpPractice()
+		{
+            showFeedback();
+			startFeedback();
+			waitingForPracticeInput = true;
+			boundingboxpractice.style.visibility = "visible";	
+			practiceContinueInstructions.style.visibility = 'visible';
+            practiceInstructions.style.visibility = 'visible';
+            Kinetics.SetLedState(4,1);
+		}
+		
+		function tearDownPractice()
+		{
+            stopFeedback();
+            waitingForPracticeInput = false;
+            boundingboxpractice.style.visibility = "hidden";   
+            practiceContinueInstructions.style.visibility = 'hidden';
+            practiceInstructions.style.visibility = 'hidden';
+            Kinetics.SetLedState(4,0);
+		}
 			
 		// prepare for right hand
 		function readyRight()
 		{
+			if (countRight === 1 || countLeft === 1) {
+				useFeedback = false;
+			} else {
+				useFeedback = true;
+			}
 	        header.innerText = "Keyboard Test - Right Hand";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-            Kinetics.ActivityConfig(6, "KEYRIGHT", 0, 0);
+			
+            if (useFeedback) {
+                showFeedback();
+            } else {
+                hideFeedback();
+				initKeyCounts();
+            }
+			
+			panel_keys.innerHTML = "&nbsp;Right Hand Index<br>&nbsp;And Middle Fingers<br>&nbsp;Get Ready";
+
+
+            setTimeout('readyRight2()',2000);
+		}
+		
+		function readyRight2()
+		{
+            Kinetics.ActivityConfig(6, "KEYRIGHT" + countRight, 0, 0);
             parent.frames["scriptframe"].KineticsAudioPlay(
                 "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
-            setTimeout('startRight()',WAIT_GET_READY_DELAY);
+            setTimeout('startRight()',WAIT_GET_READY_DELAY);			
 		}
 
 		// prepare for left hand
 		function readyLeft()
 		{
+            if (countRight === 1 || countLeft === 1) {
+                useFeedback = false;
+            } else {
+                useFeedback = true;
+            }
             header.innerText = "Keyboard Test - Left Hand";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			
+            if (useFeedback) {
+                showFeedback();
+            } else {
+                hideFeedback();
+				initKeyCounts();
+            }
+			
+            panel_keys.innerHTML = "&nbsp;Left Hand Index<br>&nbsp;And Middle Fingers<br>&nbsp;Get Ready";
+
             setTimeout('readyLeft2()',2000);
 		}
 		
 		function readyLeft2()
 		{
-            Kinetics.ActivityConfig(6, "KEYLEFT", 0, 0);
+            Kinetics.ActivityConfig(6, "KEYLEFT" + countLeft, 0, 0);
             parent.frames["scriptframe"].KineticsAudioPlay(
                 "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
             setTimeout('startLeft()',WAIT_GET_READY_DELAY);
@@ -73,29 +155,41 @@
 		// begin test with right hand
 		function startRight()
 		{
+            panel_keys.innerHTML = "";
+			stopFeedback();
 			countRight++;
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 
-            setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Alternate Pressing<br>The Keys As Fast<br>As You Can';",2000);
+            setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
+			
+			
 			Kinetics.ActivityStart(1);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
-			updateFeedback();
+			
+            if (useFeedback) {
+                startFeedback();
+            }
 		}
 		
 		// begin test with left hand
 		function startLeft()
 		{
+            panel_keys.innerHTML = "";
+            stopFeedback();
 			countLeft++;
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			
-			setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Alternate Pressing<br>The Keys As Fast<br>As You Can';",2000);
+            setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
 			Kinetics.ActivityStart(1);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);
-            updateFeedback();
+            
+            if (useFeedback) {
+                startFeedback();
+            }
 		}
 		
 		// stop right
@@ -107,11 +201,10 @@
 			panel.style.paddingTop=12;
 			panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";
-			reminderElement.innerHTML = "";
             savingElement.innerHTML = "Saving Data...";
-            resetFeedback();
+			stopFeedback();
 
-			setTimeout('stopRight2()',2000); 
+			setTimeout('stopRight2()',500); 
 		}
 		
 		// Forcing a delay before stopping recording ensures that the screen is updated "STOP"
@@ -120,30 +213,29 @@
 		{
             Kinetics.ActivityEndNormal();   
             savingElement.innerHTML = "";
-			readyLeft();
+            showResults();
 		}
 		
 		// stop left
 		function stopLeft()
-		{         
+		{        
 			parent.frames["scriptframe"].KineticsAudioPlay(
 				"\\hard disk\\audio\\stop.wav");	
 					
 			panel.style.paddingTop=12;
             panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
-			reminderElement.innerHTML = "";
             savingElement.innerHTML = "Saving Data...";
-            resetFeedback();
+			stopFeedback();
 			
-            setTimeout('stopLeft2()',2000); 
+            setTimeout('stopLeft2()',500); 
 		}
 		
 		function stopLeft2()
 		{
             Kinetics.ActivityEndNormal();  
             savingElement.innerHTML = "";
-            endTest();
+            showResults();
 		}
 				
 		// after three rounds
@@ -158,7 +250,8 @@
 
 			parent.frames["scriptframe"].currentTest = "";
 			
-			setTimeout("location='foot-intro.html';",4000);
+//			setTimeout("location='foot-intro.html';",4000);
+            setTimeout("location='keys-intro-index-finger.html';",4000);
 		}
 		
 		// return to home screen for now (temporary for demo purposes)
@@ -171,10 +264,106 @@
 				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
 				window.location = "debug-menu.html";
 			}
+			 // enter key
+		    if (event.keyCode == 13)
+		    {
+		        if (waitingForResultsInput === true)
+		        {   
+				    hideResults();
+				    if (countLeft === 0) {
+						if (countRight === 1) {
+							// Only the first round of right handed tests have been done
+							readyRight();
+						}
+						else {
+							// We have only completed the right test, continue to the left.
+							leftPractice();
+						}
+						waitingForResultsInput = false;
+					}
+					else if (countLeft === 1) {
+						// Only the first round of left handed tests have been done
+						readyLeft();
+				    } else {
+						// All tests complete. End test
+						endTest();
+					}
+		        } else if (waitingForPracticeInput === true) {
+                    if (countRight === 0) {
+                        // We have only completed the right test practice, continue to the right test.
+                        readyRight();
+                        tearDownPractice();
+                    } else {
+                        readyLeft();
+                        tearDownPractice();
+                    }
+				}
+		    }
+		}		
+		
+		function showResults() {
+			Kinetics.SetLedState(4,1);
+			waitingForResultsInput = true;
+						
+			header.innerText = "Keyboard Test - Results";
+			
+			hideFeedback();
+			
+            boundingboxtest.style.visibility = "hidden";
+			
+			results.style.visibility = "visible";
+			continueButton.style.visibility = "visible";
+			
+			results.innerHTML = "<ul>";
+			
+			if (parent.frames["scriptframe"].nBothKeysPressed === 0) {
+				results.innerHTML += "<li>You never pressed both keys at the same time. Good job!";
+			} else {
+                results.innerHTML += "<li>You pressed both keys at the same time <font color='#ff0000'>" + parent.frames["scriptframe"].nBothKeysPressed + "</font> times. Try to release each key completely before pressing the next one.";
+
+            }
+			
+            results.innerHTML += "<li>You pressed the left key a total of <font color='#ff0000'>" + parent.frames["scriptframe"].nLeftKeyStrokeEvents + "</font> times.";
+            results.innerHTML += "<li>You pressed the right key a total of <font color='#ff0000'>" + parent.frames["scriptframe"].nRightKeyStrokeEvents + "</font> times.";
+            
+            if (countRight === 1) {
+                results.innerHTML += "<br><font color='#0000ff'>Try one more round using your right hand without the visual feedback. Can you do better this time?</font>";
+            } else {
+			    if (countLeft === 0) {
+                    results.innerHTML += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
+                } else if (countLeft ===1) {
+                    results.innerHTML += "<br><font color='#0000ff'>Try one more round without visual feedback using your left hand. Can you do better this time?</font>";
+                } else {
+					results.innerHTML += "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
+				}
+			}
+			
+            results.innerHTML += "</ul>"
+			
 		}
+		
+		function hideResults() {
+			Kinetics.SetLedState(4,0);
+			continueButton.style.visibility = "hidden";
+            results.style.visibility = "hidden";
+			boundingboxtest.style.visibility = "visible";
+		}
+
+		
+		function startFeedback() {
+			initKeyCounts();
+			processingFeedback = true;
+			updateFeedback();
+		}   
+		  
+        function stopFeedback() {
+            processingFeedback = false;
+			resetFeedback();
+        }
 		
 		function resetFeedback()
 		{
+            reminderElement.innerHTML = "";
             clearTimeout(updateFeedbackTimer);
             leftKeyMeter.src = "images/vuMeter_0.gif";
             rightKeyMeter.src = "images/vuMeter_0.gif";
@@ -182,12 +371,33 @@
             parent.frames["scriptframe"].rightKeyStrokes = new Array();
 		}
 		
+		function hideFeedback()
+		{
+            reminderElement.innerHTML = "";
+            meterLeftKey.style.visibility = "hidden";
+            meterRightKey.style.visibility = "hidden";
+            meterLeftKeyLabel.style.visibility = "hidden";
+            meterRightKeyLabel.style.visibility = "hidden";
+            panel.innerHTML = "";
+		}
+		
+        function showFeedback()
+        {
+            meterLeftKey.style.visibility = "visible";
+            meterRightKey.style.visibility = "visible";
+            meterLeftKeyLabel.style.visibility = "visible";
+            meterRightKeyLabel.style.visibility = "visible";
+            boundingboxtest.style.visibility = "visible";
+        }
+		
 		function updateFeedback()
 		{
-			updateLeftKeyRate();
-			updateRightKeyRate();
-			updateReminders();
-            updateFeedbackTimer = setTimeout("updateFeedback();",feedbackUpdateInterval);
+			if (processingFeedback === true) {
+				updateLeftKeyRate();
+				updateRightKeyRate();
+				updateReminders();
+				updateFeedbackTimer = setTimeout("updateFeedback();", feedbackUpdateInterval);
+			}
 		}
 		
 		function updateLeftKeyRate()
@@ -206,7 +416,6 @@
 			
             rate = leftKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
             
-//            leftKeyRateText.value = rate;
             if (rate < rateThresholds[0]) {
                 leftKeyMeter.src = "images/vuMeter_0.gif";
             } else if (rate <= rateThresholds[1]){
@@ -268,7 +477,6 @@
             
             rate = rightKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
             
-//            rightKeyRateText.value = rate;
             if (rate < rateThresholds[0]) {
                 rightKeyMeter.src = "images/vuMeter_0.gif";
             } else if (rate <= rateThresholds[1]){
@@ -333,7 +541,7 @@
 		<div id="header" class="header">
 			Keyboard Test
 		</div>
-		<div id="boundingboxtest" class="boundingboxtest" style="top:85">
+		<div id="boundingboxtest" class="boundingboxtest" style="top:85;visible:hidden">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				<td><img src="images/boundingbox-topleft.gif"></td>
@@ -352,36 +560,72 @@
 				</tr>
 			</table>
 		</div>
+		
+        <div id="boundingboxpractice" class="boundingboxtest" style="top:50;visible:hidden">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td><img src="images/boundingbox-topleft.gif"></td>
+                <td width="100" height="14" background="images/boundingbox-top.gif"></td>
+                <td><img src="images/boundingbox-topright.gif"></td>
+                </tr>
+                <tr>
+                <td height="108" background="images/boundingbox-left.gif"></td>
+                <td background="images/boundingbox-bg.gif"></td>
+                <td height="108" background="images/boundingbox-right.gif"></td>
+                </tr>
+                <tr>
+                <td><img src="images/boundingbox-bottomleft.gif"></td>
+                <td width="100" height="14" background="images/boundingbox-bottom.gif"></td>
+                <td><img src="images/boundingbox-bottomright.gif"></td>
+                </tr>
+            </table>
+        </div>
+		
+		
         <div id="meterLeftKey" style="position: absolute; left: 30px; top: 90px;">
     	    <input type="image" src="images/vuMeter_0.gif" id="leftKeyMeter" name="leftKeyMeter">
         </div>
-        <div style="position: absolute; left: 20px; top: 50px;">
+        <div id="meterLeftKeyLabel" style="position: absolute; left: 20px; top: 50px;">
             Left Key<br>&nbsp;&nbsp;Speed
         </div>
         <div id="meterRightKey" style="position: absolute; left: 260px; top: 90px;">
             <input type="image" src="images/vuMeter_0.gif" id="rightKeyMeter" name="rightKeyMeter">
         </div>
-        <div style="position: absolute; left: 245px; top: 50px;">
+        <div id="meterRightKeyLabel" style="position: absolute; left: 245px; top: 50px;">
             Right Key<br>&nbsp;&nbsp;&nbsp;Speed
         </div>
-		<!--div style="position: absolute; left: 100; top: 53;">
-            <input type="text" name="leftKeyRateText" value="0" size="3" >
-        </div>
-        <div style="position: absolute; left: 170; top: 53;">
-            <input type="text" name="rightKeyRateText" value="0" size="3" >
-        </div-->
-		<div id="reminder" style="position: absolute; left: 60; top: 180; color: #ff0000; font-size:12pt;"> 
+		<div id="reminder" style="position: absolute; left: 60; top: 185; color: #ff0000; font-size:12pt;"> 
         </div>
         <div id="saving" style="position: absolute; left: 120; top: 60; color: #ff0000; font-size:12pt;"> 
         </div>
 
+
         <div id="panel" class="inprogress">
         </div>
 		<div id="panel_keys" class="inprogress_keys">
+			
 		</div>
 		<div id="sessionDone" style="position:absolute;left:100;top:110;font-color:black;font-size:12pt;">
         </div>
-		<div id="debugdiv" style="position:absolute;left:25;top:350;font-color:black;font-size:16pt;">
+		<div id="practiceInstructions" style="position:absolute;left:97;top:50;color:#234368;font-size:10pt;visibility: hidden">
+		Using your index and<br>middle fingers, practice<br>pressing the keys back<br> and forth as fast as you<br>can without pressing<br>them both at the same<br>time.
         </div>
+        <div id="practiceContinueInstructions" style="position:absolute;left:5;top:30;color:#0000ff;font-size:12pt;visibility: hidden">
+        Press the illuminated button when done practicing
+        </div>
+
+		
+		<div id="results" style="position: absolute; left: 10; top: 40; color: #000000; font-size:12pt;"> 
+		</div>		
+		<div id="continueButton" style="position: absolute; left: 176px; top:200px; visibility: hidden">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="menu-left-sel"   id="m1-left"></td>
+                    <td class="menu-mid-sel"    id="m1-mid" width="82">Continue</td>
+                    <td class="menu-right-sel"  id="m1-right"></td>
+                </tr>            
+            </table>
+        </div>
+		
 	</body>
 </html>

@@ -17,7 +17,7 @@ PEG_TIMEOUT					= TEST_TIMEOUT;
 // length of time to complete one round of the reaction test
 REACTION_TIMEOUT			= TEST_TIMEOUT;
 // length of time to complete one round of the tap test
-TAP_TIMEOUT					= 60000;
+TAP_TIMEOUT					= 30000;
 //TAP_TIMEOUT                 = 60;
 // length of time to complete one round of the keyboard test
 KEY_TIMEOUT					= 20000;
@@ -31,7 +31,7 @@ VOICE_TALK_FIXED_TIMEOUT	= 50;
 VOICE_TALK_FIXED_TIMEOUT_2    = 60;
 //VOICE_TALK_FIXED_TIMEOUT    = 10;
 // length of time to complete one round of the foot tapping test (in SECONDS)
-FOOT_TIMEOUT                = 45;
+FOOT_TIMEOUT                = 30;
 //FOOT_TIMEOUT                = 10;
 
 // length of time in between activities (msecs)

@@ -38,6 +38,9 @@
 			
 			var leftKeyStrokeEvents = new Array;
 			var rightKeyStrokeEvents = new Array;
+			var nLeftKeyStrokeEvents = 0;
+			var nRightKeyStrokeEvents = 0;
+			var nBothKeysPressed = 0;
 			var lastBothKeysPressedEvent = null;
 			
 			var is_capsit_right_down = false;
@@ -360,6 +363,7 @@
 				if (currentTest == "KEYBOARD") {
 					var currentTime = new Date();
 					leftKeyStrokeEvents.push(currentTime.getTime());
+					nLeftKeyStrokeEvents++;
 				}
 			}
 			
@@ -370,6 +374,7 @@
 				if (currentTest == "KEYBOARD") {
 					var currentTime = new Date();
 					rightKeyStrokeEvents.push(currentTime.getTime());
+                    nRightKeyStrokeEvents++;
 				}
             }
 			
@@ -380,6 +385,7 @@
                 if (currentTest == "KEYBOARD") {
                     var currentTime = new Date();
 					lastBothKeysPressedEvent = currentTime.getTime();
+					nBothKeysPressed++;
                 }
 			}
 
@@ -1000,6 +1006,11 @@
             <option value="HTML/keys-intro.html" style="color:#666666;">intro
             <option value="HTML/keys-demo.html" style="color:#666666;">instructions
             <option value="HTML/keys-test.html" style="color:#666666;">test 
+			
+            <option value="script.html" style="color:black">---keyboard test index finger
+            <option value="HTML/keys-intro-index-finger.html" style="color:#666666;">intro
+            <option value="HTML/keys-demo.html" style="color:#666666;">instructions
+            <option value="HTML/keys-test-index-finger.html" style="color:#666666;">test 
             
             <option value="script.html" style="color:black">---foot tapping test 
             <option value="HTML/foot-intro.html" style="color:#666666;">intro
