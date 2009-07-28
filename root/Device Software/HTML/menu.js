@@ -70,14 +70,11 @@ function keyDown()
 	// enter key
 	if (event.keyCode == 13)
 	{
-		if ( links[currentItem] == "RESUME" )
-		{
+		if ( links[currentItem] == "RESUME")  {    
 			history.go(-1);
-		}
-		else
-		{
-			parent.frames["scriptframe"].Kinetics.CancelAudioPlay();  
-			window.location = links[currentItem];		
+		} else {
+            parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 
+            window.location = links[currentItem];	
 		}
 	}
 	

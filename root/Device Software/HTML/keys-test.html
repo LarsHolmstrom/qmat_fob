@@ -10,12 +10,11 @@
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		
 		// Variables for user feedback functionality
-		var rateCalcWindow = 3000; //Milliseconds
-		var feedbackUpdateInterval = 500; //Milliseconds
-		var reminderWindow = 4000; //Milliseconds
+		var rateCalcWindow = 4000; //Milliseconds
+		var bothPressedCalcWindow = 2000; //Milliseconds
+		var feedbackUpdateInterval = 250; //Milliseconds
 		var updateFeedbackTimer = null;
         var rateThresholds = new Array(0.2, 0.4, 0.6, 0.8, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6.0);
-		var reminderElement = null;
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
@@ -28,7 +27,6 @@
         var waitingForPracticeInput = false;
 		// This is set to "true" when we are in the processog updating the feedback
 		var processingFeedback = false;
-		var useFeedback = false;
 
 		function init()
 		{
@@ -36,9 +34,6 @@
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
 			
-			reminderElement = document.getElementById("reminder");
-			savingElement = document.getElementById("saving");
-
             rightPractice();
 		}
 		
@@ -46,6 +41,7 @@
             
             parent.frames["scriptframe"].leftKeyStrokeEvents = new Array();
             parent.frames["scriptframe"].rightKeyStrokeEvents = new Array();
+            parent.frames["scriptframe"].bothKeysPressedEvents = new Array();
             parent.frames["scriptframe"].nLeftKeyStrokeEvents = 0;
             parent.frames["scriptframe"].nRightKeyStrokeEvents = 0;
             parent.frames["scriptframe"].nBothKeysPressed = 0;
@@ -59,12 +55,17 @@
 		function rightPractice()
 		{
             header.innerText = "Keyboard Test - Right Hand Practice";
+			parent.frames["scriptframe"].KineticsAudioPlay(
+                    "\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-right.wav");    
+			
             setUpPractice();
 		}
 		
 		function leftPractice()
         {
             header.innerText = "Keyboard Test - Left Hand Practice";
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                    "\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-left.wav");    
             setUpPractice();
         }
 		
@@ -82,6 +83,7 @@
 		function tearDownPractice()
 		{
             stopFeedback();
+			hideFeedback();
             waitingForPracticeInput = false;
             boundingboxpractice.style.visibility = "hidden";   
             practiceContinueInstructions.style.visibility = 'hidden';
@@ -92,24 +94,12 @@
 		// prepare for right hand
 		function readyRight()
 		{
-			if (countRight === 1 || countLeft === 1) {
-				useFeedback = false;
-			} else {
-				useFeedback = true;
-			}
-	        header.innerText = "Keyboard Test - Right Hand";
+			initKeyCounts();
+			thisCount = countRight + 1;
+	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of 3";
             panel.style.paddingTop = 0;
-			
-            if (useFeedback) {
-                showFeedback();
-            } else {
-                hideFeedback();
-				initKeyCounts();
-            }
-			
-			panel_keys.innerHTML = "&nbsp;Right Hand Index<br>&nbsp;And Middle Fingers<br>&nbsp;Get Ready";
-
-
+            boundingboxtest.style.visibility = "visible";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             setTimeout('readyRight2()',2000);
 		}
 		
@@ -124,23 +114,12 @@
 		// prepare for left hand
 		function readyLeft()
 		{
-            if (countRight === 1 || countLeft === 1) {
-                useFeedback = false;
-            } else {
-                useFeedback = true;
-            }
-            header.innerText = "Keyboard Test - Left Hand";
+            initKeyCounts();
+            thisCount = countLeft + 1;
+            header.innerText = "Keyboard Test - Left Hand " + thisCount + " of 3";
             panel.style.paddingTop = 0;
-			
-            if (useFeedback) {
-                showFeedback();
-            } else {
-                hideFeedback();
-				initKeyCounts();
-            }
-			
-            panel_keys.innerHTML = "&nbsp;Left Hand Index<br>&nbsp;And Middle Fingers<br>&nbsp;Get Ready";
-
+            boundingboxtest.style.visibility = "visible";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             setTimeout('readyLeft2()',2000);
 		}
 		
@@ -155,41 +134,28 @@
 		// begin test with right hand
 		function startRight()
 		{
-            panel_keys.innerHTML = "";
-			stopFeedback();
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			countRight++;
 			panel.style.paddingTop = 12;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
-			
-			
 			Kinetics.ActivityStart(1);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
-			
-            if (useFeedback) {
-                startFeedback();
-            }
 		}
 		
 		// begin test with left hand
 		function startLeft()
 		{
-            panel_keys.innerHTML = "";
-            stopFeedback();
+            
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			countLeft++;
 			panel.style.paddingTop = 12;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
 			Kinetics.ActivityStart(1);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);
-            
-            if (useFeedback) {
-                startFeedback();
-            }
 		}
 		
 		// stop right
@@ -201,9 +167,9 @@
 			panel.style.paddingTop=12;
 			panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";
-            savingElement.innerHTML = "Saving Data...";
-			stopFeedback();
+            saving.innerHTML = "Saving Data...";
 
+            // Use a brief pause to ensure that the HTML text is updated before saving the data.
 			setTimeout('stopRight2()',500); 
 		}
 		
@@ -212,7 +178,7 @@
 		function stopRight2()
 		{
             Kinetics.ActivityEndNormal();   
-            savingElement.innerHTML = "";
+            saving.innerHTML = "";
             showResults();
 		}
 		
@@ -225,16 +191,16 @@
 			panel.style.paddingTop=12;
             panel_keys.innerHTML = "";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
-            savingElement.innerHTML = "Saving Data...";
-			stopFeedback();
+            saving.innerHTML = "Saving Data...";
 			
+            // Use a brief pause to ensure that the HTML text is updated before saving the data.
             setTimeout('stopLeft2()',500); 
 		}
 		
 		function stopLeft2()
 		{
             Kinetics.ActivityEndNormal();  
-            savingElement.innerHTML = "";
+            saving.innerHTML = "";
             showResults();
 		}
 				
@@ -250,14 +216,14 @@
 
 			parent.frames["scriptframe"].currentTest = "";
 			
-//			setTimeout("location='foot-intro.html';",4000);
-            setTimeout("location='keys-intro-index-finger.html';",4000);
+			setTimeout("location='tap-intro.html';",3000);
 		}
 		
 		// return to home screen for now (temporary for demo purposes)
 		function keyDownLocal()
-		{
+		{	
 			parent.frames["scriptframe"].resetActivityTimer();
+			
 			// m key (menu)
 			if (event.keyCode == 77)
 			{
@@ -267,35 +233,37 @@
 			 // enter key
 		    if (event.keyCode == 13)
 		    {
-		        if (waitingForResultsInput === true)
-		        {   
-				    hideResults();
-				    if (countLeft === 0) {
-						if (countRight === 1) {
-							// Only the first round of right handed tests have been done
-							readyRight();
-						}
-						else {
+		        if (waitingForResultsInput === true) {
+					hideResults();
+					if (countRight === 1 || countRight === 2) {
+						// Only the first or second round of right handed tests have been done
+						readyRight();
+					}
+					else { // countRight === 3
+						if (countLeft === 0) {
 							// We have only completed the right test, continue to the left.
 							leftPractice();
 						}
-						waitingForResultsInput = false;
-					}
-					else if (countLeft === 1) {
-						// Only the first round of left handed tests have been done
-						readyLeft();
-				    } else {
-						// All tests complete. End test
-						endTest();
+						else {
+							if (countLeft === 1 || countLeft === 2) {
+								// Only the first or second round of left handed tests have been done
+								readyLeft();
+							}
+							else {
+								// All tests complete. Move on to the last test.
+								location='tap-intro.html';
+//								endTest();
+							}
+						}
 					}
 		        } else if (waitingForPracticeInput === true) {
                     if (countRight === 0) {
                         // We have only completed the right test practice, continue to the right test.
+                        tearDownPractice();
                         readyRight();
-                        tearDownPractice();
                     } else {
-                        readyLeft();
                         tearDownPractice();
+                        readyLeft();
                     }
 				}
 		    }
@@ -306,47 +274,59 @@
 			waitingForResultsInput = true;
 						
 			header.innerText = "Keyboard Test - Results";
-			
-			hideFeedback();
+			panel.innerHTML = "";
 			
             boundingboxtest.style.visibility = "hidden";
 			
 			results.style.visibility = "visible";
 			continueButton.style.visibility = "visible";
 			
-			results.innerHTML = "<ul>";
+			resultsStr = "<ul style='padding-left: 0;margin: 1em;'>";
+			resultsStr+= "<li>Key presses: Left: <font color='#009900'>" + parent.frames["scriptframe"].nLeftKeyStrokeEvents + "</font> ";
+			resultsStr += "Right: <font color='#009900'>" + parent.frames["scriptframe"].nRightKeyStrokeEvents + "</font> ";
+            resultsStr += "Both: <font color='#ff0000'>" + parent.frames["scriptframe"].nBothKeysPressed + "</font> ";
 			
-			if (parent.frames["scriptframe"].nBothKeysPressed === 0) {
-				results.innerHTML += "<li>You never pressed both keys at the same time. Good job!";
-			} else {
-                results.innerHTML += "<li>You pressed both keys at the same time <font color='#ff0000'>" + parent.frames["scriptframe"].nBothKeysPressed + "</font> times. Try to release each key completely before pressing the next one.";
-
+			minKeysPressed = Math.min(parent.frames["scriptframe"].nLeftKeyStrokeEvents,parent.frames["scriptframe"].nRightKeyStrokeEvents);
+			motorScore = (minKeysPressed - parent.frames["scriptframe"].nBothKeysPressed) * 60000/KEY_TIMEOUT; 
+			motorScore = Math.max(motorScore,0);
+            resultsStr += "<li>Your score is <font color='#009900'>" + Math.round(motorScore) + "</font> cycles per minute.</li>";
+			
+            if (countRight < 3 || countLeft < 3) {
+	            resultsStr += "<li>You can improve your score by";
+	            resultsStr += "<ul><li><font size='2'>Pressing the keys back and forth faster</font></li>";
+	            
+	            if (parent.frames["scriptframe"].nBothKeysPressed > 0){
+	                resultsStr += "<li><font size='2'>Avoid pressing the keys at the same time</font></li>";
+	            }
+	            resultsStr += "</ul></li>";
             }
 			
-            results.innerHTML += "<li>You pressed the left key a total of <font color='#ff0000'>" + parent.frames["scriptframe"].nLeftKeyStrokeEvents + "</font> times.";
-            results.innerHTML += "<li>You pressed the right key a total of <font color='#ff0000'>" + parent.frames["scriptframe"].nRightKeyStrokeEvents + "</font> times.";
-            
             if (countRight === 1) {
-                results.innerHTML += "<br><font color='#0000ff'>Try one more round using your right hand without the visual feedback. Can you do better this time?</font>";
+                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
+            } else if (countRight === 2) {
+			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
             } else {
 			    if (countLeft === 0) {
-                    results.innerHTML += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
-                } else if (countLeft ===1) {
-                    results.innerHTML += "<br><font color='#0000ff'>Try one more round without visual feedback using your left hand. Can you do better this time?</font>";
+                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
+                } else if (countLeft === 1) {
+                    resultsStr += "<br><font color='#0000ff'>Try another round using your left hand. Can you do better this time?</font>";
+                } else if (countLeft === 2) {
+                    resultsStr += "<br><font color='#0000ff'>Try one more round using your left hand. Can you improve your score?</font>";
                 } else {
-					results.innerHTML += "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
+					resultsStr+= "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
 				}
 			}
 			
-            results.innerHTML += "</ul>"
-			
+            resultsStr += "</ul>"
+
+			results.innerHTML = resultsStr;
 		}
 		
 		function hideResults() {
 			Kinetics.SetLedState(4,0);
 			continueButton.style.visibility = "hidden";
             results.style.visibility = "hidden";
-			boundingboxtest.style.visibility = "visible";
+			waitingForResultsInput = false;
 		}
 
 		
@@ -358,53 +338,43 @@
 		  
         function stopFeedback() {
             processingFeedback = false;
-			resetFeedback();
-        }
-		
-		function resetFeedback()
-		{
-            reminderElement.innerHTML = "";
             clearTimeout(updateFeedbackTimer);
-            leftKeyMeter.src = "images/vuMeter_0.gif";
-            rightKeyMeter.src = "images/vuMeter_0.gif";
-			parent.frames["scriptframe"].leftKeyStrokes = new Array();
-            parent.frames["scriptframe"].rightKeyStrokes = new Array();
-		}
+            motorScoreMeterImage.src = "images/vuMeter_0.gif";
+        }
 		
 		function hideFeedback()
 		{
-            reminderElement.innerHTML = "";
-            meterLeftKey.style.visibility = "hidden";
-            meterRightKey.style.visibility = "hidden";
-            meterLeftKeyLabel.style.visibility = "hidden";
-            meterRightKeyLabel.style.visibility = "hidden";
+            keyPresses.style.visibility = "hidden";
+            motorScoreMeter.style.visibility = "hidden";
+            motorScoreMeterLabel.style.visibility = "hidden";
+            boundingboxtest.style.visibility = "visible";
             panel.innerHTML = "";
 		}
 		
         function showFeedback()
         {
-            meterLeftKey.style.visibility = "visible";
-            meterRightKey.style.visibility = "visible";
-            meterLeftKeyLabel.style.visibility = "visible";
-            meterRightKeyLabel.style.visibility = "visible";
-            boundingboxtest.style.visibility = "visible";
+            keyPresses.style.visibility = "visible";
+            motorScoreMeter.style.visibility = "visible";
+            motorScoreMeterLabel.style.visibility = "visible";
+            boundingboxtest.style.visibility = "hidden";
         }
 		
 		function updateFeedback()
 		{
 			if (processingFeedback === true) {
-				updateLeftKeyRate();
-				updateRightKeyRate();
-				updateReminders();
+				updateMotorScoreMeter();
 				updateFeedbackTimer = setTimeout("updateFeedback();", feedbackUpdateInterval);
 			}
 		}
 		
-		function updateLeftKeyRate()
+		function updateMotorScoreMeter()
 		{
 			leftKeyStrokeEvents = parent.frames["scriptframe"].leftKeyStrokeEvents;
+            rightKeyStrokeEvents = parent.frames["scriptframe"].rightKeyStrokeEvents;
+            bothKeysPressedEvents = parent.frames["scriptframe"].bothKeysPressedEvents;
 			currentTime = new Date();
 			currentMilliseconds = currentTime.getTime();
+			// Purge events that are older than the moving average window
 			while (leftKeyStrokeEvents.length > 0) {
 				// Remove the entry if it happened outside of the moving average window
 				if (currentMilliseconds - leftKeyStrokeEvents[0] > rateCalcWindow) {
@@ -413,60 +383,7 @@
 					break;
 				}
 			}
-			
-            rate = leftKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
-            
-            if (rate < rateThresholds[0]) {
-                leftKeyMeter.src = "images/vuMeter_0.gif";
-            } else if (rate <= rateThresholds[1]){
-                leftKeyMeter.src = "images/vuMeter_5.gif";
-            } else if (rate <= rateThresholds[2]){
-                leftKeyMeter.src = "images/vuMeter_10.gif";
-            } else if (rate <= rateThresholds[3]){
-                leftKeyMeter.src = "images/vuMeter_15.gif";
-            } else if (rate <= rateThresholds[4]){
-                leftKeyMeter.src = "images/vuMeter_20.gif";
-            } else if (rate <= rateThresholds[5]){
-                leftKeyMeter.src = "images/vuMeter_25.gif";
-            } else if (rate <= rateThresholds[6]){
-                leftKeyMeter.src = "images/vuMeter_30.gif";
-            } else if (rate <= rateThresholds[7]){
-                leftKeyMeter.src = "images/vuMeter_35.gif";
-            } else if (rate <= rateThresholds[8]){
-                leftKeyMeter.src = "images/vuMeter_40.gif";
-            } else if (rate <= rateThresholds[9]){
-                leftKeyMeter.src = "images/vuMeter_45.gif";
-            } else if (rate <= rateThresholds[10]){
-                leftKeyMeter.src = "images/vuMeter_50.gif";
-            } else if (rate <= rateThresholds[11]){
-                leftKeyMeter.src = "images/vuMeter_55.gif";
-            } else if (rate <= rateThresholds[12]){
-                leftKeyMeter.src = "images/vuMeter_60.gif";
-            } else if (rate <= rateThresholds[13]){
-                leftKeyMeter.src = "images/vuMeter_65.gif";
-            } else if (rate <= rateThresholds[14]){
-                leftKeyMeter.src = "images/vuMeter_70.gif";
-            } else if (rate <= rateThresholds[15]){
-                leftKeyMeter.src = "images/vuMeter_75.gif";
-            } else if (rate <= rateThresholds[16]){
-                leftKeyMeter.src = "images/vuMeter_80.gif";
-            } else if (rate <= rateThresholds[17]){
-                leftKeyMeter.src = "images/vuMeter_85.gif";
-            } else if (rate <= rateThresholds[18]){
-                leftKeyMeter.src = "images/vuMeter_90.gif";
-            } else if (rate <= rateThresholds[19]){
-                leftKeyMeter.src = "images/vuMeter_95.gif";
-            } else {
-                leftKeyMeter.src = "images/vuMeter_100.gif";
-            }
-		}
-		
-        function updateRightKeyRate()
-        {
-            rightKeyStrokeEvents = parent.frames["scriptframe"].rightKeyStrokeEvents;
-            currentTime = new Date();
-            currentMilliseconds = currentTime.getTime();
-            while (rightKeyStrokeEvents.length > 0) {
+			while (rightKeyStrokeEvents.length > 0) {
                 // Remove the entry if it happened outside of the moving average window
                 if (currentMilliseconds - rightKeyStrokeEvents[0] > rateCalcWindow) {
                     rightKeyStrokeEvents.shift();
@@ -474,74 +391,96 @@
                     break;
                 }
             }
-            
-            rate = rightKeyStrokeEvents.length * (1000/rateCalcWindow); //In Hz
-            
-            if (rate < rateThresholds[0]) {
-                rightKeyMeter.src = "images/vuMeter_0.gif";
-            } else if (rate <= rateThresholds[1]){
-                rightKeyMeter.src = "images/vuMeter_5.gif";
-            } else if (rate <= rateThresholds[2]){
-                rightKeyMeter.src = "images/vuMeter_10.gif";
-            } else if (rate <= rateThresholds[3]){
-                rightKeyMeter.src = "images/vuMeter_15.gif";
-            } else if (rate <= rateThresholds[4]){
-                rightKeyMeter.src = "images/vuMeter_20.gif";
-            } else if (rate <= rateThresholds[5]){
-                rightKeyMeter.src = "images/vuMeter_25.gif";
-            } else if (rate <= rateThresholds[6]){
-                rightKeyMeter.src = "images/vuMeter_30.gif";
-            } else if (rate <= rateThresholds[7]){
-                rightKeyMeter.src = "images/vuMeter_35.gif";
-            } else if (rate <= rateThresholds[8]){
-                rightKeyMeter.src = "images/vuMeter_40.gif";
-            } else if (rate <= rateThresholds[9]){
-                rightKeyMeter.src = "images/vuMeter_45.gif";
-            } else if (rate <= rateThresholds[10]){
-                rightKeyMeter.src = "images/vuMeter_50.gif";
-            } else if (rate <= rateThresholds[11]){
-                rightKeyMeter.src = "images/vuMeter_55.gif";
-            } else if (rate <= rateThresholds[12]){
-                rightKeyMeter.src = "images/vuMeter_60.gif";
-            } else if (rate <= rateThresholds[13]){
-                rightKeyMeter.src = "images/vuMeter_65.gif";
-            } else if (rate <= rateThresholds[14]){
-                rightKeyMeter.src = "images/vuMeter_70.gif";
-            } else if (rate <= rateThresholds[15]){
-                rightKeyMeter.src = "images/vuMeter_75.gif";
-            } else if (rate <= rateThresholds[16]){
-                rightKeyMeter.src = "images/vuMeter_80.gif";
-            } else if (rate <= rateThresholds[17]){
-                rightKeyMeter.src = "images/vuMeter_85.gif";
-            } else if (rate <= rateThresholds[18]){
-                rightKeyMeter.src = "images/vuMeter_90.gif";
-            } else if (rate <= rateThresholds[19]){
-                rightKeyMeter.src = "images/vuMeter_95.gif";
-            } else {
-                rightKeyMeter.src = "images/vuMeter_100.gif";
+            while (bothKeysPressedEvents.length > 0) {
+                // Remove the entry if it happened outside of the moving average window
+                if (currentMilliseconds - bothKeysPressedEvents[0] > bothPressedCalcWindow) {
+                    bothKeysPressedEvents.shift();
+                } else {
+                    break;
+                }
             }
-        }
-		
-		function updateReminders()
-		{
-            lastBothKeysPressedEvent = parent.frames["scriptframe"].lastBothKeysPressedEvent;
-            currentTime = new Date();
-            currentMilliseconds = currentTime.getTime();
-            if (lastBothKeysPressedEvent != null && currentMilliseconds - lastBothKeysPressedEvent < reminderWindow) {
-                reminderElement.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lift Each Key Completely<br>Before Depressing The Next One";
+			
+			minNumStrokes = Math.min(leftKeyStrokeEvents.length,rightKeyStrokeEvents.length);
+            rate = (minNumStrokes - 2*(rateCalcWindow/bothPressedCalcWindow)*bothKeysPressedEvents.length)* (1000/rateCalcWindow); //In Hz
+			            
+            if (rate < rateThresholds[0]) {
+                motorScoreMeterImage.src = "images/vuMeter_0.gif";
+            } else if (rate <= rateThresholds[1]){
+                motorScoreMeterImage.src = "images/vuMeter_5.gif";
+            } else if (rate <= rateThresholds[2]){
+                motorScoreMeterImage.src = "images/vuMeter_10.gif";
+            } else if (rate <= rateThresholds[3]){
+                motorScoreMeterImage.src = "images/vuMeter_15.gif";
+            } else if (rate <= rateThresholds[4]){
+                motorScoreMeterImage.src = "images/vuMeter_20.gif";
+            } else if (rate <= rateThresholds[5]){
+                motorScoreMeterImage.src = "images/vuMeter_25.gif";
+            } else if (rate <= rateThresholds[6]){
+                motorScoreMeterImage.src = "images/vuMeter_30.gif";
+            } else if (rate <= rateThresholds[7]){
+                motorScoreMeterImage.src = "images/vuMeter_35.gif";
+            } else if (rate <= rateThresholds[8]){
+                motorScoreMeterImage.src = "images/vuMeter_40.gif";
+            } else if (rate <= rateThresholds[9]){
+                motorScoreMeterImage.src = "images/vuMeter_45.gif";
+            } else if (rate <= rateThresholds[10]){
+                motorScoreMeterImage.src = "images/vuMeter_50.gif";
+            } else if (rate <= rateThresholds[11]){
+                motorScoreMeterImage.src = "images/vuMeter_55.gif";
+            } else if (rate <= rateThresholds[12]){
+                motorScoreMeterImage.src = "images/vuMeter_60.gif";
+            } else if (rate <= rateThresholds[13]){
+                motorScoreMeterImage.src = "images/vuMeter_65.gif";
+            } else if (rate <= rateThresholds[14]){
+                motorScoreMeterImage.src = "images/vuMeter_70.gif";
+            } else if (rate <= rateThresholds[15]){
+                motorScoreMeterImage.src = "images/vuMeter_75.gif";
+            } else if (rate <= rateThresholds[16]){
+                motorScoreMeterImage.src = "images/vuMeter_80.gif";
+            } else if (rate <= rateThresholds[17]){
+                motorScoreMeterImage.src = "images/vuMeter_85.gif";
+            } else if (rate <= rateThresholds[18]){
+                motorScoreMeterImage.src = "images/vuMeter_90.gif";
+            } else if (rate <= rateThresholds[19]){
+                motorScoreMeterImage.src = "images/vuMeter_95.gif";
             } else {
-				reminderElement.innerHTML = "";
+                motorScoreMeterImage.src = "images/vuMeter_100.gif";
+            }
+			
+			leftStrokeStr = parent.frames["scriptframe"].nLeftKeyStrokeEvents;
+			if (parent.frames["scriptframe"].nLeftKeyStrokeEvents < 100) {
+				leftStrokeStr = "0" + leftStrokeStr;
 			}
+            if (parent.frames["scriptframe"].nLeftKeyStrokeEvents < 10) {
+                leftStrokeStr = "0" + leftStrokeStr;
+            }
+            bothStrokeStr = parent.frames["scriptframe"].nBothKeysPressed;
+            if (parent.frames["scriptframe"].nBothKeysPressed < 100) {
+                bothStrokeStr = "0" + bothStrokeStr;
+            }
+            if (parent.frames["scriptframe"].nBothKeysPressed < 10) {
+                bothStrokeStr = "0" + bothStrokeStr;
+            }
+            rightStrokeStr = parent.frames["scriptframe"].nRightKeyStrokeEvents;
+            if (parent.frames["scriptframe"].nRightKeyStrokeEvents < 100) {
+                rightStrokeStr = "0" + rightStrokeStr;
+            }
+            if (parent.frames["scriptframe"].nRightKeyStrokeEvents < 10) {
+                rightStrokeStr = "0" + rightStrokeStr;
+            }
+			keyPresses.innerHTML = "Left: <font color='009900'>" + leftStrokeStr + "</font>&nbsp;&nbsp;";
+			keyPresses.innerHTML += "Right: <font color='009900'>" + rightStrokeStr + "</font>&nbsp;&nbsp;";
+            keyPresses.innerHTML += "Both: <font color='ff0000'>" + bothStrokeStr + "</font>";
 		}
-
+		
 	</script>
 				
 	</head>
-	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
+	<body id="bodyElement" class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
 		<div id="header" class="header">
 			Keyboard Test
 		</div>
-		<div id="boundingboxtest" class="boundingboxtest" style="top:85;visible:hidden">
+		<div id="boundingboxtest" class="boundingboxtest" style="top:85;visibility:hidden">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				<td><img src="images/boundingbox-topleft.gif"></td>
@@ -561,7 +500,7 @@
 			</table>
 		</div>
 		
-        <div id="boundingboxpractice" class="boundingboxtest" style="top:50;visible:hidden">
+        <div id="boundingboxpractice" style="position:absolute;left:10;top:50;visibility:hidden">
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
                 <td><img src="images/boundingbox-topleft.gif"></td>
@@ -582,41 +521,40 @@
         </div>
 		
 		
-        <div id="meterLeftKey" style="position: absolute; left: 30px; top: 90px;">
-    	    <input type="image" src="images/vuMeter_0.gif" id="leftKeyMeter" name="leftKeyMeter">
+        <div id="motorScoreMeter" style="position: absolute; left: 185px; top: 68px; visibility:hidden">
+    	    <input type="image" src="images/vuMeter_0.gif" height="101" width="90" id="motorScoreMeterImage" name="motorScoreMeterImage">
         </div>
-        <div id="meterLeftKeyLabel" style="position: absolute; left: 20px; top: 50px;">
-            Left Key<br>&nbsp;&nbsp;Speed
+        <div style="position: absolute; left: 185px; top: 330px; visibility:visible">
+			<!-->
+			This div is here simply to retain focus in the view frame after the enter key is pushed.
+			The loss of focus is not reproducible in the desktop emulation environment.
+			Be careful if you change anything here. I tried moving the div to the bottom and trying
+			a text input type, but focus is lost in both of these cases.
+			</-->
+            <input type="image" src="" height="101" width="90" id="placeHolder" name="placeHolder">
         </div>
-        <div id="meterRightKey" style="position: absolute; left: 260px; top: 90px;">
-            <input type="image" src="images/vuMeter_0.gif" id="rightKeyMeter" name="rightKeyMeter">
+        <div id="motorScoreMeterLabel" style="position: absolute; left: 173px; top: 49px; color: #234368;text-align: center;visibility:hidden">
+            Performance Meter
         </div>
-        <div id="meterRightKeyLabel" style="position: absolute; left: 245px; top: 50px;">
-            Right Key<br>&nbsp;&nbsp;&nbsp;Speed
-        </div>
-		<div id="reminder" style="position: absolute; left: 60; top: 185; color: #ff0000; font-size:12pt;"> 
-        </div>
+		<div id="keyPresses" style="position: absolute; left: 148; top: 167; color: #234368; font-size:10pt;visibility:hidden; text-align: center;"> 
+		</div>
         <div id="saving" style="position: absolute; left: 120; top: 60; color: #ff0000; font-size:12pt;"> 
         </div>
 
 
-        <div id="panel" class="inprogress">
-        </div>
-		<div id="panel_keys" class="inprogress_keys">
-			
-		</div>
+        <div id="panel" class="inprogress"></div>
+		<div id="panel_keys" class="inprogress_keys"></div>
 		<div id="sessionDone" style="position:absolute;left:100;top:110;font-color:black;font-size:12pt;">
         </div>
-		<div id="practiceInstructions" style="position:absolute;left:97;top:50;color:#234368;font-size:10pt;visibility: hidden">
+		<div id="practiceInstructions" style="position:absolute;left:15;top:50;color:#234368;font-size:10pt;visibility: hidden">
 		Using your index and<br>middle fingers, practice<br>pressing the keys back<br> and forth as fast as you<br>can without pressing<br>them both at the same<br>time.
         </div>
-        <div id="practiceContinueInstructions" style="position:absolute;left:5;top:30;color:#0000ff;font-size:12pt;visibility: hidden">
-        Press the illuminated button when done practicing
+        <div id="practiceContinueInstructions" style="position:absolute;left:45;top:200;color:#0000ff;font-size:12pt;visibility: hidden">
+        Press illuminated button when done
         </div>
 
 		
-		<div id="results" style="position: absolute; left: 10; top: 40; color: #000000; font-size:12pt;"> 
-		</div>		
+		<div id="results" style="position: absolute; left: 10; top: 25; color: #000000; font-size:12pt;"></div>		
 		<div id="continueButton" style="position: absolute; left: 176px; top:200px; visibility: hidden">
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
@@ -626,6 +564,7 @@
                 </tr>            
             </table>
         </div>
+		
 		
 	</body>
 </html>

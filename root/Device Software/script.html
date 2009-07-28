@@ -38,10 +38,10 @@
 			
 			var leftKeyStrokeEvents = new Array;
 			var rightKeyStrokeEvents = new Array;
+            var bothKeysPressedEvents = new Array;
 			var nLeftKeyStrokeEvents = 0;
 			var nRightKeyStrokeEvents = 0;
 			var nBothKeysPressed = 0;
-			var lastBothKeysPressedEvent = null;
 			
 			var is_capsit_right_down = false;
 			var is_capsit_left_down = false;
@@ -384,7 +384,7 @@
 				trace("EVENT: Both digitography keys pressed simultaneously");
                 if (currentTest == "KEYBOARD") {
                     var currentTime = new Date();
-					lastBothKeysPressedEvent = currentTime.getTime();
+                    bothKeysPressedEvents.push(currentTime.getTime());
 					nBothKeysPressed++;
                 }
 			}
