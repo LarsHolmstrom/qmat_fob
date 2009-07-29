@@ -62,9 +62,9 @@
         function saveAnswer()
         {
                 // record question response
-            Kinetics.ActivityConfig(7, "Q_AFFECTED", 0, 0);
+            Kinetics.ActivityConfig(7, "Q_HANDED", 0, 0);
             Kinetics.ActivityStart(0);
-            Kinetics.QuestionResponse("Q_AFFECTED", currentItem);
+            Kinetics.QuestionResponse("Q_HANDED", currentItem);
             Kinetics.ActivityEndNormal();
             setTimeout("window.location = 'questions_most_affected.html'",2000);
         }
