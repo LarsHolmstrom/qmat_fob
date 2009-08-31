@@ -82,6 +82,7 @@
 		
 		function tearDownPractice()
 		{
+			parent.frames["scriptframe"].Kinetics.CancelAudioPlay();     
             stopFeedback();
 			hideFeedback();
             waitingForPracticeInput = false;
@@ -139,6 +140,7 @@
 			panel.style.paddingTop = 12;
 
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
+			
 			Kinetics.ActivityStart(1);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
@@ -153,6 +155,7 @@
 			panel.style.paddingTop = 12;
 			
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
+			
 			Kinetics.ActivityStart(1);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);

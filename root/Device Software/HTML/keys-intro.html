@@ -15,7 +15,6 @@
 		currentItem = 2;		
 		
 		// links specific to this page
-//		links[1] = "keys-demo.html";   
         links[1] = "keys-video.html";
         links[2] = "keys-test.html";    
 				
@@ -47,8 +46,7 @@
 			if (url.indexOf("quiet") == -1)
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");	
-//                setTimeout("location='keys-demo.html'",2000);    	
+					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");
                 setTimeout("location='keys-video.html'",2000);       
 	            Kinetics.SetLedState(2,0);
 	            Kinetics.SetLedState(3,0);          

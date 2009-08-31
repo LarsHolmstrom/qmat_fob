@@ -5,7 +5,7 @@
 		<title>Untitled Document</title>
 	</head>
 	
-    <SCRIPT FOR="MediaPlayer1" EVENT="PlayStateChange(lOldState, lNewState)" LANGUAGE="JScript">
+    <SCRIPT FOR="Video" EVENT="PlayStateChange(lOldState, lNewState)" LANGUAGE="JScript">
         if (lNewState === 0) {
             setTimeout("location='keys-intro.html?quiet';",1000);    
         }
@@ -34,27 +34,19 @@
         }
     }
 	
-	function init() {
-//		setTimeout(exit(),20000);
-	}
-	
-//	function exit() {
-//        location = "keys-intro.html?quiet";
-//        document.getElementById('MediaPlayer1').controls.stop();
-//	}
-	
 	</script>
 	
-	<body onload="init();focus();" style="background-color: #000000;">
+	<body onload="focus();" style="background-color: #000000;">
     <div style="position: absolute; left: 0; top: 0;">
-    <object id="MediaPlayer1" CLASSID="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701" standby="Loading Microsoft Windows® Media Player components..." type="application/x-oleobject" hspace="0" vspace="0" width="320" height="240">
+    <object id="Video" CLASSID="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701" standby="Loading Microsoft Windows® Media Player components..." type="application/x-oleobject" hspace="0" vspace="0" width="320" height="240">
         <param name="fileName" value="../../Hard Disk/video/keys-demo.wmv">
 		<param name="animationatStart" value="true">
 		<param name="transparentatStart" value="true">
 		<param name="autoStart" value="true">
 		<param name="showControls" value="false">
 		<param NAME="SendPlayStateChangeEvents" VALUE="True">
-        <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="../../hard disk/video/keys-demo.wmv" name="MediaPlayer1" width="320" height="240" autostart=1 showcontrols=0>
+		<param name="Volume" value="100">
+        <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="../../hard disk/video/keys-demo.wmv" Volume="100" name="Video" width="320" height="240" autostart=1 showcontrols=0>
     </object>
 	</div>
 	</body>
