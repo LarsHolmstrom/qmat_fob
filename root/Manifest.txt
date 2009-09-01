@@ -1,5 +1,5 @@
-Build 107
-Script: 107
+Build 108
+Script: 108
 Device Control: 1.1.2.0
 Device App: 1.0.1.0
 HC08: 7.10
