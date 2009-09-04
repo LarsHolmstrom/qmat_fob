@@ -13,7 +13,9 @@
 		var rateCalcWindow = 4000; //Milliseconds
 		var bothPressedCalcWindow = 2000; //Milliseconds
 		var feedbackUpdateInterval = 250; //Milliseconds
+		var practiceReminderInterval = 20000; //Milliseconds
 		var updateFeedbackTimer = null;
+		var practiceReminderTimer = null;
         var rateThresholds = new Array(0.2, 0.4, 0.6, 0.8, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6.0);
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
@@ -77,6 +79,7 @@
 			boundingboxpractice.style.visibility = "visible";	
 			practiceContinueInstructions.style.visibility = 'visible';
             practiceInstructions.style.visibility = 'visible';
+			bothKeysPressedWarning.style.visibility = 'visible';
             Kinetics.SetLedState(4,1);
 		}
 		
@@ -89,6 +92,7 @@
             boundingboxpractice.style.visibility = "hidden";   
             practiceContinueInstructions.style.visibility = 'hidden';
             practiceInstructions.style.visibility = 'hidden';
+            bothKeysPressedWarning.style.visibility = 'hidden';
             Kinetics.SetLedState(4,0);
 		}
 			
@@ -149,7 +153,6 @@
 		// begin test with left hand
 		function startLeft()
 		{
-            
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 			countLeft++;
 			panel.style.paddingTop = 12;
@@ -255,7 +258,6 @@
 							else {
 								// All tests complete. Move on to the last test.
 								location='tap-intro.html';
-//								endTest();
 							}
 						}
 					}
@@ -337,11 +339,13 @@
 			initKeyCounts();
 			processingFeedback = true;
 			updateFeedback();
+			practiceReminderTimer = setTimeout("playPracticeReminder();", 40000);
 		}   
 		  
         function stopFeedback() {
             processingFeedback = false;
             clearTimeout(updateFeedbackTimer);
+			clearTimeout(practiceReminderTimer);
             motorScoreMeterImage.src = "images/vuMeter_0.gif";
         }
 		
@@ -367,6 +371,14 @@
 			if (processingFeedback === true) {
 				updateMotorScoreMeter();
 				updateFeedbackTimer = setTimeout("updateFeedback();", feedbackUpdateInterval);
+			}
+		}
+		
+		function playPracticeReminder()
+		{
+			if (processingFeedback === true) {
+				parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-practice-reminder.wav");    
+				practiceReminderTimer = setTimeout("playPracticeReminder();", practiceReminderInterval);
 			}
 		}
 		
@@ -474,6 +486,12 @@
 			keyPresses.innerHTML = "Left: <font color='009900'>" + leftStrokeStr + "</font>&nbsp;&nbsp;";
 			keyPresses.innerHTML += "Right: <font color='009900'>" + rightStrokeStr + "</font>&nbsp;&nbsp;";
             keyPresses.innerHTML += "Both: <font color='ff0000'>" + bothStrokeStr + "</font>";
+			
+			if (bothKeysPressedEvents.length > 0) {
+				bothKeysPressedWarning.innerHTML = "Try not to press<br>both keys at<br>the same time";
+			} else {
+                bothKeysPressedWarning.innerHTML = "";
+			}
 		}
 		
 	</script>
@@ -552,9 +570,11 @@
 		<div id="practiceInstructions" style="position:absolute;left:15;top:50;color:#234368;font-size:10pt;visibility: hidden">
 		Using your index and<br>middle fingers, practice<br>pressing the keys back<br> and forth as fast as you<br>can without pressing<br>them both at the same<br>time.
         </div>
-        <div id="practiceContinueInstructions" style="position:absolute;left:45;top:200;color:#0000ff;font-size:12pt;visibility: hidden">
-        Press illuminated button when done
+        <div id="practiceContinueInstructions" style="position:absolute;left:15;top:200;color:#0000ff;font-size:12pt;visibility: visible">
+        Press illuminated button when done practicing
         </div>
+		<div id="bothKeysPressedWarning" style="position: absolute; left: 188px; top: 70px;font-size:10pt; line-height:0.95; color: #ff0000;text-align: center;visibility:hidden">
+		</div>
 
 		
 		<div id="results" style="position: absolute; left: 10; top: 25; color: #000000; font-size:12pt;"></div>		
