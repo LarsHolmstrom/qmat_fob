@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+    <head>
+        <title>Paced Keyboard Test Intro</title>
+        <link rel="stylesheet" type="text/css" href="_style.css" /> 
+        <script language="javascript" src="menu.js"></script>
+        <script language="javascript">
+    
+        var Kinetics = parent.frames["scriptframe"].Kinetics;
+            
+        // local (this page) event handler for keydown
+        function keyDownLocal()
+        {   
+            parent.frames["scriptframe"].resetActivityTimer();
+            // h key (help)
+            if (event.keyCode == 72)
+            {
+                parent.frames["scriptframe"].Kinetics.CancelAudioPlay();        
+                window.location = "keys-paced-intro.html";
+            }
+
+            // enter key
+            if (event.keyCode == 13)
+            {           
+                parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+                location = "keys-paced-intro.html?quiet";
+            }
+        }
+            
+        // start the animation and audio
+        function init()
+        {
+            // tell the control to play the instruction audio
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\keyboard\\keyboard-paced_instructions.wav");
+            
+            // redirect back to the test intro page after the audio
+            setTimeout("location='keys-paced-intro.html?quiet'",22000);
+            
+            Kinetics.SetLedState(4,1);
+            Kinetics.SetLedState(5,0);
+            Kinetics.SetLedState(6,0);
+                        
+            focus();
+            
+        }
+    
+
+        
+        </script>
+    </head>
+    <body class="hands" onload="init();" onkeydown="keyDownLocal();">
+        <div id="device" class="device">
+            <img src="images/device.gif">
+        </div>
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 178px; top:10px; visibility:visible;">
+            <img src="images/sidebar_med.gif" height="150">
+        </div>
+        <div id="lower_sidebar_notes" class="sidebar" style="position: absolute; left: 170px; top:20px; font-size:10pt; visibility:visible; line-height:1.3;">
+        <ul>
+            <li>Place the gel pad under your palm</li>
+            <li>Alternate pressing back and forth between the keys</li>
+            <li>PRESS THE KEYS IN TIME WITH THE METRONOME</li>
+        </ul>
+        </div>
+    </body>
+</html>
