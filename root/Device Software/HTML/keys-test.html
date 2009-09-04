@@ -18,6 +18,7 @@
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
+		var nCounts = 4;
 		var countRight = 0;
 		var countLeft = 0;
 		
@@ -54,7 +55,8 @@
 		
 		function rightPractice()
 		{
-            header.innerText = "Keyboard Test - Right Hand Practice";
+//            header.innerText = "Keyboard Test - Right Hand Practice";
+            header.innerText = "Keyboard Test - Practice";
 			parent.frames["scriptframe"].KineticsAudioPlay(
                     "\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-right.wav");    
 			
@@ -97,7 +99,8 @@
 		{
 			initKeyCounts();
 			thisCount = countRight + 1;
-	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of 3";
+//	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of " + nCounts;
+            header.innerText = "Keyboard Test - Trial " + thisCount + " of " + nCounts;
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
@@ -117,7 +120,7 @@
 		{
             initKeyCounts();
             thisCount = countLeft + 1;
-            header.innerText = "Keyboard Test - Left Hand " + thisCount + " of 3";
+            header.innerText = "Keyboard Test - Left Hand " + thisCount + " of " + nCounts;
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
@@ -238,24 +241,24 @@
 		    {
 		        if (waitingForResultsInput === true) {
 					hideResults();
-					if (countRight === 1 || countRight === 2) {
-						// Only the first or second round of right handed tests have been done
+					if (countRight < nCounts) {
+						// Not all right handed tests have been done
 						readyRight();
 					}
-					else { // countRight === 3
+					else {
 						if (countLeft === 0) {
 							// We have only completed the right test, continue to the left.
-							leftPractice();
+//							leftPractice();
+                            location='keys-paced-intro.html';
 						}
 						else {
-							if (countLeft === 1 || countLeft === 2) {
-								// Only the first or second round of left handed tests have been done
+							if (countLeft <= nCounts) {
+								// Not all left handed tests have been done
 								readyLeft();
 							}
 							else {
 								// All tests complete. Move on to the last test.
 								location='tap-intro.html';
-//								endTest();
 							}
 						}
 					}
@@ -294,7 +297,7 @@
 			motorScore = Math.max(motorScore,0);
             resultsStr += "<li>Your score is <font color='#009900'>" + Math.round(motorScore) + "</font> cycles per minute.</li>";
 			
-            if (countRight < 3 || countLeft < 3) {
+            if (countRight < nCounts || countLeft < nCounts) {
 	            resultsStr += "<li>You can improve your score by";
 	            resultsStr += "<ul><li><font size='2'>Pressing the keys back and forth faster</font></li>";
 	            
@@ -304,16 +307,17 @@
 	            resultsStr += "</ul></li>";
             }
 			
-            if (countRight === 1) {
+            if (countRight < nCounts-1) {
                 resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
-            } else if (countRight === 2) {
+            } else if (countRight === nCounts-1) {
 			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
             } else {
 			    if (countLeft === 0) {
-                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
-                } else if (countLeft === 1) {
+//                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
+                    resultsStr+= "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
+                } else if (countLeft < nCounts-1) {
                     resultsStr += "<br><font color='#0000ff'>Try another round using your left hand. Can you do better this time?</font>";
-                } else if (countLeft === 2) {
+                } else if (countLeft === nCounts-1) {
                     resultsStr += "<br><font color='#0000ff'>Try one more round using your left hand. Can you improve your score?</font>";
                 } else {
 					resultsStr+= "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
