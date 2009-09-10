@@ -107,7 +107,8 @@
             header.innerText = "Keyboard Test - Trial " + thisCount + " of " + nCounts;
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+//            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+            panel.innerHTML = "&nbsp;&nbsp;Ready Most<br>&nbsp;&nbsp;Affected Hand";
             setTimeout('readyRight2()',2000);
 		}
 		
@@ -311,9 +312,11 @@
             }
 			
             if (countRight < nCounts-1) {
-                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
+//                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
+                resultsStr += "<br><font color='#0000ff'>Try another round. Can you do better this time?</font>";
             } else if (countRight === nCounts-1) {
-			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
+//			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
+                resultsStr += "<br><font color='#0000ff'>Try one more round. Can you improve your score?</font>";
             } else {
 			    if (countLeft === 0) {
 //                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
@@ -575,7 +578,7 @@
 		<div id="practiceInstructions" style="position:absolute;left:15;top:50;color:#234368;font-size:10pt;visibility: hidden">
 		Using your index and<br>middle fingers, practice<br>pressing the keys back<br> and forth as fast as you<br>can without pressing<br>them both at the same<br>time.
         </div>
-        <div id="practiceContinueInstructions" style="position:absolute;left:15;top:200;color:#0000ff;font-size:12pt;visibility: visible">
+        <div id="practiceContinueInstructions" style="position:absolute;left:15;top:200;color:#0000ff;font-size:12pt;visibility: hidden">
         Press illuminated button when done practicing
         </div>
 		<div id="bothKeysPressedWarning" style="position: absolute; left: 188px; top: 70px;font-size:10pt; line-height:0.95; color: #ff0000;text-align: center;visibility:hidden">
