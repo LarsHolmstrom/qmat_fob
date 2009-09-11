@@ -45,26 +45,18 @@
 			var url = String(window.location);
 			if (url.indexOf("quiet") == -1)
 			{			
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\keyboard\\keyboard_intro.wav");
-                setTimeout("location='keys-video.html'",2000);       
-	            Kinetics.SetLedState(2,0);
-	            Kinetics.SetLedState(3,0);          
-	            Kinetics.SetLedState(4,1);
-	            Kinetics.SetLedState(5,0);
-	            Kinetics.SetLedState(6,0);
+				parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard_intro_lars.wav");
 			}	
-			else
-			{
-                document.getElementById("upper_sidebar").style.visibility = 'visible';
-                document.getElementById("lower_sidebar").style.visibility = 'visible';
-                document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
-                document.getElementById("Buttons").style.visibility = 'visible';
-				menuSelect(2);		
-                Kinetics.SetLedState(5,1);
-                Kinetics.SetLedState(6,1);		
-			}
-						
+            document.getElementById("upper_sidebar").style.visibility = 'visible';
+            document.getElementById("lower_sidebar").style.visibility = 'visible';
+            document.getElementById("lower_sidebar_notes").style.visibility = 'visible';
+            document.getElementById("Buttons").style.visibility = 'visible';
+			menuSelect(2);		   
+            Kinetics.SetLedState(2,0);
+            Kinetics.SetLedState(3,0);          
+            Kinetics.SetLedState(4,1);
+            Kinetics.SetLedState(5,1);
+            Kinetics.SetLedState(6,1);		
 		}
 						
 		</script>

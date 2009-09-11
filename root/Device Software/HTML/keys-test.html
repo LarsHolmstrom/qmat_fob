@@ -13,14 +13,14 @@
 		var rateCalcWindow = 4000; //Milliseconds
 		var bothPressedCalcWindow = 2000; //Milliseconds
 		var feedbackUpdateInterval = 250; //Milliseconds
-		var practiceReminderInterval = 20000; //Milliseconds
+		var practiceReminderInterval = 25000; //Milliseconds
 		var updateFeedbackTimer = null;
 		var practiceReminderTimer = null;
         var rateThresholds = new Array(0.2, 0.4, 0.6, 0.8, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6.0);
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
-		var nCounts = 4;
+		var nCounts = 3; //Number of times to perform each test in each side.
 		var countRight = 0;
 		var countLeft = 0;
 		
@@ -57,8 +57,7 @@
 		
 		function rightPractice()
 		{
-//            header.innerText = "Keyboard Test - Right Hand Practice";
-            header.innerText = "Keyboard Test - Practice";
+            header.innerText = "Keyboard Test - Right Hand Practice";
 			parent.frames["scriptframe"].KineticsAudioPlay(
                     "\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-right.wav");    
 			
@@ -68,8 +67,7 @@
 		function leftPractice()
         {
             header.innerText = "Keyboard Test - Left Hand Practice";
-            parent.frames["scriptframe"].KineticsAudioPlay(
-                    "\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-left.wav");    
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-practice-instructions-left.wav");    
             setUpPractice();
         }
 		
@@ -103,12 +101,10 @@
 		{
 			initKeyCounts();
 			thisCount = countRight + 1;
-//	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of " + nCounts;
-            header.innerText = "Keyboard Test - Trial " + thisCount + " of " + nCounts;
+	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of " + nCounts;
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
-//            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-            panel.innerHTML = "&nbsp;&nbsp;Ready Most<br>&nbsp;&nbsp;Affected Hand";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             setTimeout('readyRight2()',2000);
 		}
 		
@@ -116,7 +112,7 @@
 		{
             Kinetics.ActivityConfig(6, "KEYRIGHT" + countRight, 0, 0);
             parent.frames["scriptframe"].KineticsAudioPlay(
-                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+                "\\hard disk\\audio\\begin_at_beep_get_ready_lars.wav");
             setTimeout('startRight()',WAIT_GET_READY_DELAY);			
 		}
 
@@ -135,8 +131,7 @@
 		function readyLeft2()
 		{
             Kinetics.ActivityConfig(6, "KEYLEFT" + countLeft, 0, 0);
-            parent.frames["scriptframe"].KineticsAudioPlay(
-                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\begin_at_beep_get_ready_lars.wav");
             setTimeout('startLeft()',WAIT_GET_READY_DELAY);
 		}
 				
@@ -171,8 +166,7 @@
 		// stop right
 		function stopRight()
 		{		
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\stop.wav");	
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop_lars.wav");	
 				
 			panel.style.paddingTop=12;
 			panel_keys.innerHTML = "";
@@ -195,8 +189,7 @@
 		// stop left
 		function stopLeft()
 		{        
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\stop.wav");	
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop_lars.wav");	
 					
 			panel.style.paddingTop=12;
             panel_keys.innerHTML = "";
@@ -252,17 +245,16 @@
 					else {
 						if (countLeft === 0) {
 							// We have only completed the right test, continue to the left.
-//							leftPractice();
-                            location='keys-paced-intro.html';
+							leftPractice();
 						}
 						else {
-							if (countLeft <= nCounts) {
+							if (countLeft < nCounts) {
 								// Not all left handed tests have been done
 								readyLeft();
 							}
 							else {
-								// All tests complete. Move on to the last test.
-								location='tap-intro.html';
+								// All tests complete. Move on to the next test type.
+                                location='keys-paced-intro.html';
 							}
 						}
 					}
@@ -312,15 +304,12 @@
             }
 			
             if (countRight < nCounts-1) {
-//                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
-                resultsStr += "<br><font color='#0000ff'>Try another round. Can you do better this time?</font>";
+                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
             } else if (countRight === nCounts-1) {
-//			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
-                resultsStr += "<br><font color='#0000ff'>Try one more round. Can you improve your score?</font>";
+			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
             } else {
 			    if (countLeft === 0) {
-//                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
-                    resultsStr+= "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
+                    resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
                 } else if (countLeft < nCounts-1) {
                     resultsStr += "<br><font color='#0000ff'>Try another round using your left hand. Can you do better this time?</font>";
                 } else if (countLeft === nCounts-1) {
@@ -347,7 +336,7 @@
 			initKeyCounts();
 			processingFeedback = true;
 			updateFeedback();
-			practiceReminderTimer = setTimeout("playPracticeReminder();", 40000);
+			practiceReminderTimer = setTimeout("playPracticeReminder();", 45000);
 		}   
 		  
         function stopFeedback() {

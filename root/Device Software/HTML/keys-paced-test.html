@@ -14,6 +14,7 @@
 		
 		var countRight = 0;
 		var countLeft = 0;
+		var nCounts = 1;
 
 		function init()
 		{
@@ -21,7 +22,7 @@
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
 			
-			readyRight();
+			readyRight1();
 		}
 
 		function resetActivityTimer()
@@ -29,126 +30,125 @@
 			// do nothing here in the event a capsit button is pressed	
 		}
 		
+		function readyRight1()
+		{
+            panel.style.paddingTop = 0;
+            header.innerText = "Paced Keyboard Test - Right Hand";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-prepare-right-hand.wav");
+            setTimeout('readyRight2()',4000);
+		}
 			
 		// prepare for right hand
-		function readyRight()
+		function readyRight2()
 		{
-            thisCount = countRight + 1;
-            header.innerText = "Paced Keyboard Test - Trial " + thisCount + " of 3";
-            panel.style.top = 90;
-//            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;Most Affected<br>Hand<br>&nbsp;Get Ready";
+            header.innerText = "Paced Keyboard Test - Right Hand";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             Kinetics.ActivityConfig(6, "KEYPACER" + countRight, 0, 0);
-            parent.frames["scriptframe"].KineticsAudioPlay(
-                "\\hard disk\\audio\\keyboard\\keyboard-paced-test.wav");
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-paced-test.wav");
         
             setTimeout('startRight()',4800);
 		}
+		
+		function readyLeft1()
+		{
+            panel.style.paddingTop = 0;
+            header.innerText = "Paced Keyboard Test - Left Hand";
+            //            panel.style.top = 90;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-prepare-left-hand.wav");
+			setTimeout('readyLeft2()',5000);
+		}
 
-//		// prepare for left hand
-//		function readyLeft()
-//		{
-//            header.innerText = "Keyboard Test - Left Hand";
-//            panel.style.paddingTop = 0;
-//            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close Your<br>&nbsp;&nbsp;&nbsp;&nbsp;Eyes Again";
-//            parent.frames["scriptframe"].KineticsAudioPlay(
-//                "\\hard disk\\audio\\keyboard\\repeat_left_begin_at_beep_get_ready.wav");
-//            setTimeout('readyLeft2()',4000);
-//		}
-//		
-//		function readyLeft2()
-//		{
-//            panel.style.paddingTop = 0;
-//            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-//        
-//            Kinetics.ActivityConfig(6, "KEYLEFT", 0, 0);
-//        
-//            setTimeout('startLeft()',3500);
-//		}
-//				
+		// prepare for left hand
+		function readyLeft2()
+		{
+            panel.style.paddingTop = 0;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+			Kinetics.ActivityConfig(6, "KEYPACEL" + countLeft, 0, 0);
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-paced-test.wav");
+			
+			setTimeout('startLeft()', 4800);
+		}
+		
 		// begin test with right hand
 		function startRight()
 		{
 			countRight++;
-            panel.style.top = 100;
 			panel.style.paddingTop = 12;
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-
-			setTimeout("panel.style.top=80;panel.innerHTML = 'Press the Keys<br>In Time With<br>the Metronome';",4000);
+            
+			setTimeout("boundingboxtall.style.visibility = \"visible\";panel.style.top=54;panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';",2000);
 			Kinetics.ActivityStart(0);
 
-			setTimeout('stopRight()',49000);
+			setTimeout('stopRight1()',48600);
 		}
 		
-//		// begin test with left hand
-//		function startLeft()
-//		{
-//			countLeft++;
-//			panel.style.paddingTop = 12;
-//			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-//			
-//			setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Test In Progress<br>No Peeking!';",2000);
-//			Kinetics.ActivityStart(1);
-//				
-//			setTimeout('stopLeft()',KEY_TIMEOUT);
-//		}
+        // begin test with right hand
+        function startLeft()
+        {
+            countLeft++;
+            panel.style.paddingTop = 12;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
+            setTimeout("boundingboxtall.style.visibility = \"visible\";panel.style.top=54;panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';",2000);
+            Kinetics.ActivityStart(0);
+
+            setTimeout('stopLeft1()',48600);
+        }
 		
 		// stop right
-		function stopRight()
+		function stopRight1()
 		{		
-		    Kinetics.ActivityEndNormal();  
-		  					
-//			Kinetics.ActivityBeep();
-
-//			parent.frames["scriptframe"].KineticsAudioPlay(
-//				"\\hard disk\\audio\\stop.wav");	
 				
-			panel.style.top=100;
+			panel.style.top=105;
 			panel.style.paddingTop=12;
+            boundingboxtall.style.visibility = "hidden";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 
-            if (countRight < 3) {
-				setTimeout('readyRight()', 4000);
-			}
-			else {
-				setTimeout('endTest();', 2000);
-			}
-//			setTimeout('readyLeft()',2000);	
+            setTimeout('stopRight2()',1000);
+		}
+		
+		function stopRight2()
+		{
+            Kinetics.ActivityEndNormal();  
+            if (countRight < nCounts) {
+                setTimeout('readyRight2()', 1000);
+            }
+            else {
+                readyLeft1();
+            }
 		}
 		
 		// stop left
-		function stopLeft()
+		function stopLeft1()
 		{                        
-            Kinetics.ActivityEndNormal();  
-                            
-            Kinetics.ActivityBeep();						
-			
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\stop.wav");	
-					
-			panel.style.paddingTop=12;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
-					
-			setTimeout('endTest();',1000); 	
+			 
+            panel.style.top=105;
+            panel.style.paddingTop=12;
+            boundingboxtall.style.visibility = "hidden";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>"; 
+
+            setTimeout('stopLeft2()',1000);
+		}
+		
+		function stopLeft2()
+		{
+            Kinetics.ActivityEndNormal(); 
+            if (countRight < nCounts) {
+                setTimeout('readyLeft2()', 1000);
+            }
+            else {
+                endTest();
+            }
 		}
 				
-		// after three rounds
+		// after all rounds are complete
 		function endTest()
 		{
 			header.innerText = "Paced Keyboard Test - Complete";
-			
-			panel.innerHTML = "";
-			
-//			var el = document.getElementById("sessionDone");
-//			el.innerHTML = "You may open your<br>&nbsp;&nbsp;eyes and remove<br>&nbsp;&nbsp;&nbsp;&nbsp;the ear muffs";
-			
+//			panel.innerHTML = "";
 			parent.frames["scriptframe"].currentTest = "";
-			
-//			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\misc\\ears_eyes_complete.wav");    
-			
-//			setTimeout("location='foot-intro.html';",4000);
-			
             setTimeout("location='session-saving.html';",2000);
 		}
 		
@@ -163,7 +163,6 @@
 				window.location = "debug-menu.html";
 			}
 		}
-
 	</script>
 				
 	</head>
@@ -196,11 +195,27 @@
 				</tr>
 			</table>
 		</div>
-		<div id="panel" class="inprogress">
-			
-		</div>
-        <div id="panel2" class="inprogress2" style="position:absolute;left:80;top:100;color: #234368; ;font-size:13pt;">
+        <div id="boundingboxtall" class="boundingboxtest" style="top:55;visibility:hidden">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td><img src="images/boundingbox-topleft.gif"></td>
+                <td width="100" height="14" background="images/boundingbox-top.gif"></td>
+                <td><img src="images/boundingbox-topright.gif"></td>
+                </tr>
+                <tr>
+                <td height="90" background="images/boundingbox-left.gif"></td>
+                <td background="images/boundingbox-bg.gif"></td>
+                <td height="90" background="images/boundingbox-right.gif"></td>
+                </tr>
+                <tr>
+                <td><img src="images/boundingbox-bottomleft.gif"></td>
+                <td width="100" height="14" background="images/boundingbox-bottom.gif"></td>
+                <td><img src="images/boundingbox-bottomright.gif"></td>
+                </tr>
+            </table>
         </div>
+		<div id="panel" class="inprogress">
+		</div>
 		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
         </div>
 	</body>
