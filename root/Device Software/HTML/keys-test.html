@@ -3,11 +3,19 @@
 	<head>
 		<title>Keyboarding Test</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />	
-		
+        <script language="javascript" src="menu.js"></script>
 		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
+		
+		// menu setup
+        menuItems = 2;
+        // this is changed during the keyUp event and used to pick the right link out of the array below
+        currentItem = 2;
+        // links specific to this page
+        links[1] = "";
+        links[2] = "";    
 		
 		// Variables for user feedback functionality
 		var rateCalcWindow = 4000; //Milliseconds
@@ -20,16 +28,15 @@
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
-		var nCounts = 3; //Number of times to perform each test in each side.
+		var nCounts = 1; //Number of times to perform each test in each side.
 		var countRight = 0;
 		var countLeft = 0;
 		
-		// This is set to "true" when waiting for user input in results view
-		var waitingForResultsInput = false;
-		// This is set to "true" when waiting for user input in results view
-        var waitingForPracticeInput = false;
+        var showRedoOption = true; //If this is set to "true" then the user has the option of redoing the last test.
+		
 		// This is set to "true" when we are in the processog updating the feedback
 		var processingFeedback = false;
+		
 
 		function init()
 		{
@@ -75,12 +82,17 @@
 		{
             showFeedback();
 			startFeedback();
-			waitingForPracticeInput = true;
+			
+	        links[1] = "practiceComplete()";
+	        links[2] = "practiceComplete()";    
+			
 			boundingboxpractice.style.visibility = "visible";	
 			practiceContinueInstructions.style.visibility = 'visible';
             practiceInstructions.style.visibility = 'visible';
 			bothKeysPressedWarning.style.visibility = 'visible';
             Kinetics.SetLedState(4,1);
+			
+			bodyElement.focus();
 		}
 		
 		function tearDownPractice()
@@ -88,7 +100,8 @@
 			parent.frames["scriptframe"].Kinetics.CancelAudioPlay();     
             stopFeedback();
 			hideFeedback();
-            waitingForPracticeInput = false;
+            links[1] = "";
+            links[2] = "";   
             boundingboxpractice.style.visibility = "hidden";   
             practiceContinueInstructions.style.visibility = 'hidden';
             practiceInstructions.style.visibility = 'hidden';
@@ -101,37 +114,47 @@
 		{
 			initKeyCounts();
 			thisCount = countRight + 1;
-	        header.innerText = "Keyboard Test - Right Hand " + thisCount + " of " + nCounts;
+			if (nCounts > 1) {
+				header.innerText = "Keyboard Test - Right Hand " + thisCount + " of " + nCounts;
+			} else {
+				header.innerText = "Keyboard Test - Right Hand ";
+			}
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Right Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-            setTimeout('readyRight2()',2000);
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-prepare-right-hand.wav");
+            setTimeout('readyRight2()',4000);
 		}
 		
 		function readyRight2()
 		{
             Kinetics.ActivityConfig(6, "KEYRIGHT" + countRight, 0, 0);
             parent.frames["scriptframe"].KineticsAudioPlay(
-                "\\hard disk\\audio\\begin_at_beep_get_ready_lars.wav");
+                "\\hard disk\\audio\\begin_at_beep_get_ready.wav");
             setTimeout('startRight()',WAIT_GET_READY_DELAY);			
 		}
 
 		// prepare for left hand
-		function readyLeft()
-		{
-            initKeyCounts();
-            thisCount = countLeft + 1;
-            header.innerText = "Keyboard Test - Left Hand " + thisCount + " of " + nCounts;
+		function readyLeft(){
+			initKeyCounts();
+			thisCount = countLeft + 1;
+			if (nCounts > 1) {
+				header.innerText = "Keyboard Test - Left Hand " + thisCount + " of " + nCounts;
+			}
+			else {
+				header.innerText = "Keyboard Test - Left Hand ";
+			}
             panel.style.paddingTop = 0;
             boundingboxtest.style.visibility = "visible";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-            setTimeout('readyLeft2()',2000);
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-prepare-left-hand.wav");
+            setTimeout('readyLeft2()',4000);
 		}
 		
 		function readyLeft2()
 		{
             Kinetics.ActivityConfig(6, "KEYLEFT" + countLeft, 0, 0);
-            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\begin_at_beep_get_ready_lars.wav");
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\begin_at_beep_get_ready.wav");
             setTimeout('startLeft()',WAIT_GET_READY_DELAY);
 		}
 				
@@ -144,7 +167,8 @@
 
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
 			
-			Kinetics.ActivityStart(1);
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\beep.wav");
+			Kinetics.ActivityStart(0);
 
 			setTimeout('stopRight()',KEY_TIMEOUT);
 		}
@@ -158,7 +182,8 @@
 			
             setTimeout("panel.innerHTML='';panel_keys.innerHTML = 'Press The Keys Back<br>And Forth As Fast As<br>You Can';",2000);
 			
-			Kinetics.ActivityStart(1);
+            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\beep.wav");
+            Kinetics.ActivityStart(0);
 				
 			setTimeout('stopLeft()',KEY_TIMEOUT);
 		}
@@ -166,7 +191,7 @@
 		// stop right
 		function stopRight()
 		{		
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop_lars.wav");	
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav");	
 				
 			panel.style.paddingTop=12;
 			panel_keys.innerHTML = "";
@@ -189,7 +214,7 @@
 		// stop left
 		function stopLeft()
 		{        
-			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop_lars.wav");	
+			parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\stop.wav");	
 					
 			panel.style.paddingTop=12;
             panel_keys.innerHTML = "";
@@ -221,59 +246,61 @@
 			
 			setTimeout("location='tap-intro.html';",3000);
 		}
-		
-		// return to home screen for now (temporary for demo purposes)
-		function keyDownLocal()
-		{	
-			parent.frames["scriptframe"].resetActivityTimer();
-			
-			// m key (menu)
-			if (event.keyCode == 77)
-			{
-				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
-				window.location = "debug-menu.html";
+	
+        function redoTest() {
+			if (countRight <= nCounts && countLeft === 0){
+				// Redo the last right handed test.
+				countRight--;
+				hideResults();
+				readyRight();
+			} else {
+				// Redo the last left handed test.
+				countLeft--;
+                hideResults();
+                readyLeft();
 			}
-			 // enter key
-		    if (event.keyCode == 13)
-		    {
-		        if (waitingForResultsInput === true) {
-					hideResults();
-					if (countRight < nCounts) {
-						// Not all right handed tests have been done
-						readyRight();
-					}
-					else {
-						if (countLeft === 0) {
-							// We have only completed the right test, continue to the left.
-							leftPractice();
-						}
-						else {
-							if (countLeft < nCounts) {
-								// Not all left handed tests have been done
-								readyLeft();
-							}
-							else {
-								// All tests complete. Move on to the next test type.
-                                location='keys-paced-intro.html';
-							}
-						}
-					}
-		        } else if (waitingForPracticeInput === true) {
-                    if (countRight === 0) {
-                        // We have only completed the right test practice, continue to the right test.
-                        tearDownPractice();
-                        readyRight();
-                    } else {
-                        tearDownPractice();
+		}
+		
+		function continueTest() {
+            hideResults();
+            if (countRight < nCounts) {
+                // Not all right handed tests have been done
+                readyRight();
+            }
+            else {
+                if (countLeft === 0) {
+                    // We have only completed the right test, continue to the left.
+                    leftPractice();
+                }
+                else {
+                    if (countLeft < nCounts) {
+                        // Not all left handed tests have been done
                         readyLeft();
                     }
-				}
-		    }
-		}		
+                    else {
+                        // All tests complete. Move on to the next test type.
+                        location='keys-paced-intro.html';
+                    }
+                }
+            }
+		}	
+		
+		function practiceComplete() {
+            if (countRight === 0) {
+                // We have only completed the right test practice, continue to the right test.
+                tearDownPractice();
+                readyRight();
+            } else {
+                tearDownPractice();
+                readyLeft();
+            }
+		}
 		
 		function showResults() {
 			Kinetics.SetLedState(4,1);
-			waitingForResultsInput = true;
+            menuSelect(1);
+	        links[1] = "continueTest()";
+	        links[2] = "redoTest()";    
 						
 			header.innerText = "Keyboard Test - Results";
 			panel.innerHTML = "";
@@ -281,6 +308,7 @@
             boundingboxtest.style.visibility = "hidden";
 			
 			results.style.visibility = "visible";
+            lower_sidebar.style.visibility = "visible";
 			continueButton.style.visibility = "visible";
 			
 			resultsStr = "<ul style='padding-left: 0;margin: 1em;'>";
@@ -304,16 +332,16 @@
             }
 			
             if (countRight < nCounts-1) {
-                resultsStr += "<br><font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
+                resultsStr += "<font color='#0000ff'>Try another round using your right hand. Can you do better this time?</font>";
             } else if (countRight === nCounts-1) {
-			    resultsStr += "<br><font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
+			    resultsStr += "<font color='#0000ff'>Try one more round using your right hand. Can you improve your score?</font>";
             } else {
 			    if (countLeft === 0) {
                     resultsStr += "<br><font color='#0000ff'>We will now move on to your left hand.</font>";
                 } else if (countLeft < nCounts-1) {
-                    resultsStr += "<br><font color='#0000ff'>Try another round using your left hand. Can you do better this time?</font>";
+                    resultsStr += "<font color='#0000ff'>Try another round using your left hand. Can you do better this time?</font>";
                 } else if (countLeft === nCounts-1) {
-                    resultsStr += "<br><font color='#0000ff'>Try one more round using your left hand. Can you improve your score?</font>";
+                    resultsStr += "<font color='#0000ff'>Try one more round using your left hand. Can you improve your score?</font>";
                 } else {
 					resultsStr+= "<br><font color='#0000ff'>You have completed the keyboard test.</font>";
 				}
@@ -327,8 +355,10 @@
 		function hideResults() {
 			Kinetics.SetLedState(4,0);
 			continueButton.style.visibility = "hidden";
+			lower_sidebar.style.visibility = "hidden";
             results.style.visibility = "hidden";
-			waitingForResultsInput = false;
+            links[1] = "";
+            links[2] = "";   
 		}
 
 		
@@ -336,7 +366,7 @@
 			initKeyCounts();
 			processingFeedback = true;
 			updateFeedback();
-			practiceReminderTimer = setTimeout("playPracticeReminder();", 45000);
+			practiceReminderTimer = setTimeout("playPracticeReminder();", 40000);
 		}   
 		  
         function stopFeedback() {
@@ -491,10 +521,28 @@
 			}
 		}
 		
+		// local handler for help (or "do over" button)
+        function keyDownLocal()
+        {
+            // h key (help)
+            if (event.keyCode == 72)
+            {
+                parent.frames["scriptframe"].Kinetics.CancelAudioPlay();        
+                if (parent.frames["scriptframe"].DebugMenuAvailable === true)
+                {
+                    window.location = "debug-menu.html";
+                }
+                else
+                {
+                    window.location = "keys-intro.html";
+                }
+            }
+        }
+		
 	</script>
 				
 	</head>
-	<body id="bodyElement" class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
+	<body id="bodyElement" class="hands" onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
 		<div id="header" class="header">
 			Keyboard Test
 		</div>
@@ -545,9 +593,10 @@
         <div style="position: absolute; left: 185px; top: 330px; visibility:visible">
 			<!-->
 			This div is here simply to retain focus in the view frame after the enter key is pushed.
-			The loss of focus is not reproducible in the desktop emulation environment.
-			Be careful if you change anything here. I tried moving the div to the bottom and trying
-			a text input type, but focus is lost in both of these cases.
+			Focus is lost because the buttons are hidden during the practice phase. It was thought
+			that a "Continue" button at the bottom would introduce confusion (start practice? finish
+			practice? I tried moving the div to the bottom and trying a text input type, but focus is
+			lost in both of these cases.
 			</-->
             <input type="image" src="" height="101" width="90" id="placeHolder" name="placeHolder">
         </div>
@@ -574,17 +623,23 @@
 		</div>
 
 		
-		<div id="results" style="position: absolute; left: 10; top: 25; color: #000000; font-size:12pt;"></div>		
-		<div id="continueButton" style="position: absolute; left: 176px; top:200px; visibility: hidden">
+		<div id="results" style="position: absolute; left: 10; top: 25; color: #000000; font-size:12pt;"></div>	
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:185px; visibility:hidden;">
+            <img src="images/sidebar_short.gif" height="55">
+        </div>	
+		<div id="continueButton" style="position: absolute; left: 173px; top:187px; visibility: hidden">
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="menu-left-sel"   id="m1-left"></td>
-                    <td class="menu-mid-sel"    id="m1-mid" width="82">Continue</td>
+                    <td class="menu-mid-sel"    id="m1-mid" width="100">Continue</td>
                     <td class="menu-right-sel"  id="m1-right"></td>
-                </tr>            
+                </tr>          
+                <tr>
+                    <td class="menu-left-sel"   id="m2-left"></td>
+                    <td class="menu-mid-sel"    id="m2-mid" width="100">Redo Last Test</td>
+                    <td class="menu-right-sel"  id="m2-right"></td>
+                </tr>        
             </table>
         </div>
-		
-		
 	</body>
 </html>

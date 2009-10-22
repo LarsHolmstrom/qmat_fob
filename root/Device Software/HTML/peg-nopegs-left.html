@@ -7,7 +7,6 @@
 		<script language="javascript" src="menu.js"></script>
 		<script language="javascript">
 		
-		var peg_test_page_timer_id = null;
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		parent.frames["scriptframe"].currentTest = "NOPEGSLEFT";
 		
@@ -35,10 +34,7 @@
 		// called from the script frame once all 8 pegs show up on the left 
 		function pegsReady()
 		{
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\misc\\great.wav");
-			clearTimeout(peg_test_page_timer_id);
-			peg_test_page_timer_id = setTimeout('location = "\peg-test.html"',2000);
+            setTimeout('location = "\peg-test.html"',100);
 		}
 		
 		// called from the script frame each time a pegMap event fires

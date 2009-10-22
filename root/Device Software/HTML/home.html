@@ -19,6 +19,10 @@
 		var nextTestCaption;		
 		var buttonCaption;
 		
+		// Variables for blank screen saver.
+		var screenSaverTimer = null;
+		var screenSaverInterval = 300000; //5 minite screen saver
+		
 		// menu setup
 		menuItems = 2;
 		
@@ -26,8 +30,8 @@
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "pretest.html"; 
-		links[2] = "intro1.html";
+        links[1] = "volume-test.html"
+        links[2] = "intro1.html";
 			
 		// keep the date/time updated
 		function jsClock()
@@ -256,6 +260,9 @@
 					Kinetics.SetLedState(4,1);
 					Kinetics.SetLedState(5,1);
 					Kinetics.SetLedState(6,1);
+					
+					// make sure the backlight is on
+                    Kinetics.SetBacklightPower(1);
 				}
 				
 				focus();
@@ -269,16 +276,27 @@
 				{		
 					parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\hello_and_welcome.wav");
 				}
+				
+				screenSaverTimer = setTimeout("location='screen-saver.html'", screenSaverInterval);
 			}
 			else
 			{
 				setTimeout("initWait()", 2000);
 			}
 		}
+		
+        function keyDownLocal()
+        {
+            // select (enter) key
+            if (event.keyCode == 13)
+            {
+                clearTimeout(screenSaverTimer);
+            }
+        }
 		</script>
 				
 	</head>
-	<body class="home" onload="init();" onkeydown="keyDown()">
+	<body class="home" onload="init();" onkeydown="keyDown();keyDownLocal()">
 		<div id="headerhome" class="header-home">
 			Loading...Please Wait
 		</div>
@@ -290,7 +308,7 @@
 			<img src="images/alert-green.gif" border="0">
 		</div>
 		<div id="NextTest" style="position: absolute; left: 25px; top:155px; line-height:13pt;font-family:Arial; color:234368; font-size:11pt;font-weight:bold;">
-			<br>Checking Memory...<br>Build 109h
+			<br>Checking Memory...<br>Build 110h
 		</div>
 		<div id="Buttons" style="position: absolute; left: 176px; top:67px;visibility:hidden">
 			<table border="0" cellpadding="0" cellspacing="0">

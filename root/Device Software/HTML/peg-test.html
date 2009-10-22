@@ -3,9 +3,17 @@
 	<head>
 		<title>Peg Test</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />	
-		
+        <script language="javascript" src="menu.js"></script>
 		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
+			
+        // menu setup
+        menuItems = 2;
+        // this is changed during the keyUp event and used to pick the right link out of the array below
+        currentItem = 2;
+        // links specific to this page
+        links[1] = "";
+        links[2] = "";    
 
 		// TODO: make constants for all tests in contants.js
 	
@@ -16,6 +24,12 @@
 		var debounce = false;
 		var timerID;
 		var the_side_active = "right";
+		var nRounds = 1;
+		
+		var startTime = 0;
+		var endTime = 0;
+		
+        var waitingForContinueToLeft = false;
 		
 		function init()
 		{
@@ -26,6 +40,9 @@
 			}
 			else
 			{
+				// This handles the case when returning to this page
+				// after visitin peg-nopegs-right.html. Does this
+				// assume that we never call peg-nopegs-left.html?
 				the_script_frame.pegDirection = "right";
 				readyLeft();
 			}
@@ -71,14 +88,10 @@
 		// prepare for right hand
 		function readyRight()
 		{
+            Kinetics.SetLedState(4,0);
 			the_script_frame.pegDirection = "left";
 
-			if (the_script_frame.pegCountRight > 1)
-			{
-				Kinetics.ActivityEndNormal();	
-				endTest();
-			} 
-			else if (checkPegsRight())
+			if (checkPegsRight())
 			{
 				//header.innerText = "Peg Test - Round " + the_script_frame.pegCountRight + " of 2";
                 header.innerText = "Pegboard Test - Right Hand";
@@ -101,31 +114,38 @@
 		// prepare for left hand
 		function readyLeft()
 		{
+            Kinetics.SetLedState(4,0);
 			the_script_frame.pegDirection = "right";
 			
-			if (the_script_frame.pegCountLeft > 1)
+            continueToLeftButton.style.visibility = "hidden";
+            bluebg.style.visibility = "visible";
+			continueToLeftPanel.innerHTML = "";
+            waitingForContinueToLeft = false;
+            Kinetics.SetLedState(4,0);
+			
+			if (checkPegsLeft())
 			{
-				Kinetics.ActivityEndNormal();	
-				endTest();
-			}
-			else if (checkPegsLeft())
-			{
-				//header.innerText = "Peg Test - Round " + the_script_frame.pegCountLeft + " of 2";
-                header.innerText = "Pegboard Test - Left Hand";
-				panel.style.paddingTop = 0;
-				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
-		
-				Kinetics.ActivityEndNormal();
-				Kinetics.ActivityConfig(6, "PEGLEFT", 0, 0);
-				the_script_frame.KineticsAudioPlay(
-					"\\hard disk\\audio\\begin_at_beep_get_ready.wav");
-		
-				setTimeout('startLeft()',WAIT_GET_READY_DELAY);
+				// This is needed to give the cancel audio event from the menu navigation
+				// a little time to process before playing the next audio.
+                setTimeout("readyLeft2()",500);
 			}
 			else
 			{
-				location = "\peg-nopegs-left.html";
+				location = "\peg-nopegs-left.html?right";
 			}
+		}
+		
+		function readyLeft2() {
+            //header.innerText = "Peg Test - Round " + the_script_frame.pegCountLeft + " of 2";
+            header.innerText = "Pegboard Test - Left Hand";
+            panel.style.paddingTop = 0;
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+    
+            Kinetics.ActivityEndNormal();
+            Kinetics.ActivityConfig(6, "PEGLEFT", 0, 0);
+            the_script_frame.KineticsAudioPlay("\\hard disk\\audio\\begin_at_beep_get_ready.wav");
+                
+            setTimeout('startLeft()',WAIT_GET_READY_DELAY);
 		}
 				
 		// begin test with right hand
@@ -139,7 +159,11 @@
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Right Hand<br>Test In Progress';",2000);
 
-				Kinetics.ActivityStart(1);
+	            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\beep.wav");
+	            Kinetics.ActivityStart(0);
+				
+				currentTime = new Date();
+                startTime = currentTime.getTime();
 
 				the_side_active = "right";
 				resetViewActivityTimer();
@@ -161,7 +185,12 @@
 				panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
 				setTimeout("panel.style.paddingTop=0;panel.innerHTML = 'Left Hand<br>Test In Progress';",2000);
 
-				Kinetics.ActivityStart(1);
+	            parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\beep.wav");
+	            Kinetics.ActivityStart(0);
+				
+                currentTime = new Date();
+                startTime = currentTime.getTime();
+			
 				the_side_active = "left";
 				resetViewActivityTimer();
 			}
@@ -171,20 +200,6 @@
 			}
 		}
 		
-		// after three rounds
-		function endTest()
-		{
-			header.innerText = "Peg Test - Complete";
-			panel.style.paddingTop = 0;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Peg Test<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complete";
-			the_script_frame.currentTest = "";
-
-			the_script_frame.pegCountRight = 1;	// used to keep track of round of right hand peg activity
-			the_script_frame.pegCountLeft = 1;	// used to keep track of round of left hand peg activity
-
-			setTimeout("location='voice-intro.html';",1200);
-		}
-		
 		// fired from the script frame once all pegs are on left (overrides local javascript timers)
 		function allPegsMoved(side)
 		{
@@ -192,13 +207,20 @@
 			{	
 				// clear the 40 second timeout if they get the pegs over sooner
 				clearTimeout(timerID);
+								
+                currentTime = new Date();
+                endTime = currentTime.getTime();
 				
 				if (side == "right")
 				{
+                    testDuration = (endTime - startTime)/1000;
+					the_script_frame.rightToLeftDuration = testDuration.toFixed(2);
 					endOfRight();
 				}
 				else
 				{
+                    testDuration = (endTime - startTime)/1000;
+                    the_script_frame.leftToRightDuration = testDuration.toFixed(2);
 					endOfLeft();
 				}
 				
@@ -222,13 +244,27 @@
 		{
 			endOfHalfRound();
 			the_script_frame.pegCountRight++;
-			setTimeout('readyLeft()',ACTIVITY_SPACING_TIME);
+			
+            setTimeout('intermission()',ACTIVITY_SPACING_TIME);
 		}
+		
+		function intermission() {
+			the_script_frame.pegDirection = "";
+            panel.innerHTML = "";
+            header.innerText = "Pegboard Test - Left Hand";
+            waitingForContinueToLeft = true;
+            continueToLeftButton.style.visibility = "visible";
+            bluebg.style.visibility = "hidden";
+			continueToLeftPanel.innerHTML = "Press the illuminated<br>button to start the <br>left handed test";
+            Kinetics.SetLedState(4,1);
+			focus();
+		}
+		
 		function endOfLeft()
 		{
 			endOfHalfRound();
 			the_script_frame.pegCountLeft++;
-			setTimeout('readyRight()',ACTIVITY_SPACING_TIME);
+			setTimeout('showResults()',ACTIVITY_SPACING_TIME);
 		}
 
 		function clearDebounce()
@@ -244,6 +280,9 @@
 			{
 				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
 				window.location = "debug-menu.html";
+			} else if (event.keyCode == 13 && waitingForContinueToLeft == true) {
+				// Enter key
+				readyLeft();
 			}
 		}
 
@@ -255,11 +294,91 @@
 			else
 				timerID = setTimeout('endOfLeft()', PEG_TIMEOUT);
 		}
+		
+		function continueTest() { 
+            boundingboxtest.style.visibility = "visible";
+            bluebg.style.visibility = "visible";
+            device.style.visibility = "visible";
+            
+            results.style.visibility = "hidden";
+            lower_sidebar.style.visibility = "hidden";
+            continueButton.style.visibility = "hidden";
+            // This deactivates the now invisible menu buttons
+            links[1] = "";
+            links[2] = "";   
+			
+			if (the_script_frame.pegCountRight > nRounds) {
+                Kinetics.ActivityEndNormal();   
+                endTest();
+			} else {
+				readyRight();
+			}
+			
+		}
+		
+		function redoTest() {
+            boundingboxtest.style.visibility = "visible";
+            bluebg.style.visibility = "visible";
+            device.style.visibility = "visible";
+            
+            results.style.visibility = "hidden";
+            lower_sidebar.style.visibility = "hidden";
+            continueButton.style.visibility = "hidden";
+            // This deactivates the now invisible menu buttons
+            links[1] = "";
+            links[2] = "";   
+			
+			the_script_frame.pegCountRight--;
+            the_script_frame.pegCountLeft--;
+			continueTest();
+		}
+		
+        // after all rounds are done
+        function endTest()
+        {
+            the_script_frame.currentTest = "";
+
+            the_script_frame.pegCountRight = 1; // used to keep track of round of right hand peg activity
+            the_script_frame.pegCountLeft = 1;  // used to keep track of round of left hand peg activity
+
+            location='session-saving.html';
+        }
+		
+        function showResults() {
+            Kinetics.SetLedState(4,1);
+            menuSelect(1);
+            links[1] = "continueTest()";
+            links[2] = "redoTest()";    
+                        
+            header.innerText = "Pegboard Test - Results";
+            panel.innerHTML = "";
+            
+            boundingboxtest.style.visibility = "hidden";
+			bluebg.style.visibility = "hidden";
+			device.style.visibility = "hidden";
+            
+            results.style.visibility = "visible";
+            lower_sidebar.style.visibility = "visible";
+            continueButton.style.visibility = "visible";
+            
+            resultsStr = "<ul style='padding-left: 0;margin: 1em;'>";
+            
+            resultsStr += "<li>You moved the pegs from right to left in<br> <font color='#009900'>" + the_script_frame.rightToLeftDuration + "</font> seconds.</li>";
+            resultsStr += "<li>You moved the pegs from left to right in<br> <font color='#009900'>" + the_script_frame.leftToRightDuration + "</font> seconds.</li>";
+                     
+			resultsStr+= "<br><font color='#0000ff'>You have completed the pegboard test.</font>";
+					            
+            resultsStr += "</ul>"
+
+            results.innerHTML = resultsStr;
+			
+			focus();
+        }
 				
 		</script>
 				
 	</head>
-	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
 		<div id="device" class="device">
 			<img src="images/device-peg.gif">
 		</div>
@@ -289,8 +408,42 @@
 			</table>
 		</div>
 		<div id="panel" class="inprogress">
+        </div>
 			
-		</div>
+			
+        <div id="continueToLeftPanel" class="inprogress" style="position: absolute; left: 95px; top:93px; font-size:11pt; visibility:visible;">
+		
+        </div>
+		
+        <div id="results" style="position: absolute; left: 30; top: 35; color: #000000; font-size:12pt;"></div> 
+        <div id="lower_sidebar" class="sidebar" style="position: absolute; left: 168px; top:185px; visibility:hidden;">
+            <img src="images/sidebar_short.gif" height="55">
+        </div>  
+        <div id="continueButton" style="position: absolute; left: 173px; top:187px; visibility: hidden">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="menu-left-sel"   id="m1-left"></td>
+                    <td class="menu-mid-sel"    id="m1-mid" width="80">Continue</td>
+                    <td class="menu-right-sel"  id="m1-right"></td>
+                </tr>          
+                <tr>
+                    <td class="menu-left-sel"   id="m2-left"></td>
+                    <td class="menu-mid-sel"    id="m2-mid" width="80">Redo Test</td>
+                    <td class="menu-right-sel"  id="m2-right"></td>
+                </tr>        
+            </table>
+        </div>
+		
+        <div id="continueToLeftButton" style="position: absolute; left: 193px; top:200px; visibility: hidden">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="menu-left-sel"></td>
+                    <td class="menu-mid-sel" width="70">Continue</td>
+                    <td class="menu-right-sel"></td>
+                </tr>          
+            </table>
+        </div>
+			
 		<div id="debugleft" name="debugleft" style="position:absolute;top:370"></div>
 		<div id="debugright" name="debugright" style="position:absolute;top:400"></div>
 	</body>

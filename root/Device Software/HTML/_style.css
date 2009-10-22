@@ -15,7 +15,7 @@ body
 {
 	margin: 0px;
 	background-color: #CAEDF9;
-	background-image: url(images/background-default.gif);
+	background-image: url(images/background-default-bottom-line.gif);
 	background-repeat: no-repeat;
 	font-family: Arial Narrow; 
 	font-size: 11pt; 
@@ -34,7 +34,7 @@ body.home
 body.hands
 {
 	background-color: #CAEDF9;
-	background-image: url(images/background-hands.gif);
+	background-image: url(images/background-hands-bottom-line.gif);
 	background-repeat: no-repeat;
 }
 	

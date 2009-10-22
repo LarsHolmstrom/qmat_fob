@@ -32,6 +32,8 @@
 			var pegCountRight = 1;			// used to keep track of round of right hand peg activity
 			var pegCountLeft = 1;			// used to keep track of round of left hand peg activity
 			var pegDirection = "";			// direction pegs are supposed to be moving
+	        var rightToLeftDuration = 0;    // duration of the right to left test
+	        var leftToRightDuration = 0;    // duration of the left to right test
 			
 			var ignoreCapsitRight;			// used to irgnore first press on tap test/reaction test
 			var ignoreCapsitLeft;			// used to irgnore first press on tap test/reaction test
@@ -601,31 +603,19 @@
         <script for="Kinetics" event="DigitoLeftFullKeyStroke(rate)">
             trace(" Left key full press");
             pushLeftKeyStroke();
-//            setLeftRateMeter(rate);
-//            leftKey.src="HTML/images/green.gif";
-//            rateLeftKey.value=rate;
         </script>
 		
         <!--script for="Kinetics" event="DigitoLeftShortKeyStroke(rate)">
             trace(" Left key partial key press");
-//			setLeftRateMeter(rate);
-//            leftKey.src="HTML/images/red.gif";
-//            rateLeftKey.value=rate;
         </script-->
 
         <script for="Kinetics" event="DigitoRightFullKeyStroke(rate)">
             trace(" Right key full press");
             pushRightKeyStroke();
-//            setRightRateMeter(rate);
-//            rightKey.src="HTML/images/green.gif";
-//            rateRightKey.value=rate;
         </script>
 		
         <!--script for="Kinetics" event="DigitoRightShortKeyStroke(rate)">
             trace(" Right key partial key press");
-//            setRightRateMeter(rate);
-//            rightKey.src="HTML/images/red.gif";
-//            rateRightKey.value=rate;
         </script-->
 		
 		<script for="Kinetics" event="DigitoBothKeysPressed()">

@@ -15,7 +15,7 @@
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "questions_handedness.html";			
+		links[1] = "questions_handedness.html";		
 				
 		function keyDownLocal()
 		{
@@ -36,6 +36,10 @@
 
 			// leave only the select light on since there's only a "next" button
 			var Kinetics = parent.frames["scriptframe"].Kinetics;
+			
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\misc\\pre-test.wav");
+
 			
             Kinetics.SessionStart();
 			
@@ -74,7 +78,7 @@
 			
 				<li style="padding-bottom:8px;">Place yourself in a straight back chair.<br>
 				<li style="padding-bottom:8px;">Ensure that your surroundings will remain quiet and distraction free for the duration of the session<br>
-				<li>Follow directions exactly.<br>
+				<li>Follow directions exactly<br>
 			
 			</ul>	
 

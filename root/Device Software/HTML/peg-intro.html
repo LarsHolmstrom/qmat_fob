@@ -15,7 +15,7 @@
 		currentItem = 2;		
 		
 		// links specific to this page
-		links[1] = "peg-demo.html";
+		links[1] = "peg-video.html";
 		links[2] = "peg-test.html"; 		
 		
 		// local handler for help (or "do over" button)
@@ -39,7 +39,7 @@
 		// initialize menu and play audio (if applicable)	
 		function init()
 		{
-			menuSelect(1);
+			menuSelect(2);
 			
 			// reset peg related variables in the script frame
 			parent.frames["scriptframe"].pegDirection = "";
@@ -51,24 +51,16 @@
 			if (url.indexOf("quiet") == -1)
 			{			
 				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");	
-				setTimeout("location='peg-demo.html'",3000);
-				// turn off nav LED's
-	            Kinetics.SetLedState(4,1);
-	            Kinetics.SetLedState(5,0);
-	            Kinetics.SetLedState(6,0);  
-			}	
-			else
-			{
-				document.getElementById("sidebar").style.visibility = 'visible';
-                document.getElementById("notes").style.visibility = 'visible';
-                document.getElementById("Buttons").style.visibility = 'visible';
-				// turn on nav LED's
-                Kinetics.SetLedState(5,1);
-                Kinetics.SetLedState(6,1);  
-				menuSelect(2);				
-			}		
+					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");
+			}			
 			
+			document.getElementById("sidebar").style.visibility = 'visible';
+            document.getElementById("notes").style.visibility = 'visible';
+            document.getElementById("Buttons").style.visibility = 'visible';
+            // turn on nav LED's
+            Kinetics.SetLedState(4,1); 
+            Kinetics.SetLedState(5,1);
+            Kinetics.SetLedState(6,1);  
 			
 		}
 						
@@ -84,8 +76,8 @@
 		<div id="header" class="header">
 			&nbsp;Pegboard Test
 		</div>
-		<div id="notes" style="position: absolute; left: 185px; top:125px; width:120px; visibility=hidden;">
-			<font class="grey8">Move the pegs from the right side to the left side as quickly as you can.<br></font>
+		<div id="notes" style="position: absolute; left: 185px; top:125px; width:120px; font-size:8pt; line-height: 10pt; visibility=hidden; color: #ff0000;">
+			Move the pegs from one side to the other as quickly as you can.<br>
 		</div>
 		<div id="Buttons" style="position: absolute; left: 176px; top:172px; visibility:hidden;">
 			<table border="0" cellpadding="0" cellspacing="0">
@@ -96,7 +88,7 @@
 				</tr>
 				<tr>
 					<td class="menu-left"	id="m2-left"></td>
-					<td class="menu-mid"	id="m2-mid" width="82">Start</td>
+					<td class="menu-mid"	id="m2-mid" width="82">Continue</td>
 					<td class="menu-right"	id="m2-right"></td>
 				</tr>				
 			</table>

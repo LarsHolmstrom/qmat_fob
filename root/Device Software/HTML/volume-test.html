@@ -1,22 +1,23 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <html>
 	<head>
-		<title>Replace Storage Unit</title>
+		<title>Volume Test</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />
 		<script language="javascript" src="menu.js"></script>
 		<script language="javascript">
-		
+	
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
-		
+	
 		// menu setup
-		menuItems = 1;
+		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
 		currentItem = 1;		
 		
 		// links specific to this page
-		links[1] = "home.html?quiet";			
-		
+		links[1] = "pretest.html";
+		links[2] = "playAudio();"		
+				
 		function keyDownLocal()
 		{
 			// h key
@@ -30,14 +31,27 @@
 		function init()
 		{
 			Kinetics.SetLedState(4,1);
-			Kinetics.SetLedState(5,0);
-			Kinetics.SetLedState(6,0);
+			Kinetics.SetLedState(5,1);
+			Kinetics.SetLedState(6,1);
 
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\misc\\instructions5.wav");
-
-			menuSelect(1);
-			focus();			
+			focus();		
+			playAudio();	
+		}
+		
+		function playAudio() {
+			buttons.style.visibility = "hidden";
+			innerbody.innerHTML = "<br><br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#ff0000' size='4'>Testing audio playback...</font>";
+            parent.frames["scriptframe"].KineticsAudioPlay(
+                "\\hard disk\\audio\\misc\\volume-test.wav");
+		    setTimeout("audioComplete();", 3000);
+		}
+		
+		function audioComplete() {
+            menuSelect(1);
+			innerbody.innerHTML = "Did you hear the test audio and was it at a good volume?<br><br>The volume knob is on the bottom right side of the device near the front.";
+		
+            focus();        
+            buttons.style.visibility = "visible";
 		}
 		
 		</script>
@@ -66,17 +80,20 @@
 			</table>
 		</div>
 		<div id="innerbody" style="position: absolute; left: 30px; top:40px; width:258px; height:130px;">
-		If you must interrupt the session or you feel like you made a mistake, you will be given an option to redo each test after it is completed.
-
-        <div id="questions" style="position: absolute; left: 145; top:145;">
-				<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
-					<tr>
-						<td class="menu-left"	id="m1-left"></td>
-						<td class="menu-mid"	id="m1-mid" width="70">Continue</td>
-						<td class="menu-right"	id="m1-right"></td>
-					</tr>			
-				</table>
-			</div>
+        </div>
+		<div id="buttons" style="position: absolute; left: 145; top:165; visibility: visible;">
+			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+				<tr>
+					<td class="menu-left"	id="m1-left"></td>
+					<td class="menu-mid"	id="m1-mid" width="90">Continue</td>
+					<td class="menu-right"	id="m1-right"></td>
+				</tr>		
+                <tr>
+                    <td class="menu-left"   id="m2-left"></td>
+                    <td class="menu-mid"    id="m2-mid" width="90">Replay Audio</td>
+                    <td class="menu-right"  id="m2-right"></td>
+                </tr>   	
+			</table>
 		</div>
 	</body>
 </html>

@@ -70,9 +70,15 @@ function keyDown()
 	// enter key
 	if (event.keyCode == 13)
 	{
-		if ( links[currentItem] == "RESUME")  {    
-			history.go(-1);
+		if (links[currentItem].search("html") === "") {
+	        //Do nothing if the link is empty.
+			return;
+		}else if ( links[currentItem].search("html") == -1)  {    
+		    // No "html" found in the target link, so execute as a command.
+			parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+			eval(links[currentItem]);
 		} else {
+			// "html" found in the target, so navigate to the specified URL.
             parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 
             window.location = links[currentItem];	
 		}

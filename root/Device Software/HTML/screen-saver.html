@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Questionnaire</title>
+		<link rel="stylesheet" type="text/css" href="_style.css" />	
+		<script language="javascript">
+		
+        var Kinetics = parent.frames["scriptframe"].Kinetics;
+
+		function keyDownLocal()
+		{
+			// select (enter) key
+			if (event.keyCode == 13)
+			{
+                Kinetics.SetBacklightPower(1);
+				location = "home.html?quiet";
+			}
+		}
+					
+		function init()
+		{
+			
+            Kinetics.SetBacklightPower(0);
+				
+			Kinetics.SetLedState(4,1);
+			Kinetics.SetLedState(5,0);
+			Kinetics.SetLedState(6,0);
+			
+			focus();			
+		}
+			
+		</script>
+				
+	</head>
+	<body onload="init();" onkeydown="keyDownLocal()">
+
+	</body>
+</html>

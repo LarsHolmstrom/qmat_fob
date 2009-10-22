@@ -42,9 +42,7 @@
 		// called from the script frame once all 8 pegs show up on the right 
 		function pegsReady()
 		{
-			parent.frames["scriptframe"].KineticsAudioPlay(
-				"\\hard disk\\audio\\misc\\great.wav");
-			setTimeout('location = "\peg-test.html"',2000);
+			setTimeout('location = "\peg-test.html"',100);
 		}
 		
 		// called from the script frame each time a pegMap event fires

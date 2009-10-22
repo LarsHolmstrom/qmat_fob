@@ -3,21 +3,31 @@
 	<head>
 		<title>Paced Keyboard Test</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />	
-		
+        <script language="javascript" src="menu.js"></script>
 		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 						
+		// menu setup
+        menuItems = 2;
+        // this is changed during the keyUp event and used to pick the right link out of the array below
+        currentItem = 2;    
+        // links specific to this page
+        links[1] = "";
+        links[2] = "";    
 			
 		parent.frames["scriptframe"].currentTest = "KEYBOARD";
 		
 		var countRight = 0;
 		var countLeft = 0;
 		var nCounts = 1;
+		var showRedoOption = true;
 
 		function init()
 		{
+            menuSelect(2);      
+			
 			Kinetics.SetLedState(4,0);
 			Kinetics.SetLedState(5,0);
 			Kinetics.SetLedState(6,0);
@@ -55,10 +65,9 @@
 		{
             panel.style.paddingTop = 0;
             header.innerText = "Paced Keyboard Test - Left Hand";
-            //            panel.style.top = 90;
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
             parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\keyboard\\keyboard-prepare-left-hand.wav");
-			setTimeout('readyLeft2()',5000);
+			setTimeout('readyLeft2()',4000);
 		}
 
 		// prepare for left hand
@@ -77,12 +86,16 @@
 		{
 			countRight++;
 			panel.style.paddingTop = 12;
-			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-            
-			setTimeout("boundingboxtall.style.visibility = \"visible\";panel.style.top=54;panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';",2000);
+			
+			boundingboxtall.style.visibility = "visible";
+			panel.style.top=54;
+			panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';
+			
 			Kinetics.ActivityStart(0);
 
-			setTimeout('stopRight1()',48600);
+			setTimeout('stopRight1()',49400); //8.4 seconds of each tempo
+//            setTimeout('stopRight1()',48600); //15 of each tempo
+//            setTimeout('stopRight1()',2000); // for testing
 		}
 		
         // begin test with right hand
@@ -90,67 +103,127 @@
         {
             countLeft++;
             panel.style.paddingTop = 12;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:green;'>GO</font>";
-            setTimeout("boundingboxtall.style.visibility = \"visible\";panel.style.top=54;panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';",2000);
-            Kinetics.ActivityStart(0);
+			
+            boundingboxtall.style.visibility = "visible";
+            panel.style.top=54;
+            panel.innerHTML = '&nbsp;Press the Keys<br>&nbsp;Back and Forth<br>&nbsp;In Time With<br>&nbsp;the Metronome';
+			
+			Kinetics.ActivityStart(0);
 
-            setTimeout('stopLeft1()',48600);
+            setTimeout('stopLeft1()',49400);
+//            setTimeout('stopLeft1()',48600);
+//            setTimeout('stopLeft1()',2000);
         }
 		
 		// stop right
 		function stopRight1()
 		{		
-				
 			panel.style.top=105;
 			panel.style.paddingTop=12;
             boundingboxtall.style.visibility = "hidden";
 			panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>";	
 
+            saving.innerHTML= "Saving...";
             setTimeout('stopRight2()',1000);
 		}
 		
 		function stopRight2()
 		{
             Kinetics.ActivityEndNormal();  
+            saving.innerHTML= "";
             if (countRight < nCounts) {
-                setTimeout('readyRight2()', 1000);
+                if (showRedoOption) {
+				    links[1] = 'disableRedoView();readyRight2();'; //Continue command
+				    links[2] = 'disableRedoView();countRight--;readyRight1();'; //Redo command
+				    setTimeout('enableRedoView()', 1000);
+				}
+				else {
+					readyRight2();
+				}
             }
             else {
-                readyLeft1();
+                if (showRedoOption) {
+				    links[1] = 'disableRedoView();readyLeft1();'; //Continue command
+				    links[2] = 'disableRedoView();countRight--;readyRight1();'; //Redo command
+				    setTimeout('enableRedoView()', 1000);
+				}
+				else {
+					readyLeft1();
+				}
             }
 		}
 		
 		// stop left
 		function stopLeft1()
-		{                        
-			 
+		{          
             panel.style.top=105;
             panel.style.paddingTop=12;
             boundingboxtall.style.visibility = "hidden";
             panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style='font-size:28px;color:maroon;'>STOP</font>"; 
 
+            saving.innerHTML= "Saving...";
             setTimeout('stopLeft2()',1000);
 		}
 		
 		function stopLeft2()
 		{
-            Kinetics.ActivityEndNormal(); 
-            if (countRight < nCounts) {
-                setTimeout('readyLeft2()', 1000);
+            Kinetics.ActivityEndNormal();  
+            saving.innerHTML= "";
+            if (countLeft < nCounts) {
+				if (showRedoOption) {
+					links[1] = 'disableRedoView();readyLeft2();'; //Continue command
+					links[2] = 'disableRedoView();countLeft--;readyLeft1();'; //Redo command
+					setTimeout('enableRedoView()', 1000);
+				}
+				else {
+					readyLeft2();
+				}
             }
             else {
-                endTest();
+                if (showRedoOption) {
+					links[1] = 'disableRedoView();endTest();'; //Continue command
+					links[2] = 'disableRedoView();countLeft--;readyLeft1();'; //Redo command
+					setTimeout('enableRedoView()', 1000);
+				}
+				else {
+					endTest();
+				}
             }
 		}
-				
+						
 		// after all rounds are complete
 		function endTest()
 		{
 			header.innerText = "Paced Keyboard Test - Complete";
-//			panel.innerHTML = "";
+			panel.style.paddingTop = 0;
+            panel.innerHTML = "Paced Keyboard<br>Test Complete"; 
 			parent.frames["scriptframe"].currentTest = "";
-            setTimeout("location='session-saving.html';",2000);
+            setTimeout("location='peg-intro.html';",2000);
 		}
+		
+		function enableRedoView()
+		{
+			parent.frames["scriptframe"].Kinetics.CancelAudioPlay();
+			panel.style.visibility = "hidden";
+			boundingboxtest.style.visibility = "hidden";
+			redoSidebar.style.visibility = "visible";
+            Buttons.style.visibility = "visible";
+			menuSelect(1);
+            Kinetics.SetLedState(4,1);
+			focus();
+		}
+		
+		      
+        function disableRedoView()
+        {
+	        links[1] = "";
+	        links[2] = "";    
+            panel.style.visibility = "visible";
+            boundingboxtest.style.visibility = "visible";
+            redoSidebar.style.visibility = "hidden";
+            Buttons.style.visibility = "hidden";
+            Kinetics.SetLedState(4,0);
+        }
 		
 		// return to home screen for now (temporary for demo purposes)
 		function keyDownLocal()
@@ -166,12 +239,12 @@
 	</script>
 				
 	</head>
-	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();">
+	<body class="hands" onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
 		<div id="device" class="device">
 			<img src="images/device.gif">
 		</div>
 		<div id="header" class="header">
-			Keyboard Test
+			Paced Keyboard Test
 		</div>
 		<div id="bluebg" style="position: absolute; left: 0; top:0;">
 			<img src="images/halfblue.gif">
@@ -217,6 +290,26 @@
 		<div id="panel" class="inprogress">
 		</div>
 		<div id="sessionDone" style="position:absolute;left:100;top:100;font-color:black;font-size:12pt;">
+        </div>
+		<div id="saving" style="position: absolute; left: 120; top: 60; color: #ff0000; font-size:12pt;">
+        </div>
+		
+        <div id="redoSidebar" class="sidebar" style="position: absolute; left: 178px; top:165px; visibility:hidden;">
+            <img src="images/sidebar_short.gif" height="55">
+        </div>
+        <div id="Buttons" style="position: absolute; left: 176px; top:166px; visibility:hidden;">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="menu-left"   id="m1-left"></td>
+                    <td class="menu-mid"    id="m1-mid" width="100">Continue</td>
+                    <td class="menu-right"  id="m1-right"></td>
+                </tr>
+                <tr>
+                    <td class="menu-left"   id="m2-left"></td>
+                    <td class="menu-mid"    id="m2-mid" width="100">Redo Last Test</td>
+                    <td class="menu-right"  id="m2-right"></td>
+                </tr>               
+            </table>
         </div>
 	</body>
 </html>
