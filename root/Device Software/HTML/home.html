@@ -250,7 +250,7 @@
 				//	Kinetics.SetWatchPower(1);	
 
 					// check storage capacity (default to 20 if for some reason it can't read it)
-					var minDiskSpace = eval(Kinetics.ParameterRead("MinFreeSpaceMB","20")); //[FIXME] How much space do we need for the new tests?
+					var minDiskSpace = eval(Kinetics.ParameterRead("MinFreeSpaceMB","10")); //[FIXME] How much space do we need for the new tests?
 					if (Kinetics.FreeStoreMB < minDiskSpace )
 					{
 						location = "storage-full.html";

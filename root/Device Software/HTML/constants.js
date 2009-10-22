@@ -4,7 +4,7 @@
 *******************************************************/
 
 // minimum amount of free space on disk to comlete tests (mb)
-MIN_DISK_SPACE				= 50;
+MIN_DISK_SPACE				= 10;
 
 // general max time without activity before aborting session  (msecs)
 INACTIVITY_TIMEOUT			= 60 * 60 * 1000;
