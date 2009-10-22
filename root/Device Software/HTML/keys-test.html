@@ -298,6 +298,8 @@
 		
 		function showResults() {
 			Kinetics.SetLedState(4,1);
+            Kinetics.SetLedState(5,1);
+            Kinetics.SetLedState(6,1);
             menuSelect(1);
 	        links[1] = "continueTest()";
 	        links[2] = "redoTest()";    
@@ -353,7 +355,9 @@
 		}
 		
 		function hideResults() {
-			Kinetics.SetLedState(4,0);
+            Kinetics.SetLedState(4,0);
+            Kinetics.SetLedState(5,0);
+            Kinetics.SetLedState(6,0);
 			continueButton.style.visibility = "hidden";
 			lower_sidebar.style.visibility = "hidden";
             results.style.visibility = "hidden";
