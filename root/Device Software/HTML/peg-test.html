@@ -139,7 +139,7 @@
             //header.innerText = "Peg Test - Round " + the_script_frame.pegCountLeft + " of 2";
             header.innerText = "Pegboard Test - Left Hand";
             panel.style.paddingTop = 0;
-            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
+            panel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Left Hand<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Ready";
     
             Kinetics.ActivityEndNormal();
             Kinetics.ActivityConfig(6, "PEGLEFT", 0, 0);
@@ -208,19 +208,19 @@
 				// clear the 40 second timeout if they get the pegs over sooner
 				clearTimeout(timerID);
 								
-                currentTime = new Date();
-                endTime = currentTime.getTime();
+//                currentTime = new Date(); 
+//                endTime = currentTime.getTime();
 				
 				if (side == "right")
 				{
-                    testDuration = (endTime - startTime)/1000;
-					the_script_frame.rightToLeftDuration = testDuration.toFixed(2);
+//                    testDuration = (endTime - startTime)/1000;
+//					the_script_frame.rightToLeftDuration = testDuration.toFixed(2);
 					endOfRight();
 				}
 				else
 				{
-                    testDuration = (endTime - startTime)/1000;
-                    the_script_frame.leftToRightDuration = testDuration.toFixed(2);
+//                    testDuration = (endTime - startTime)/1000;
+//                    the_script_frame.leftToRightDuration = testDuration.toFixed(2);
 					endOfLeft();
 				}
 				

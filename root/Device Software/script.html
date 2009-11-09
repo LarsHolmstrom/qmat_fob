@@ -1,3 +1,5 @@
+require "date"
+require "Win32API"
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <html>
 	<head>
@@ -59,6 +61,8 @@
 			var capsitDebounceMS = 50;
 			var rightCapsitTicksSinceGo = 0;
 			var leftCapsitTicksSinceGo = 0;
+			
+			var clockRolloverDuration = 56.8912; // The duration of a 24-bit tick rollover
 
 			var fso = null, log_file = null;
 			var useragent = navigator.userAgent;
@@ -646,11 +650,25 @@
 				{
 					is_pegs_filled = true;
 					the_view_frame.allPegsMoved("right");
+                    testDuration = ticksSinceGo/294900; //Convert to seconds. 3.391uSec per tick
+                    if (testDuration > clockRolloverDuration) {
+						// It is possible to have the clock rollover during the pegboard test.
+						// Adjust if necessary.
+						testDuration = testDuration - clockRolloverDuration;
+					}
+                    the_script_frame.rightToLeftDuration = testDuration.toFixed(2);
 				}
 				else if (pegsInRight == 255 && pegDirection == "right")
 				{
-					is_pegs_filled = true;
+					is_pegs_filled = true; 
 					the_view_frame.allPegsMoved("left");
+                    testDuration = ticksSinceGo/294900; //Convert to seconds. 3.391uSec per tick
+                    if (testDuration > clockRolloverDuration) {
+                        // It is possible to have the clock rollover during the pegboard test.
+                        // Adjust if necessary.
+                        testDuration = testDuration - clockRolloverDuration;
+                    }
+                    the_script_frame.leftToRightDuration = testDuration.toFixed(2);
 				}
 			}
 
@@ -849,7 +867,7 @@
 			if (endCauseID === 0)	
 			{
 //				parent.frames["viewframe"].location = "HTML/session-done.html";	
-              parent.frames["viewframe"].location = "HTML/home.html"; 
+              parent.frames["viewframe"].location = "HTML/home.html?quiet"; 
 //                Kinetics.Reboot();
 			}
 			else

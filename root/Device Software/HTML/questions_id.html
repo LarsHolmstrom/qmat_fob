@@ -10,7 +10,7 @@
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		
 		// menu setup
-		menuItems = 3;
+		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
 		currentItem = 1;			
@@ -45,12 +45,12 @@
 				}
 			}
 
-            // select (enter) key
-            if (event.keyCode == 13)
-            {
+			// select (enter) key
+			if (event.keyCode == 13)
+			{
                 saving.style.visibility = "visible";
                 setTimeout("saveAnswer()",1000);
-            }
+			}
 		}
 					
 		function init()
@@ -63,15 +63,20 @@
 			focus();			
 		}
 		
-        function saveAnswer()
-        {
-                // record question response
-                Kinetics.ActivityConfig(7, "Q_AFFECTED", 0, 0);
-                Kinetics.ActivityStart(0);
-                Kinetics.QuestionResponse("Q_AFFECTED",currentItem);
-                Kinetics.ActivityEndNormal();
-                setTimeout("window.location = 'questions_adl.html'",1000);
-        }
+		function saveAnswer()
+		{
+			// record question response
+            Kinetics.ActivityConfig(7, "Q_ID", 0, 0);
+            Kinetics.ActivityStart(0);
+            Kinetics.QuestionResponse("Q_ID",currentItem);
+            Kinetics.ActivityEndNormal();
+			
+            if (currentItem == 1) {
+                setTimeout("window.location = 'questions_adl_custom.html'",1000);
+            } else {
+                setTimeout("window.location = 'questions_handedness.html'",1000);
+            }
+		}
 			
 		</script>
 				
@@ -96,26 +101,22 @@
 				</tr>
 			</table>
 		</div>
-		<div id="innerbody" style="position: absolute; left: 35px; top:45px; width:270px; height:130px;">
-			Which side was initially most affected by Parkinson's disease?
+		<div id="innerbody" style="position: absolute; left: 35px; top:45px; width:240px; height:130px;">
+			<!--Are you the subject this test was personalized for?-->
+			Are you Andy Grove?
 			
-			<div id="questions" style="position: absolute; left: 0; top:85;">
+			<div id="questions" style="position: absolute; left: 0; top:100;">
 				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
 					<tr>
 						<td class="menu-left"	id="m1-left"></td>
-						<td class="menu-mid"	id="m1-mid" width="200">Right</td>
+						<td class="menu-mid"	id="m1-mid" width="100">Yes</td>
 						<td class="menu-right"	id="m1-right"></td>
 					</tr>
 					<tr>
 						<td class="menu-left"	id="m2-left"></td>
-						<td class="menu-mid"	id="m2-mid" width="200">Left</td>
+						<td class="menu-mid"	id="m2-mid" width="100">No</td>
 						<td class="menu-right"	id="m2-right"></td>
-					</tr>
-					<tr>
-						<td class="menu-left"	id="m3-left"></td>
-						<td class="menu-mid"	id="m3-mid" width="200">Both affected equally</td>
-						<td class="menu-right"	id="m3-right"></td>
-					</tr>			
+					</tr>		
 				</table>
 			</div>
 		</div>

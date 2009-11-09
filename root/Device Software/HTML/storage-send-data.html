@@ -1,44 +1,45 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <html>
 	<head>
-		<title>Storage</title>
+		<title>Test Session Complete</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />
+		<script language="javascript" src="menu.js"></script>
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		
-		// local handler for help (or "do over" button)
+		parent.frames["scriptframe"].waitingForStorageRemoval = true;
+		
+		// local (this page) event handler for keyUp
 		function keyDownLocal()
 		{
-			parent.frames["scriptframe"].resetActivityTimer();
 			// h key (help)
+			/*
 			if (event.keyCode == 72)
 			{
-				parent.frames["scriptframe"].Kinetics.CancelAudioPlay(); 		
-				window.location = "keys-intro.html";
+				parent.frames["scriptframe"].KineticsAudioPlay(
+					"\\hard disk\\audio\\misc\\excellent.wav");	
 			}
+			*/
 		}
 						
 		function init()
 		{
-		
-			parent.frames["scriptframe"].waitingForStorageRemoval = false;
-			parent.frames["scriptframe"].waitingForStorageInsert = true;
-			
 			Kinetics.SetLedState(4,1);
 			Kinetics.SetLedState(5,0);
-			Kinetics.SetLedState(6,0);
-					
+			Kinetics.SetLedState(6,0);			
+			
+			focus();
 		}
 		
 		</script>
 	</head>
-	<body onload="init();focus();" onkeydown="keyDownLocal();keyDown();">
+	<body onload="init();" onkeydown="keyDownLocal();">
 		<div id="header" class="header">
-			Send Data
+			Prepare to send data
 		</div>
 		<div id="boundingbox" class="boundingbox">
-			<table border="0" cellpadding="0" cellspacing="0" ID="Table1">
+			<table border="0" cellpadding="0" cellspacing="0">
 				<tr>
 				<td><img src="images/boundingbox-topleft.gif"></td>
 				<td width="260" height="14" background="images/boundingbox-top.gif"></td>
@@ -56,13 +57,12 @@
 				</tr>
 			</table>
 		</div>
-		<div id="innerbody" style="font-size:12pt;line-height:15pt;position: absolute; left: 12px; top:55px; width:276px; height:90px;">
-		<img src="images/thumbdrive-remove-sm.gif" border="0" align="right">
-		<ul>
-            <li>Turn on your computer
-            <li>Plug the storage device in to the computer
-            <li>Follow the directions on your computer screen
-		</ul>			 
+		<div id="innerbody" style="position: absolute; left: 28px; top:45px; width:272px; height:130px;">
+			<img src="images/thumbdrive-illust-remove.gif" border="0" align="right">
+			<p style="padding-top:2px;">To send your test data, first remove the storage device as shown.
+			<br>
+			<br>
+			Wait for further instruction.
 		</div>
 	</body>
 </html>
