@@ -1,0 +1,38 @@
+UDRW G2 Starter Kit Version Information
+
+Update from Ver1.00 to Ver1.10
+
+ -Writing Software (Ver1.11)
+  Change window design
+
+ -Update SetupUtility.exe (Ver1.10)
+  AddedÅgInquiry InformationÅh and ÅgFlash Drive Zone Lock functionÅh
+  
+ -Update Device_Checker (Ver1.00)
+  Device Information Checker
+
+---------------------------------------------------------
+
+Update from Ver1.10 to Ver1.11
+
+ -Add software in English language and specification
+
+ -Change name for "Hidden Memory Zone"
+
+---------------------------------------------------------
+
+Update from Ver1.11 to Ver1.12
+
+ No update applied
+
+---------------------------------------------------------
+
+Update from Ver1.12 to Ver1.13
+
+ No update applied
+
+---------------------------------------------------------
+
+Update from Ver1.13 to Ver1.14
+
+ No update applied

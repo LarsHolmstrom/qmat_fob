@@ -1,0 +1,81 @@
+[Version]
+Signature="$CHICAGO$"
+Class=HDC
+provider=%HAGIWARA%
+
+[Manufacturer]
+%MfgName%=HAGIWARA
+
+[HAGIWARA]
+%USB\VID_0693&PID_001D.DeviceDesc%=U3SSTOR.install,USB\VID_0693&PID_001D
+%USB\VID_0930&PID_6541.DeviceDesc%=U3SSTOR.install,USB\VID_0930&PID_6541
+%U3SSTOR\DISK.DeviceDesc%=u3spdr.install,U3SSTOR\DISK
+
+[PreCopySection]
+HKR,,NoSetupUI,,1
+
+[DestinationDirs]
+; \<WINDIR>\SYSTEM32\DRIVERS
+u3sstor.files = 10,System32\Drivers
+
+; \<WINDIR>\SYSTEM\IOSUBSYS
+u3spdr.files = 12
+
+[U3SSTOR.install]
+CopyFiles=u3sstor.files, u3spdr.files
+AddReg=U3SSTOR.addreg
+
+[U3SSTORCB.install.HW]
+AddReg=cb.addreg.HW
+
+[U3SSTOR.addreg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,u3sstor.sys
+
+; If the device does not correctly indicate which protocol it uses,
+; one of the following sections should be added to indicate which protocol
+; the driver should use.
+
+; Indicate that the device uses the C/B/I protocol
+[cbi.addreg.HW]
+HKR,,DeviceProtocol,0x10001,00
+
+; Indicate that the device uses the C/B protocol
+[cb.addreg.HW]
+HKR,,DeviceProtocol,0x10001,01
+
+; Indicate that the device uses the BULK ONLY protocol
+[bulkonly.addreg.HW]
+HKR,,DeviceProtocol,0x10001,50
+
+; Install the port driver
+[u3spdr.install]
+AddReg=U3SPDR.addreg
+
+[U3SPDR.addreg]
+HKR,,DevLoader,,*ios
+HKR,,PortDriver,,u3spdr.pdr
+
+[u3sstor.files]
+u3sstor.sys
+
+[u3spdr.files]
+u3spdr.pdr
+
+[SourceDisksNames]
+1000 = "HAGIWARA USB2.0 Driver Disk","",,
+
+[SourceDisksFiles]
+u3sstor.sys = 1000
+u3spdr.pdr = 1000
+
+[Strings]
+HAGIWARA="HAGIWARA"
+MfgName="HAGIWARA"
+USB\VID_0693&PID_001D.DeviceDesc="HAGIWARA SYS-COM UDRW G2"
+USB\VID_0930&PID_6541.DeviceDesc="HAGIWARA SYS-COM UDRW G2"
+U3SSTOR\DISK.DeviceDesc="HAGIWARA USB Mass Storage Controller"
+
+[Setup]
+FDDInf = "u3sfdd.in_"
+Win98Only = 1
