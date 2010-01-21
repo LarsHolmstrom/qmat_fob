@@ -1,0 +1,13 @@
+These instructions assume that the XP build of KineticsControl.dll exists.
+
+
+  1. Create "c:\Hard Disk\" and put a fob image there.
+  2. Create "c:\Device Software\" and put the contents of "Device
+Software" from the fob image there.
+  3. Put the XP build of KineticsControl.dll into "c:\Device Software\"
+  4. Make sure the previous KineticsControl.dll (if any) is
+unregistered (regsvr32 -u "c:\Device Software\KineticsControl.dll")
+  5. Register the new KineticsControl.dll (regsvr32 "c:\Device
+Software\KineticsControl.dll")
+  6. Right click on "c:\Device Software\default.html" and open with IE.
+  7. Click past ActiveX warnings and allow its use.
