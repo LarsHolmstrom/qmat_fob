@@ -48,3 +48,11 @@ REACTION_BEEP_MIN_MSEC		= 2000;
 // Max number of milliseconds between reaction time beeps (msecs)
 REACTION_BEEP_MAX_MSEC		= 6000;
 
+// If this is set to true, then video instructions are automatically
+// started at the beginning of each test. In either case, the subject
+// has the opportunity to (re)view the video instructions.
+AUTO_INSTRUCTIONS           = true;
+
+// If this is set to true, then the question page asking about the user's
+// identity is displayed.
+AT_HOME                     = false;

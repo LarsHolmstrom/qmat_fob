@@ -5,15 +5,16 @@
 		<link rel="stylesheet" type="text/css" href="_style.css" />	
 		
 		<script language="javascript" src="menu.js"></script>
+		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
 		
 		// menu setup
-		menuItems = 3;
+		menuItems = 2;
 		
 		// this is changed during the keyUp event and used to pick the right link out of the array below
-		currentItem = 1;			
+		currentItem = 2;			
 
 		function keyDownLocal()
 		{
@@ -55,22 +56,34 @@
 					
 		function init()
 		{
+            
 			Kinetics.SetLedState(4,1);
 			Kinetics.SetLedState(5,1);
 			Kinetics.SetLedState(6,1);
 			
-			menuSelect(1);
+			menuSelect(2);
 			focus();			
 		}
 		
         function saveAnswer()
         {
                 // record question response
-                Kinetics.ActivityConfig(7, "Q_AFFECTED", 0, 0);
+                Kinetics.ActivityConfig(7, "Q_PRACTICE", 0, 0);
                 Kinetics.ActivityStart(0);
-                Kinetics.QuestionResponse("Q_AFFECTED",currentItem);
+                Kinetics.QuestionResponse("Q_PRACTICE",currentItem);
                 Kinetics.ActivityEndNormal();
-                setTimeout("window.location = 'questions_adl.html'",1000);
+				
+				if (currentItem == 1) {
+					setTimeout("window.location = 'keys-intro.html'",1000);
+				}
+				else {
+					if (AT_HOME) {
+						setTimeout("window.location = 'questions_id.html'", 1000);
+					}
+					else {
+						setTimeout("window.location = 'questions_handedness.html'", 1000);
+					}
+				}
         }
 			
 		</script>
@@ -96,26 +109,21 @@
 				</tr>
 			</table>
 		</div>
-		<div id="innerbody" style="position: absolute; left: 35px; top:45px; width:270px; height:130px;">
-			Which side of your body is most affected by Parkinson's disease?
+		<div id="innerbody" style="position: absolute; left: 15px; top:45px; width:290px; height:130px;">
+            Is this a practice session?
 			
 			<div id="questions" style="position: absolute; left: 0; top:85;">
 				<table border="0" cellpadding="0" cellspacing="0" ID="Table2">
 					<tr>
 						<td class="menu-left"	id="m1-left"></td>
-						<td class="menu-mid"	id="m1-mid" width="200">Right</td>
+						<td class="menu-mid"	id="m1-mid" width="200">Yes</td>
 						<td class="menu-right"	id="m1-right"></td>
 					</tr>
 					<tr>
 						<td class="menu-left"	id="m2-left"></td>
-						<td class="menu-mid"	id="m2-mid" width="200">Left</td>
+						<td class="menu-mid"	id="m2-mid" width="200">No</td>
 						<td class="menu-right"	id="m2-right"></td>
 					</tr>
-					<tr>
-						<td class="menu-left"	id="m3-left"></td>
-						<td class="menu-mid"	id="m3-mid" width="200">Both affected equally</td>
-						<td class="menu-right"	id="m3-right"></td>
-					</tr>			
 				</table>
 			</div>
 		</div>

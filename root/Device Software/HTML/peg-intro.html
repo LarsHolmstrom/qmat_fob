@@ -4,6 +4,7 @@
 		<title>Pegboard Test Intro</title>
 		<link rel="stylesheet" type="text/css" href="_style.css" />	
 		<script language="javascript" src="menu.js"></script>
+		<script language="javascript" src="constants.js"></script>
 		<script language="javascript">
 		
 		var Kinetics = parent.frames["scriptframe"].Kinetics;
@@ -39,29 +40,41 @@
 		// initialize menu and play audio (if applicable)	
 		function init()
 		{
-			menuSelect(2);
-			
+            menuSelect(1);      
+            
 			// reset peg related variables in the script frame
 			parent.frames["scriptframe"].pegDirection = "";
 			parent.frames["scriptframe"].pegCountRight = 1;
 			parent.frames["scriptframe"].pegCountLeft = 1;
-			
+            
 			// don't replay the intro audio if we're coming from the instructions page
 			var url = String(window.location);
 			if (url.indexOf("quiet") == -1)
 			{			
-				parent.frames["scriptframe"].KineticsAudioPlay(
-					"\\hard disk\\audio\\pegboard\\pegboard_intro.wav");
-			}			
-			
-			document.getElementById("sidebar").style.visibility = 'visible';
-            document.getElementById("notes").style.visibility = 'visible';
-            document.getElementById("Buttons").style.visibility = 'visible';
-            // turn on nav LED's
-            Kinetics.SetLedState(4,1); 
-            Kinetics.SetLedState(5,1);
-            Kinetics.SetLedState(6,1);  
-			
+				parent.frames["scriptframe"].KineticsAudioPlay("\\hard disk\\audio\\pegboard\\pegboard_intro.wav");
+				if (AUTO_INSTRUCTIONS) {
+					setTimeout("location='peg-video.html'",2000);       
+					Kinetics.SetLedState(2,0);
+					Kinetics.SetLedState(3,0);          
+					Kinetics.SetLedState(4,1);
+					Kinetics.SetLedState(5,0);
+					Kinetics.SetLedState(6,0);
+				}
+            }
+            
+			if (url.indexOf("quiet") != -1 || AUTO_INSTRUCTIONS == false) {
+                menuSelect(2);  
+				document.getElementById("sidebar").style.visibility = 'visible';
+				document.getElementById("notes").style.visibility = 'visible';
+				document.getElementById("Buttons").style.visibility = 'visible';   
+				Kinetics.SetLedState(2,0);
+				Kinetics.SetLedState(3,0);       
+				Kinetics.SetLedState(4,1);
+				Kinetics.SetLedState(5,1);
+				Kinetics.SetLedState(6,1);		
+			}
+            
+			focus();
 		}
 						
 		</script>
